@@ -46,9 +46,12 @@ def send():
     }
 
     chat.append(msg_id)
-    return jsonify(messages)
+    return jsonify({
+        "id": msg_id,
+    })
 
 
+@app.route('/get', defaults={'last_id': None})
 @app.route('/get/<last_id>', methods=["GET"])
 def get(last_id):
     if chat is None or len(chat) == 0:
@@ -56,7 +59,7 @@ def get(last_id):
     chat_index = get_next_index(last_id) if last_id else 0
     ids_to_return = chat[chat_index + 1:]
     results = map(lambda x: messages[x], ids_to_return)
-    return jsonify(list(results))
+    return jsonify(sorted(results, key=lambda x: x['timestamp']))
 
 
 @app.route('/updates/<last_id>', methods=["GET"])
@@ -79,4 +82,4 @@ def get_next_index(last_id):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
