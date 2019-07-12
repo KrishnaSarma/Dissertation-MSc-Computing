@@ -58,10 +58,11 @@
       <change afterPath="$PROJECT_DIR$/languageDependentMessageApp/metro.config.js" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/languageDependentMessageApp/package-lock.json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/languageDependentMessageApp/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/languageDependentMessageApp/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/languageDependentMessageApp/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/languageDependentMessageApp/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/languageDependentMessageApp/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/languageDependentMessageApp/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/languageDependentMessageApp/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/messageAppBackend/flask_socketio.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/messageAppBackend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/messageAppBackend/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/researchFiles/C1755773-debriefing_sheet.docx" beforeDir="false" afterPath="$PROJECT_DIR$/researchFiles/C1755773-debriefing_sheet.docx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/researchFiles/C1755773_briefing_information_sheet.docx" beforeDir="false" afterPath="$PROJECT_DIR$/researchFiles/C1755773_briefing_information_sheet.docx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/researchFiles/COMSC_Ethics_form.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/researchFiles/COMSC_Ethics_form.pdf" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -75,7 +76,7 @@
         <entry file="file://$PROJECT_DIR$/languageDependentMessageApp/App.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="309">
-              <caret line="59" column="47" lean-forward="true" selection-start-line="59" selection-start-column="47" selection-end-line="59" selection-end-column="47" />
+              <caret line="59" column="47" selection-start-line="59" selection-start-column="47" selection-end-line="59" selection-end-column="47" />
             </state>
           </provider>
         </entry>
@@ -93,20 +94,24 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-9" />
-    <option name="width" value="978" />
-    <option name="height" value="1039" />
+    <option name="x" value="952" />
+    <option name="width" value="977" />
+    <option name="height" value="1038" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
-    <navigator proportions="" version="1">
+    <navigator currentView="ProjectPane" proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
-    <panes />
+    <panes>
+      <pane id="PackagesPane" />
+      <pane id="ProjectPane" />
+      <pane id="Scope" />
+    </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="F:/dissertation_trial/react-native-flask-socketio" />
     <property name="project.structure.last.edited" value="SDKs" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -138,10 +143,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="0" width="782" height="831" extended-state="0" />
+    <frame x="762" y="0" width="781" height="830" extended-state="0" />
     <layout>
       <window_info id="Captures" order="0" weight="0.25" />
-      <window_info content_ui="combo" id="Project" order="1" weight="0.32980832" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.3293011" />
       <window_info id="Structure" order="2" side_tool="true" />
       <window_info id="Image Layers" order="3" />
       <window_info id="Designer" order="4" />
@@ -150,7 +155,7 @@
       <window_info id="Favorites" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="0" />
       <window_info anchor="bottom" id="TODO" order="1" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="2" visible="true" weight="0.43490702" />
+      <window_info anchor="bottom" id="Terminal" order="2" visible="true" weight="0.4355301" />
       <window_info anchor="bottom" id="Event Log" order="3" side_tool="true" />
       <window_info anchor="bottom" id="Inspection Results" order="4" weight="0.3286119" />
       <window_info anchor="bottom" id="Find" order="5" />
@@ -158,6 +163,9 @@
       <window_info anchor="right" id="Theme Preview" order="1" />
       <window_info anchor="right" id="Palette&#9;" order="2" />
     </layout>
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.js" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/messageAppBackend/src/server.py">
@@ -173,7 +181,7 @@
     <entry file="file://$PROJECT_DIR$/languageDependentMessageApp/App.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="309">
-          <caret line="59" column="47" lean-forward="true" selection-start-line="59" selection-start-column="47" selection-end-line="59" selection-end-column="47" />
+          <caret line="59" column="47" selection-start-line="59" selection-start-column="47" selection-end-line="59" selection-end-column="47" />
         </state>
       </provider>
     </entry>
