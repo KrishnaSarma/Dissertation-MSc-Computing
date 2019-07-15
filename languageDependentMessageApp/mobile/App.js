@@ -22,6 +22,8 @@ export default class App extends Component {
   }
 
   submitChatMessage(){
+    // investigate if reciever id can be sent to the server alongwith the message.
+    // update the chat list from the response
     this.socket.emit("Chat Message", this.state.chatMessage);
     this.setState({ chatMessage: "" })
   }

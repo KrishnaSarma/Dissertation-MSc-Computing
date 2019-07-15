@@ -9,6 +9,9 @@ import routes from routes;
 io.on("connection", socket => {
     console.log("a user connected: " + socket.id);
     socket.on("Chat Message", msg => {
+        // on recieving the message with sender and reciever id, store the message in the db via routes.
+        // and then send the message to the appropriate client by using the client id.
+        // and send the updated chat list to the sender.
         console.log(msg);
         io.emit("Chat Message", msg);
     });    
