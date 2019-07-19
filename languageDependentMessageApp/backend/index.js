@@ -7,7 +7,11 @@ var mongoose = require("mongoose");
 
 // import routes from './routes';
 
-mongoose.connect('mongodb://localhost/my_chat_app', { useNewUrlParser: true });
+mongoose.connect('mongodb://localhost/my_chat_app', { useNewUrlParser: true }).then(() => {
+    console.log('connected to db');
+}).catch((err) => {
+    console.log("Error on db connection", err);
+});
 
 io.on("connection", socket => {
     console.log("a user connected: " + socket.id);
