@@ -1,7 +1,5 @@
 import mongoose from 'mongoose';
 
-mongoose.connect('mongodb://localhost/my_chat_app');
-
 const Schema = mongoose.Schema;
 
 const usersSchema = new Schema({

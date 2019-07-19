@@ -1,6 +1,25 @@
 import React, {Component} from 'react';
-import {TextInput, StyleSheet, Text, View} from 'react-native';
+import {TextInput, StyleSheet, Text, View, Button} from 'react-native';
 import io from "socket.io-client";
+import {createStackNavigator, createAppContainer} from 'react-navigation';
+import HomeScreen from "./screens/home";
+import ChatScreen from "./screens/chat";
+import UsersScreen from "./screens/users";
+import LoginScreen from "./screens/login";
+
+const MainNavigator = createStackNavigator(
+  {
+    Home: {screen: HomeScreen},
+    Login: {screen: LoginScreen},
+    Users: {screen: UsersScreen},
+    Chat: {screen: ChatScreen}
+  },
+  {
+    initialRouteName: 'Home'
+  }
+);
+
+const AppContainer = createAppContainer(MainNavigator)
 
 export default class App extends Component {
 
@@ -35,20 +54,24 @@ export default class App extends Component {
     ));
 
     return (
-      <View style={styles.container}>
-        <TextInput 
-          style= {{ height: 40, borderWidth: 2 }} 
-          autoCorrect={false}
-          value={this.state.chatMessage}
-          onSubmitEditing={() => this.submitChatMessage()}
-          onChangeText={
-            chatMessage => {
-               this.setState({ chatMessage }); 
-            }
-          } 
-        />
-        {chatMessages}
-      </View>
+
+      <AppContainer />
+
+
+      // <View style={styles.container}>
+      //   <TextInput 
+      //     style= {{ height: 40, borderWidth: 2 }} 
+      //     autoCorrect={false}
+      //     value={this.state.chatMessage}
+      //     onSubmitEditing={() => this.submitChatMessage()}
+      //     onChangeText={
+      //       chatMessage => {
+      //          this.setState({ chatMessage }); 
+      //       }
+      //     } 
+      //   />
+      //   {chatMessages}
+      // </View>
     );
   }
 }

@@ -3,8 +3,11 @@ const app = express();
 const server = require("http").createServer(app);
 const io = require('socket.io').listen(server);
 const port = 3000;
+var mongoose = require("mongoose");
 
-import routes from routes;
+// import routes from './routes';
+
+mongoose.connect('mongodb://localhost/my_chat_app', { useNewUrlParser: true });
 
 io.on("connection", socket => {
     console.log("a user connected: " + socket.id);
