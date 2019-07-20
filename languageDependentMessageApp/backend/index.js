@@ -4,6 +4,7 @@ const server = require("http").createServer(app);
 const io = require('socket.io').listen(server);
 const port = 3000;
 var mongoose = require("mongoose");
+var bodyParser = require('body-parser');
 
 import routes from './routes';
 
@@ -23,5 +24,14 @@ io.on("connection", socket => {
         io.emit("Chat Message", msg);
     });    
 });
+
+app.use(bodyParser.json());
+app.post("/login", (req, res, next) => {
+    console.log("in server", req)
+    res.send('hello world')
+})
+
+//app.use("/", routes);
+//app.use(bodyParser.json());
 
 server.listen(port, () => console.log("Server is running on port " + port));

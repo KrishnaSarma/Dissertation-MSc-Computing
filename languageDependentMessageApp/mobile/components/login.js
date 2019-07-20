@@ -1,8 +1,14 @@
 import React, {Component} from 'react';
 import {Text, View, Button, TextInput} from 'react-native';
 
+import axios from 'axios';
 
 export default class LoginScreen extends Component{
+
+    static navigationOptions = {
+        header: null
+    }
+
     constructor(props){
         super(props);
         this.state = {
@@ -21,15 +27,38 @@ export default class LoginScreen extends Component{
         }
         else {
             this.setState(() => ({ nameError: null }));
-            this.setState(() => ({ signedIn: true }));
             this.login()
         }
     }
 
-    login(){       
-        const {navigate} = this.props.navigation;
-        console.log(this.state.username+" "+this.state.password);
-        navigate('Users');
+    login(){
+         var loggedin = false;
+
+        axios.post("http://192.168.0.13:3000/login", {
+            username: this.state.username,
+            password: this.state.password
+        })
+        .then(function (response) {
+                  console.log(response);
+                })
+        .catch(err => {
+            console.log("error", err)
+          });
+
+//        if (this.state.username == "admin" && this.state.password == "password"){
+//            loggedin = true;
+//        }
+//
+        if (this.state.signedIn == true){
+            const {navigate} = this.props.navigation;
+            console.log(this.state.username+" "+this.state.password);
+            navigate('Users');
+        }
+        else {
+            alert("Enter correct username/password", [{
+                text: "Okay"
+            }])
+        }
     }
 
     render(){
@@ -48,6 +77,7 @@ export default class LoginScreen extends Component{
                 <TextInput
                     style={{height: 40, width: 400, textAlign: "center"}}
                     placeholder="Enter password here..."
+                    secureTextEntry = {true}
                     onChangeText= {(password) => this.setState({password})}
                     value = {this.state.password}
                 />

@@ -2,10 +2,10 @@ import React, {Component} from 'react';
 import {TextInput, StyleSheet, Text, View, Button} from 'react-native';
 import io from "socket.io-client";
 import {createStackNavigator, createAppContainer} from 'react-navigation';
-import HomeScreen from "./screens/home";
-import ChatScreen from "./screens/chat";
-import UsersScreen from "./screens/users";
-import LoginScreen from "./screens/login";
+import HomeScreen from "./components/home";
+import ChatScreen from "./components/chat";
+import UsersScreen from "./components/users";
+import LoginScreen from "./components/login";
 
 const MainNavigator = createStackNavigator(
   {
