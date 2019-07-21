@@ -8,7 +8,7 @@ var bodyParser = require('body-parser');
 
 import routes from './routes';
 
-mongoose.connect('mongodb://localhost/my_chat_app', { useNewUrlParser: true }).then(() => {
+mongoose.connect('mongodb://localhost:27017/my_chat_app', { useNewUrlParser: true }).then(() => {
     console.log('connected to db');
 }).catch((err) => {
     console.log("Error on db connection", err);
@@ -26,12 +26,9 @@ io.on("connection", socket => {
 });
 
 app.use(bodyParser.json());
-app.post("/login", (req, res, next) => {
-    console.log("in server", req)
-    res.send('hello world')
-})
-
-//app.use("/", routes);
-//app.use(bodyParser.json());
-
-server.listen(port, () => console.log("Server is running on port " + port));
+app.use("/", routes);
+// app.post("/login", function(req, res){
+//     console.log("in server index", req.body);
+// })
+server.listen(port, () => console.log("Server is running on port " + port))
+;

@@ -3,7 +3,8 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const usersSchema = new Schema({
-    email: String
+    email: String,
+    password: String
 });
 
-module.exports = mongoose.model("Users", usersSchema);
+module.exports = mongoose.model("users", usersSchema);

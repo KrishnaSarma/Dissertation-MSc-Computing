@@ -32,33 +32,42 @@ export default class LoginScreen extends Component{
     }
 
     login(){
-         var loggedin = false;
 
-        axios.post("http://192.168.0.13:3000/login", {
+        axios.post("http://192.168.0.10:3000/login", {
             username: this.state.username,
             password: this.state.password
         })
-        .then(function (response) {
-                  console.log(response);
-                })
-        .catch(err => {
-            console.log("error", err)
-          });
+        .then((response) => {
+            console.log("response lgin", response);
+            if (response.status == 201){
+                this.setState({
+                    signedIn: true
+                });
 
-//        if (this.state.username == "admin" && this.state.password == "password"){
-//            loggedin = true;
-//        }
-//
-        if (this.state.signedIn == true){
-            const {navigate} = this.props.navigation;
-            console.log(this.state.username+" "+this.state.password);
-            navigate('Users');
-        }
-        else {
-            alert("Enter correct username/password", [{
-                text: "Okay"
-            }])
-        }
+                console.log("login", this.state.username+" "+this.state.password)
+                const {navigate} = this.props.navigation
+                navigate('Users')
+            }
+            
+        })
+        .catch(err => {
+            var error = err.response
+            if (error.status == 404){
+                alert("Enter correct username/password.", [{
+                    text: "Okay"
+                }])
+            }
+            else if (err.status == 500){
+                alert("Internal server error. Please try again.", [{
+                    text: "Okay"
+                }])
+            }
+            else{
+                alert(err, [{
+                    text: "Okay"
+                }])
+            }
+          });
     }
 
     render(){

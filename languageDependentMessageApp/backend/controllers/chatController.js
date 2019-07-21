@@ -1,4 +1,4 @@
-import MsgDb from '../models/MsgDb';
+import messages from '../models/MsgDb';
 
 export const getMessages = (req, res) => {
     console.log("in get msg");

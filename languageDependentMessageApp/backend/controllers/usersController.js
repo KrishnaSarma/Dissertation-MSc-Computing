@@ -1,4 +1,4 @@
-import Users from '../models/UsersDb';
+import users from '../models/UsersDb';
 
 export const findAll = (req, res) => {
     console.log("in users");
