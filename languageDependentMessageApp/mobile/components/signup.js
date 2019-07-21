@@ -1,20 +1,14 @@
 import React, {Component} from 'react';
 import {Text, View, Button, TextInput} from 'react-native';
-
 import axios from 'axios';
 
-export default class LoginScreen extends Component{
-
-    // static navigationOptions = {
-    //     header: null
-    // }
-
+export default class SignupScreen extends Component{
+    
     constructor(props){
         super(props);
         this.state = {
             username: "",
-            password: "",
-            signedIn: false
+            password: ""
         }
     }
 
@@ -27,23 +21,24 @@ export default class LoginScreen extends Component{
         }
         else {
             this.setState(() => ({ nameError: null }));
-            this.login()
+            this.signup()
         }
     }
 
-    login(){
+    signup(){
 
-        axios.post("http://192.168.0.10:3000/login", {
+        axios.post("http://192.168.0.10:3000/signup", {
             username: this.state.username,
             password: this.state.password
         })
         .then((response) => {
-            console.log("response lgin", response);
+            console.log("response signup", response);
             if (response.status == 201){
-                this.setState({
-                    signedIn: true
-                });
-
+                
+                alert("Sign up successful", [{
+                    text: "Okay"
+                }])
+                
                 console.log("login", this.state.username+" "+this.state.password)
                 const {navigate} = this.props.navigation
                 navigate('Users')
@@ -68,9 +63,11 @@ export default class LoginScreen extends Component{
                 }])
             }
           });
+
     }
 
     render(){
+        const {navigate} = this.props.navigation;
         return(
             <View>
                 <Text style = {{height: 40, width: 400, textAlign: "center"}}>
@@ -98,7 +95,7 @@ export default class LoginScreen extends Component{
                 <Button 
                     style={{ height: 40, width : 40 }}
                     onPress={() => this.validateTextInput()}
-                    title="Login"
+                    title="Sign Up"
                 />
             </View>
         )

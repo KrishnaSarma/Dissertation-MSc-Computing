@@ -22,6 +22,9 @@ export default class HomeScreen extends Component{
                     onPress={() => navigate('Login')}
                     title="Sign In"
                 />
+                <Text style = {{height : 40, width : 400, textAlign: "center"}} onPress = {() => navigate('Signup')}>
+                    New to the app? Signup here!
+                </Text>
             </View>
         )
     }

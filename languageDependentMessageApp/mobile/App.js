@@ -1,16 +1,21 @@
 import React, {Component} from 'react';
 import {TextInput, StyleSheet, Text, View, Button} from 'react-native';
-import io from "socket.io-client";
-import {createStackNavigator, createAppContainer} from 'react-navigation';
+import {createStackNavigator, createAppContainer, createSwitchNavigator} from 'react-navigation';
 import HomeScreen from "./components/home";
 import ChatScreen from "./components/chat";
 import UsersScreen from "./components/users";
 import LoginScreen from "./components/login";
+import SignupScreen from "./components/signup";
+
+const authNavigator = createSwitchNavigator({
+  Login: {screen: LoginScreen},
+  Signup: {screen: SignupScreen}
+});
 
 const MainNavigator = createStackNavigator(
   {
     Home: {screen: HomeScreen},
-    Login: {screen: LoginScreen},
+    Auth: {screen: authNavigator},
     Users: {screen: UsersScreen},
     Chat: {screen: ChatScreen}
   },
@@ -31,21 +36,7 @@ export default class App extends Component {
     };
   }
 
-  componentDidMount() {
-    this.socket = io('http://192.168.0.13:3000');
-    this.socket.on("Chat Message", msg => {
-      this.setState({ chatMessages: [...this.state.chatMessages, msg] });
-      console.log(this.state.chatMessages);
-    });
-    
-  }
-
-  submitChatMessage(){
-    // investigate if reciever id can be sent to the server alongwith the message.
-    // update the chat list from the response
-    this.socket.emit("Chat Message", this.state.chatMessage);
-    this.setState({ chatMessage: "" })
-  }
+  
 
   render() {
 

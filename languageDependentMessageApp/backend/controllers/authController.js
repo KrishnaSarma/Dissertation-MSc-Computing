@@ -27,19 +27,17 @@ export const login = (req, response) => {
 export const signup = (req, response) => {
     var username = req.body.username;
     var password = req.body.password;
-    newUser = new users()
-    users.findOne({email: username})
-    .then((user)=>{
-        if(user){
-            if (user.password == password){       
-                return response.status(201).json({
-                    signin: true
-                });
-            }
-        }
-        return response.status(404).json({
-            signin: false
-        });
+    var newUser = new users({
+        email: username,
+        password: password
+    })
+    newUser.save()
+    .then((res)=>{
+        if(res){
+            return response.status(201).json({
+                signin: true
+            })
+        }        
     }).catch((err)=>{
         return response.status(500).json({
             data: "Internal server error!"
