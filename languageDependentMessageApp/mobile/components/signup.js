@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {Text, View, Button, TextInput} from 'react-native';
 import axios from 'axios';
 
+import AsyncStorage from '@react-native-community/async-storage';
+
 export default class SignupScreen extends Component{
     
     constructor(props){
@@ -25,6 +27,14 @@ export default class SignupScreen extends Component{
         }
     }
 
+    setValue = async () => {
+        try {
+            await AsyncStorage.setItem('@isLoggedIn', 'True')
+        } catch(e) {
+            console.log(e)
+        }
+      }
+
     signup(){
 
         axios.post("http://192.168.0.10:3000/signup", {
@@ -33,8 +43,8 @@ export default class SignupScreen extends Component{
         })
         .then((response) => {
             console.log("response signup", response);
-            if (response.status == 201){
-                
+            if (response.status == 201){                
+                this.setValue()
                 alert("Sign up successful", [{
                     text: "Okay"
                 }])

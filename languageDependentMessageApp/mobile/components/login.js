@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Text, View, Button, TextInput} from 'react-native';
-
+import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 
 export default class LoginScreen extends Component{
@@ -13,8 +13,7 @@ export default class LoginScreen extends Component{
         super(props);
         this.state = {
             username: "",
-            password: "",
-            signedIn: false
+            password: ""
         }
     }
 
@@ -40,10 +39,7 @@ export default class LoginScreen extends Component{
         .then((response) => {
             console.log("response lgin", response);
             if (response.status == 201){
-                this.setState({
-                    signedIn: true
-                });
-
+                this.setValue()
                 console.log("login", this.state.username+" "+this.state.password)
                 const {navigate} = this.props.navigation
                 navigate('Users')
@@ -68,6 +64,14 @@ export default class LoginScreen extends Component{
                 }])
             }
           });
+    }
+
+    setValue = async () => {
+        try {
+            await AsyncStorage.setItem('@isLoggedIn', 'True')
+        } catch(e) {
+            console.log(e)
+        }
     }
 
     render(){

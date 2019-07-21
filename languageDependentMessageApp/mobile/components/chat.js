@@ -4,6 +4,15 @@ import io from "socket.io-client";
 
 export default class LoginScreen extends Component{
 
+    
+    constructor(props) {
+        super(props);
+        this.state = {
+        chatMessage: "",
+        chatMessages: []
+        };
+    }
+
     componentDidMount() {
         this.socket = io('http://192.168.0.13:3000');
         this.socket.on("Chat Message", msg => {
@@ -21,6 +30,10 @@ export default class LoginScreen extends Component{
     }
 
     render(){
+        const chatMessages = this.state.chatMessages.map(chatMessage => (
+            <Text key={chatMessage}>{chatMessage}</Text>
+        ));
+
         const {navigate} = this.props.navigation;
         return(
             <View>
@@ -36,3 +49,28 @@ export default class LoginScreen extends Component{
         )
     }
 }
+
+
+      // <View style={styles.container}>
+      //   <TextInput 
+      //     style= {{ height: 40, borderWidth: 2 }} 
+      //     autoCorrect={false}
+      //     value={this.state.chatMessage}
+      //     onSubmitEditing={() => this.submitChatMessage()}
+      //     onChangeText={
+      //       chatMessage => {
+      //          this.setState({ chatMessage }); 
+      //       }
+      //     } 
+      //   />
+      //   {chatMessages}
+      // </View>
+
+      
+
+// const styles = StyleSheet.create({
+//     container: {
+//       flex: 1,
+//       backgroundColor: 'white'
+//     }
+//   });
