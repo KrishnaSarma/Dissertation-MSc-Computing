@@ -20,8 +20,8 @@ export default class App extends Component {
   getData = async () => {
     try {
       const loggedin = await AsyncStorage.getItem('@isLoggedIn')
-      console.log('state', loggedin)
-      console.log('store', loggedin)
+      // console.log('state', loggedin)
+      // console.log('store', loggedin)
       if(loggedin !== null) {
         this.setState(() => (
           { loggedIn: true }

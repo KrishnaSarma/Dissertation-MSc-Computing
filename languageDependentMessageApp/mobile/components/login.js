@@ -29,7 +29,6 @@ export default class LoginScreen extends Component{
             this.login()
         }
     }
-
     login(){
 
         axios.post("http://192.168.0.10:3000/login", {

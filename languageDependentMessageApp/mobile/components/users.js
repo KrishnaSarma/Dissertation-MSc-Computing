@@ -10,6 +10,7 @@ export default class LoginScreen extends Component{
     }
     
     removeValue = async () => {
+        console.log('remove value called');
         try {
             await AsyncStorage.removeItem('@isLoggedIn')
         } catch(e) {
@@ -19,17 +20,19 @@ export default class LoginScreen extends Component{
 
     logout(){
         const {navigate} = this.props.navigation;
+        console.log('logout pressed');
         this.removeValue()
         navigate("Home")
     }
-    
     render(){
         
         return(
             <View>
                 <Button 
                     style={{ height : 40, width : 40 }}
-                    onPress={this.logout()}
+                    onPress={()=>{
+                        this.logout()
+                    }}
                     title="Logout"
                 />
                 <Text style = {{height: 40, width: 50}}>
@@ -37,7 +40,11 @@ export default class LoginScreen extends Component{
                 </Text>
                 <Button 
                     style={{ height : 40, width : 40 }}
-                    onPress={() => navigate('Chat')}
+                    onPress={() =>
+                        {   
+                            console.log('chat button called')
+                            navigate('Chat')
+                        } }
                     title="Login"
                 />
             </View>
