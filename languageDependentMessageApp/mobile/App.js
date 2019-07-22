@@ -13,19 +13,20 @@ export default class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      loggedIn: false
+      // loggedIn: false
     }
   }
 
   getData = async () => {
     try {
-      const loggedin = await AsyncStorage.getItem('@isLoggedIn')
-      // console.log('state', loggedin)
-      // console.log('store', loggedin)
+      const loggedin = await AsyncStorage.getItem('isLoggedIn')
+      console.log('state', loggedin)
+      console.log('store', loggedin)
       if(loggedin !== null) {
-        this.setState(() => (
-          { loggedIn: true }
-        ))
+        return true;
+      }
+      else{
+        return false;
       }
     } catch(e) {
       console.log(e)
@@ -36,7 +37,7 @@ export default class App extends Component {
 
   render() {
 
-    this.getData();
+    var signedIn = this.getData();
 
     const loggedInNavigator = createStackNavigator({
       Users: {screen: UsersScreen},
@@ -57,7 +58,7 @@ export default class App extends Component {
       notSignedIn: {screen: AuthNavigator}
     },
     {
-      initialRouteName: this.state.loggedIn == true? 'signedIn' : 'notSignedIn'
+      initialRouteName: signedIn? 'signedIn' : 'notSignedIn'
     });
     
     const AppContainer = createAppContainer(MainNavigator)

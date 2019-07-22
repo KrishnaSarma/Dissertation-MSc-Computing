@@ -29,7 +29,7 @@ export default class SignupScreen extends Component{
 
     setValue = async () => {
         try {
-            await AsyncStorage.setItem('@isLoggedIn', 'True')
+            await AsyncStorage.setItem('isLoggedIn', 'True')
         } catch(e) {
             console.log(e)
         }
