@@ -20,8 +20,6 @@ export default class App extends Component {
   getData = async () => {
     try {
       const loggedin = await AsyncStorage.getItem('isLoggedIn')
-      console.log('state', loggedin)
-      console.log('store', loggedin)
       if(loggedin !== null) {
         return true;
       }
@@ -40,12 +38,22 @@ export default class App extends Component {
     var signedIn = this.getData();
 
     const loggedInNavigator = createStackNavigator({
-      Users: {screen: UsersScreen},
+      Users: {
+        screen: UsersScreen,
+        navigationOptions: {
+          header: null
+        }
+      },
       Chat: {screen: ChatScreen}
     })
   
     const AuthNavigator = createStackNavigator({
-      Home: {screen: HomeScreen},
+      Home: {
+        screen: HomeScreen,
+        navigationOptions: {
+          header: null
+        }
+      },
       Login: {screen: LoginScreen},
       Signup: {screen: SignupScreen}
     },

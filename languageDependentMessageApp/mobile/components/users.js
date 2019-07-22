@@ -3,15 +3,12 @@ import {Text, View, Button} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 
 
-export default class LoginScreen extends Component{
-
-    static navigationOptions = {
-        header: null
-    }
+export default class UsersScreen extends Component{
     
     removeValue = async () => {
         try {
             await AsyncStorage.removeItem('isLoggedIn')
+            await AsyncStorage.removeItem('username')
         } catch(e) {
             console.log(e)
         }
@@ -40,7 +37,7 @@ export default class LoginScreen extends Component{
                 <Button 
                     style={{ height : 40, width : 40 }}
                     onPress={() => navigate('Chat')}
-                    title="Login"
+                    title="Go to chat"
                 />
             </View>
         )

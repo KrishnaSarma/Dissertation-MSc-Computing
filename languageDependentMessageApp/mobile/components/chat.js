@@ -1,31 +1,73 @@
 import React, {Component} from 'react';
-import {Text, View, Button} from 'react-native';
+import {Text, View, Button, Tex, StyleSheet, TextInput} from 'react-native';
 import io from "socket.io-client";
+import AsyncStorage from '@react-native-community/async-storage';
 
-export default class LoginScreen extends Component{
+export default class ChatScreen extends Component{
 
     
     constructor(props) {
         super(props);
         this.state = {
         chatMessage: "",
-        chatMessages: []
+        chatMessages: [],
+        username: ""
         };
     }
 
-    componentDidMount() {
-        this.socket = io('http://192.168.0.13:3000');
+    componentDidMount = async () => {
+        this.socket = io('http://192.168.0.10:3000');
+        await this.getUsername();
+        this.socket.emit("User Name", {
+            sen: this.state.username,
+            rec: "krishna"
+        })
         this.socket.on("Chat Message", msg => {
-          this.setState({ chatMessages: [...this.state.chatMessages, msg] });
-          console.log(this.state.chatMessages);
+            this.setState({ chatMessages: [...this.state.chatMessages, JSON.stringify(msg)] });
+            console.log(this.state.chatMessages);
         });
+        this.socket.on("previousMessages", messages => {
+            this.setState({
+                chatMessages: messages
+            })
+            console.log("prev messages", this.state.chatMessages)
+
+        })
+        
+    }
+
+    componentWillUnmout() {
+        // do not work
+        // use willfocus
+        console.log("chat unmounter");
+        this.socket.disconnect();
+    }
+
+    getUsername = async () => {
+        try{
+            const user = await AsyncStorage.getItem('username')
+            console.log("username in chat screen", user);
+            this.setState({
+                username: user
+            })
+            console.log("username in state", this.state.username)
+        }
+        catch(e){
+            console.log(e);
+        }
         
     }
     
     submitChatMessage(){
         // investigate if reciever id can be sent to the server alongwith the message.
         // update the chat list from the response
-        this.socket.emit("Chat Message", this.state.chatMessage);
+        var message = {
+            sender: this.state.username,
+            // set the reciever as async storage while coming from users screen
+            reciever: "krishna",
+            message: this.state.chatMessage
+        }
+        this.socket.emit("Chat Message", message);
         this.setState({ chatMessage: "" })
     }
 
@@ -34,43 +76,34 @@ export default class LoginScreen extends Component{
             <Text key={chatMessage}>{chatMessage}</Text>
         ));
 
-        const {navigate} = this.props.navigation;
+        // const {navigate} = this.props.navigation;
         return(
-            <View>
-                <Text style = {{height: 40, width: 50}}>
-                    "Chat Screen"
-                </Text>
-                {/* <Button 
-                    style={{ height = 40, width = 40 }}
-                    onPress={() => navigate('Chat')}
-                    title="Login"
-                /> */}
+            <View style={styles.container}>
+                {chatMessages}
+                <TextInput 
+                    style= {{ height: 40, borderWidth: 2 }} 
+                    autoCorrect={false}
+                    value={this.state.chatMessage}
+                    // onSubmitEditing={() => this.submitChatMessage()}
+                    onChangeText={
+                        chatMessage => {
+                        this.setState({ chatMessage }); 
+                        }
+                    } 
+                />
+                <Button 
+                    style={{ height: 40, width : 40 }}
+                    onPress={() => this.submitChatMessage()}
+                    title="Send"
+                />
             </View>
         )
     }
-}
+}      
 
-
-      // <View style={styles.container}>
-      //   <TextInput 
-      //     style= {{ height: 40, borderWidth: 2 }} 
-      //     autoCorrect={false}
-      //     value={this.state.chatMessage}
-      //     onSubmitEditing={() => this.submitChatMessage()}
-      //     onChangeText={
-      //       chatMessage => {
-      //          this.setState({ chatMessage }); 
-      //       }
-      //     } 
-      //   />
-      //   {chatMessages}
-      // </View>
-
-      
-
-// const styles = StyleSheet.create({
-//     container: {
-//       flex: 1,
-//       backgroundColor: 'white'
-//     }
-//   });
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: 'white'
+    }
+  });
