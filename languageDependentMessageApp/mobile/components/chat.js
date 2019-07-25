@@ -18,10 +18,12 @@ export default class ChatScreen extends Component{
     componentDidMount = async () => {
         this.socket = io('http://192.168.0.10:3000');
         await this.getUsername();
-        this.socket.emit("User Name", {
-            sen: this.state.username,
-            rec: "krishna"
-        })
+        // this.socket.emit("User Name", {
+        //     sen: this.state.username,
+        //     rec: "krishna"
+        // })
+
+        this.socket.emit("User Name", this.state.username);
         this.socket.on("Chat Message", msg => {
             this.setState({ chatMessages: [...this.state.chatMessages, JSON.stringify(msg)] });
             console.log(this.state.chatMessages);
