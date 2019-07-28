@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
 import {Text, View, Button, Tex, StyleSheet, TextInput} from 'react-native';
-import io from "socket.io-client";
-import AsyncStorage from '@react-native-community/async-storage';
 
 export default class ChatScreen extends Component{
 
@@ -16,14 +14,11 @@ export default class ChatScreen extends Component{
     }
 
     componentDidMount = async () => {
-        this.socket = io('http://192.168.0.10:3000');
-        await this.getUsername();
-        // this.socket.emit("User Name", {
-        //     sen: this.state.username,
-        //     rec: "krishna"
-        // })
 
-        this.socket.emit("User Name", this.state.username);
+        this.socket = this.props.navigation.state.params.socket
+
+        console.log("in component did mount", this.props);
+
         this.socket.on("Chat Message", msg => {
             this.setState({ chatMessages: [...this.state.chatMessages, JSON.stringify(msg)] });
             console.log(this.state.chatMessages);
@@ -37,32 +32,9 @@ export default class ChatScreen extends Component{
         })
         
     }
-
-    componentWillUnmout() {
-        // do not work
-        // use willfocus
-        console.log("chat unmounter");
-        this.socket.disconnect();
-    }
-
-    getUsername = async () => {
-        try{
-            const user = await AsyncStorage.getItem('username')
-            console.log("username in chat screen", user);
-            this.setState({
-                username: user
-            })
-            console.log("username in state", this.state.username)
-        }
-        catch(e){
-            console.log(e);
-        }
-        
-    }
     
     submitChatMessage(){
-        // investigate if reciever id can be sent to the server alongwith the message.
-        // update the chat list from the response
+        console.log("pressing submit")
         var message = {
             sender: this.state.username,
             // set the reciever as async storage while coming from users screen
@@ -78,7 +50,6 @@ export default class ChatScreen extends Component{
             <Text key={chatMessage}>{chatMessage}</Text>
         ));
 
-        // const {navigate} = this.props.navigation;
         return(
             <View style={styles.container}>
                 {chatMessages}
@@ -101,7 +72,7 @@ export default class ChatScreen extends Component{
             </View>
         )
     }
-}      
+}
 
 const styles = StyleSheet.create({
     container: {

@@ -35,10 +35,10 @@ export default class LoginScreen extends Component{
             username: this.state.username,
             password: this.state.password
         })
-        .then((response) => {
+        .then(async (response) => {
             console.log("response lgin", response);
             if (response.status == 201){
-                this.setValue()
+                await this.setValue()
                 console.log("login", this.state.username+" "+this.state.password)
                 const {navigate} = this.props.navigation
                 navigate('Users')
@@ -69,6 +69,7 @@ export default class LoginScreen extends Component{
         try {
             await AsyncStorage.setItem('isLoggedIn', 'True');            
             await AsyncStorage.setItem('username', this.state.username);
+            console.log("Async Storage username", await AsyncStorage.getItem('username'));
         } catch(e) {
             console.log(e)
         }

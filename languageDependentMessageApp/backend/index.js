@@ -38,14 +38,16 @@ io.on("connection", socket => {
     // })
 
     socket.on("User Name", uname => {
-        var present = false
-        var usrIndex = {}
-        for(var user of users){
+        console.log("uname sent", uname);
+        let present = false
+        let usrIndex
+        users.forEach((user, index) => {
             if (user.uname == uname){
                 present = true
-                usrIndex = users.findIndex(user)
+                usrIndex = index
             }
-        }
+        });
+    
         if (!present){
             users.push({
                 uname: uname,
@@ -56,7 +58,8 @@ io.on("connection", socket => {
             users[usrIndex].socket = socket.id
         }
         
-        console.log("users list", users)
+        console.log("users list", users);
+
     })
 
     // @todo: send the reciever ONCE on choosing the reciever in user screen
@@ -84,9 +87,12 @@ io.on("connection", socket => {
      
     socket.on("disconnect", data => {
         console.log("Socket disconnected due to", data);
+        console.log("the socket disconnected is", socket.id);
         users.forEach((user, index) => {
-            if (user.key == socket.id){
-                users.slice(index, 1);
+            
+            if (user.socket == socket.id){
+                console.log("disconnect: user", user.uname)
+                users.splice(index, 1);
             }
         });
         console.log('users after disconnect', users);
