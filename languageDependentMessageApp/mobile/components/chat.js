@@ -16,6 +16,7 @@ export default class ChatScreen extends Component{
     componentDidMount = async () => {
 
         this.socket = this.props.navigation.state.params.socket
+        this.setState(() => ({ reciever: this.props.navigation.state.params.reciever }));
 
         console.log("in component did mount", this.props);
 
@@ -38,7 +39,7 @@ export default class ChatScreen extends Component{
         var message = {
             sender: this.state.username,
             // set the reciever as async storage while coming from users screen
-            reciever: "krishna",
+            reciever: this.state.reciever,
             message: this.state.chatMessage
         }
         this.socket.emit("Chat Message", message);
