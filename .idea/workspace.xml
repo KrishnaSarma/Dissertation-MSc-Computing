@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="53b49c50-a9ed-4637-9b80-70733dea3654" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/languageDependentMessageApp/mobile/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/languageDependentMessageApp/mobile/android/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/languageDependentMessageApp/mobile/android/app/src/main/java/com/mobile/MainApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/languageDependentMessageApp/mobile/android/app/src/main/java/com/mobile/MainApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/languageDependentMessageApp/mobile/android/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/languageDependentMessageApp/mobile/android/settings.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/languageDependentMessageApp/mobile/ios/Podfile" beforeDir="false" afterPath="$PROJECT_DIR$/languageDependentMessageApp/mobile/ios/Podfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/languageDependentMessageApp/mobile/ios/mobile.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/languageDependentMessageApp/mobile/ios/mobile.xcodeproj/project.pbxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/languageDependentMessageApp/mobile/ios/mobile/Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/languageDependentMessageApp/mobile/ios/mobile/Info.plist" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/languageDependentMessageApp/mobile/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/languageDependentMessageApp/mobile/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/languageDependentMessageApp/mobile/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/languageDependentMessageApp/mobile/package.json" afterDir="false" />
-    </list>
+    <list default="true" id="53b49c50-a9ed-4637-9b80-70733dea3654" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,7 +22,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/languageDependentMessageApp/mobile/package.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="408">
+            <state relative-caret-position="442">
               <caret line="26" column="22" selection-start-line="26" selection-start-column="22" selection-end-line="26" selection-end-column="22" />
             </state>
           </provider>
@@ -41,7 +31,7 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/languageDependentMessageApp/backend/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="208">
+            <state relative-caret-position="191">
               <caret line="24" column="41" selection-start-line="24" selection-start-column="41" selection-end-line="24" selection-end-column="41" />
             </state>
           </provider>
@@ -80,7 +70,7 @@
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-10" />
-    <option name="width" value="979" />
+    <option name="width" value="980" />
     <option name="height" value="1040" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -91,7 +81,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -120,6 +109,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="PackagesPane" />
     </panes>
   </component>
@@ -254,7 +244,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/languageDependentMessageApp/mobile/package.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
+        <state relative-caret-position="442">
           <caret line="26" column="22" selection-start-line="26" selection-start-column="22" selection-end-line="26" selection-end-column="22" />
         </state>
       </provider>
@@ -268,7 +258,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/languageDependentMessageApp/backend/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
+        <state relative-caret-position="191">
           <caret line="24" column="41" selection-start-line="24" selection-start-column="41" selection-end-line="24" selection-end-column="41" />
         </state>
       </provider>

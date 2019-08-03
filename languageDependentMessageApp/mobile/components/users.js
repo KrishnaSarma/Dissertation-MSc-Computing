@@ -4,7 +4,6 @@ import {Text, View, Button, FlatList, ActivityIndicator, TouchableHighlight } fr
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 
-import io from "socket.io-client";
 // import { FlatList } from 'react-native-gesture-handler';
 
 export default class UsersScreen extends Component{
@@ -23,10 +22,7 @@ export default class UsersScreen extends Component{
     }
 
     componentDidMount = async () => {
-        this.socket = io('http://192.168.0.10:3000');
         await this.getUsername();
-        console.log("uname to send", this.state.username);
-        this.socket.emit("User Name", this.state.username);
         await this.getUserList();
     }
 
@@ -82,7 +78,7 @@ export default class UsersScreen extends Component{
     logout = async (navigate) => {
         // const {navigate} = this.props.navigation;
         console.log('logout pressed');
-        await this.socket.disconnect();
+        // await this.socket.disconnect();
         this.removeValue()
         navigate("Home")
     }
@@ -188,7 +184,6 @@ export default class UsersScreen extends Component{
                 renderItem={({item, index, separators}) => (
                     <TouchableHighlight
                       onPress={() => navigate('Chat', {
-                                socket: this.socket,
                                 reciever: item
                             })}
                       onShowUnderlay={separators.highlight}

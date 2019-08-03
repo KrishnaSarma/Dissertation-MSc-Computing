@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import {Text, View, Button, Tex, StyleSheet, TextInput} from 'react-native';
+import io from "socket.io-client";
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class ChatScreen extends Component{
 
@@ -14,9 +16,18 @@ export default class ChatScreen extends Component{
     }
 
     componentDidMount = async () => {
+        const { navigation } = this.props;
 
-        this.socket = this.props.navigation.state.params.socket
-        this.setState(() => ({ reciever: this.props.navigation.state.params.reciever }));
+        this.socket = io('http://192.168.0.10:3000');
+        await this.getUsername();
+        console.log("uname to send", this.state.username);
+        this.socket.emit("User Name", this.state.username);
+
+        this.blurListener = navigation.addListener("willBlur", () => {
+            this.socket.close();
+        });
+
+        this.setState(() => ({ reciever: navigation.state.params.reciever }));
 
         console.log("in component did mount", this.props);
 
@@ -31,14 +42,32 @@ export default class ChatScreen extends Component{
             console.log("prev messages", this.state.chatMessages)
 
         })
+      
+    }
+
+    getUsername = async () => {
+        try{
+            const user = await AsyncStorage.getItem('username')
+            console.log("username in user screen", user);
+            await this.setState({
+                username: user
+            })
+            console.log("username in state", this.state.username)
+        }
+        catch(e){
+            console.log(e);
+        }
         
+    }
+
+    componentWillUnmount = () => {
+        this.blurListener.remove();
     }
     
     submitChatMessage(){
         console.log("pressing submit")
         var message = {
             sender: this.state.username,
-            // set the reciever as async storage while coming from users screen
             reciever: this.state.reciever,
             message: this.state.chatMessage
         }

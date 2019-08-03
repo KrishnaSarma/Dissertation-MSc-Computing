@@ -21,6 +21,10 @@ var reciever = "";
 
 io.on("connection", socket => {
     console.log("a user connected: " + socket.id);
+
+    //initially check for any unread messages for the username and send it.
+    //implement push notification.
+    
     socket.on("User Name", async uname => {
         console.log("uname sent", uname);
         let present = false
@@ -45,15 +49,19 @@ io.on("connection", socket => {
         console.log("users list", users);
 
     })
+    
     socket.on("Chat Message", msg => {
         var reciever_socket = {}
-        console.log(msg.reciever);
+        console.log("reciever", msg.reciever);
         for(var user of users){
             if (user.uname == msg.reciever){
                 reciever_socket = user.socket
                 break
             }
         }
+        // if reciever socket is not present
+        // store the message as unread in db
+        // else send the message and store it as read
         console.log("reciever socket", reciever_socket)
         socket.to(reciever_socket).emit("Chat Message", msg.message);
         socket.emit("Chat Message", msg.message)
