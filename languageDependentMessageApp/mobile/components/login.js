@@ -30,13 +30,13 @@ export default class LoginScreen extends Component{
         }
     }
     login(){
-
-        axios.post("http://192.168.0.10:3000/login", {
+        console.log("in login")
+        axios.post("http://192.168.0.12:3000/login", {
             username: this.state.username,
             password: this.state.password
         })
         .then(async (response) => {
-            console.log("response lgin", response);
+            console.log("response login", response);
             if (response.status == 201){
                 await this.setValue()
                 console.log("login", this.state.username+" "+this.state.password)

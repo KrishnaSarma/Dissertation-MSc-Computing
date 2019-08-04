@@ -22,13 +22,15 @@ export default class UsersScreen extends Component{
     }
 
     componentDidMount = async () => {
+        console.log("in users")
+
         await this.getUsername();
         await this.getUserList();
     }
 
     getUserList = () => {
 
-        axios.get("http://192.168.0.10:3000/users", {
+        axios.get("http://192.168.0.12:3000/users", {
             params: {
                 username: this.state.username
             }
@@ -76,9 +78,7 @@ export default class UsersScreen extends Component{
     }
 
     logout = async (navigate) => {
-        // const {navigate} = this.props.navigation;
         console.log('logout pressed');
-        // await this.socket.disconnect();
         this.removeValue()
         navigate("Home")
     }
@@ -195,13 +195,13 @@ export default class UsersScreen extends Component{
                   )}
                 />
 
-                <Button 
+                {/* <Button 
                     style={{ height : 40, width : 40 }}
                     onPress={() => navigate('Chat', {
                         socket: this.socket
                     })}
                     title="Go to chat"
-                />
+                /> */}
             </View>
         )
     }

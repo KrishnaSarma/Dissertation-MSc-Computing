@@ -8,7 +8,7 @@ import * as chatController from "./controllers/chatController";
 routes.post("/login", authController.login);
 routes.post("/signup", authController.signup);
 routes.get("/users", userController.findAll);
-routes.get("/chatMessages", chatController.getMessages);
+routes.get("/getMessages", chatController.getMessages);
 routes.post("/sentMessage", chatController.sendMessage);
 
 export default routes;

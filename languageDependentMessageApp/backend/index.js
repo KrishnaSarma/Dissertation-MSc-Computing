@@ -5,7 +5,7 @@ const io = require('socket.io').listen(server);
 const port = 3000;
 var mongoose = require("mongoose");
 var bodyParser = require('body-parser');
-import {getMessages, sendMessage, recieveMessage} from "./controllers/chatController";
+import {saveMessage} from "./controllers/chatController";
 
 import routes from './routes';
 
@@ -51,7 +51,7 @@ io.on("connection", socket => {
     })
     
     socket.on("Chat Message", msg => {
-        var reciever_socket = {}
+        let reciever_socket = {}
         console.log("reciever", msg.reciever);
         for(var user of users){
             if (user.uname == msg.reciever){
@@ -62,9 +62,16 @@ io.on("connection", socket => {
         // if reciever socket is not present
         // store the message as unread in db
         // else send the message and store it as read
-        console.log("reciever socket", reciever_socket)
-        socket.to(reciever_socket).emit("Chat Message", msg.message);
-        socket.emit("Chat Message", msg.message)
+
+        if(reciever_socket == {}){
+            saveMessage(msg, 0);
+        }
+        else{
+            saveMessage(msg, 1);
+            console.log("reciever socket", reciever_socket)
+            socket.to(reciever_socket).emit("Chat Message", msg.message);
+            socket.emit("Chat Message", msg.message)
+        }        
     });
      
     socket.on("disconnect", data => {

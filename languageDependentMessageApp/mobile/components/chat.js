@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Text, View, Button, Tex, StyleSheet, TextInput} from 'react-native';
 import io from "socket.io-client";
 import AsyncStorage from '@react-native-community/async-storage';
+import axios from 'axios';
 
 export default class ChatScreen extends Component{
 
@@ -18,7 +19,7 @@ export default class ChatScreen extends Component{
     componentDidMount = async () => {
         const { navigation } = this.props;
 
-        this.socket = io('http://192.168.0.10:3000');
+        this.socket = io('http://192.168.0.12:3000');
         await this.getUsername();
         console.log("uname to send", this.state.username);
         this.socket.emit("User Name", this.state.username);
@@ -28,8 +29,8 @@ export default class ChatScreen extends Component{
         });
 
         this.setState(() => ({ reciever: navigation.state.params.reciever }));
-
-        console.log("in component did mount", this.props);
+        
+        await this.getChatMessages(this.state.username, this.state.reciever)
 
         this.socket.on("Chat Message", msg => {
             this.setState({ chatMessages: [...this.state.chatMessages, JSON.stringify(msg)] });
@@ -58,6 +59,21 @@ export default class ChatScreen extends Component{
             console.log(e);
         }
         
+    }
+
+    getChatMessages(sender, reciever){
+        axios.get("http://192.168.0.12:3000/getMessages", {
+            params: {
+                sender: sender,
+                reciever: reciever
+            }
+        })
+        .then( (response) => {
+            console.log("chat response", response);
+        })
+        .catch((err) => {
+            console.log("err")
+        })
     }
 
     componentWillUnmount = () => {
