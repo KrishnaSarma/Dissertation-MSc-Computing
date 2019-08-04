@@ -5,11 +5,8 @@ export const getMessages = async (req, response) => {
     let sender = {}
     let reciever = {}
 
-    console.log("request", req.query)
-
     await users.findOne({email: req.query.sender})
     .then( (user) => {
-        console.log("user returned", user)
         sender = user
     })
     .catch( (err) => {
@@ -18,12 +15,13 @@ export const getMessages = async (req, response) => {
 
     await users.findOne({email: req.query.reciever})
     .then( (user) => {
-        console.log("user returned", user)
         reciever = user
     })
     .catch( (err) => {
         console.log(err)
     })
+
+    console.log("sender", sender)
 
     messages.find({
         $or : [
@@ -39,8 +37,25 @@ export const getMessages = async (req, response) => {
     })
     .then((messages) => {
         console.log("messages returned", messages)
+        let msgList = []
+
+        for(let msg of messages){
+            let reformedMsg = {}
+            if(msg.sender.toString() == sender._id.toString()){
+                reformedMsg.sender = sender.email
+                reformedMsg.message = msg.text
+            }
+            else{
+                reformedMsg.sender = reciever.email
+                reformedMsg.message = msg.reciever_text
+            }
+            reformedMsg.timestamp = msg.dateTime
+            reformedMsg.delivered = msg.delivered
+            msgList.push(reformedMsg)
+        }
+
         return response.status(201).json({
-            messages
+            msgList
         });
     }).catch((err) => {
         console.log(err)

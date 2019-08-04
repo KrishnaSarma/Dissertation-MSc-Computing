@@ -69,8 +69,12 @@ io.on("connection", socket => {
         else{
             saveMessage(msg, 1);
             console.log("reciever socket", reciever_socket)
-            socket.to(reciever_socket).emit("Chat Message", msg.message);
-            socket.emit("Chat Message", msg.message)
+            let msgToSend = {
+                sender: msg.sender,
+                message: msg.message
+            }
+            socket.to(reciever_socket).emit("Chat Message", msgToSend);
+            socket.emit("Chat Message", msgToSend)
         }        
     });
      

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View, Button, Tex, StyleSheet, TextInput} from 'react-native';
+import {Text, View, Button, Tex, StyleSheet, TextInput, FlatList, ActivityIndicator, TouchableHighlight} from 'react-native';
 import io from "socket.io-client";
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
@@ -21,7 +21,6 @@ export default class ChatScreen extends Component{
 
         this.socket = io('http://192.168.0.12:3000');
         await this.getUsername();
-        console.log("uname to send", this.state.username);
         this.socket.emit("User Name", this.state.username);
 
         this.blurListener = navigation.addListener("willBlur", () => {
@@ -33,16 +32,8 @@ export default class ChatScreen extends Component{
         await this.getChatMessages(this.state.username, this.state.reciever)
 
         this.socket.on("Chat Message", msg => {
-            this.setState({ chatMessages: [...this.state.chatMessages, JSON.stringify(msg)] });
-            console.log(this.state.chatMessages);
+            this.setState({ chatMessages: [...this.state.chatMessages, msg] });
         });
-        this.socket.on("previousMessages", messages => {
-            this.setState({
-                chatMessages: messages
-            })
-            console.log("prev messages", this.state.chatMessages)
-
-        })
       
     }
 
@@ -53,7 +44,6 @@ export default class ChatScreen extends Component{
             await this.setState({
                 username: user
             })
-            console.log("username in state", this.state.username)
         }
         catch(e){
             console.log(e);
@@ -70,9 +60,14 @@ export default class ChatScreen extends Component{
         })
         .then( (response) => {
             console.log("chat response", response);
+            this.setState({
+                chatMessages: response.data.msgList
+            })
+            console.log("chat Messages", this.state.chatMessages)
+            
         })
         .catch((err) => {
-            console.log("err")
+            console.log("err", err)
         })
     }
 
@@ -88,17 +83,36 @@ export default class ChatScreen extends Component{
             message: this.state.chatMessage
         }
         this.socket.emit("Chat Message", message);
-        this.setState({ chatMessage: "" })
+        this.setState({ 
+            chatMessage: ""
+         })
     }
 
     render(){
-        const chatMessages = this.state.chatMessages.map(chatMessage => (
-            <Text key={chatMessage}>{chatMessage}</Text>
+        const chatMessages = this.state.chatMessages.map((msg, i) => (
+            <View key={i}>
+                <Text style={{color: "blue"}}>{msg.sender}: {msg.message}</Text>
+            </View>
         ));
 
         return(
             <View style={styles.container}>
                 {chatMessages}
+                {/* <FlatList
+                data={this.state.chatMessages}
+                renderItem={({item, index, separators}) => (
+                    <TouchableHighlight
+                    //   onPress={() => navigate('Chat', {
+                    //             reciever: item
+                    //         })}
+                      onShowUnderlay={separators.highlight}
+                      onHideUnderlay={separators.unhighlight}>
+                      <View style={{backgroundColor: 'white'}}>
+                        <Text>{item}</Text>
+                      </View>
+                    </TouchableHighlight>
+                  )}
+                /> */}
                 <TextInput 
                     style= {{ height: 40, borderWidth: 2 }} 
                     autoCorrect={false}
@@ -106,9 +120,9 @@ export default class ChatScreen extends Component{
                     // onSubmitEditing={() => this.submitChatMessage()}
                     onChangeText={
                         chatMessage => {
-                        this.setState({ chatMessage }); 
+                            this.setState({ chatMessage})
                         }
-                    } 
+                    }
                 />
                 <Button 
                     style={{ height: 40, width : 40 }}
