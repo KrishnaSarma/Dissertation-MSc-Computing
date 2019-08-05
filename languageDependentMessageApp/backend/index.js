@@ -3,9 +3,10 @@ const app = express();
 const server = require("http").createServer(app);
 const io = require('socket.io').listen(server);
 const port = 3000;
-var mongoose = require("mongoose");
-var bodyParser = require('body-parser');
-import {saveMessage} from "./controllers/chatController";
+const mongoose = require("mongoose");
+const bodyParser = require('body-parser');
+
+import {saveMessage, convertMessage} from "./controllers/chatController";
 
 import routes from './routes';
 
@@ -59,9 +60,17 @@ io.on("connection", socket => {
                 break
             }
         }
-        // if reciever socket is not present
-        // store the message as unread in db
-        // else send the message and store it as read
+
+        const recieverLanguage = "de";
+        const senderLanguage = "en";
+
+        if(recieverLanguage != senderLanguage){
+            msg.reciever_message = convertMessage(msg.message, senderLanguage, recieverLanguage)
+        }
+
+        else{
+            msg.reciever_message = msg.message
+        }
 
         if(reciever_socket == {}){
             saveMessage(msg, 0);
@@ -71,10 +80,10 @@ io.on("connection", socket => {
             console.log("reciever socket", reciever_socket)
             let msgToSend = {
                 sender: msg.sender,
-                message: msg.message
+                message: msg.reciever_message
             }
             socket.to(reciever_socket).emit("Chat Message", msgToSend);
-            socket.emit("Chat Message", msgToSend)
+            // socket.emit("Chat Message", msgToSend)
         }        
     });
      

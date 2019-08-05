@@ -1,6 +1,9 @@
 import messages from '../models/MsgDb';
 import users from '../models/UsersDb';
 
+import request from "request";
+import uuidv4 from "uuid/v4";
+
 export const getMessages = async (req, response) => {
     let sender = {}
     let reciever = {}
@@ -99,7 +102,7 @@ export const saveMessage = async(msg, sent) => {
         text: msg.message,
         sender: sender._id,
         reciever: reciever._id,
-        reciever_text: msg.message,
+        reciever_text: msg.reciever_message,
         delivered: sent
     });
 
@@ -112,6 +115,39 @@ export const saveMessage = async(msg, sent) => {
     }).catch((err)=>{
         console.log(err)
     })
+}
+
+export const convertMessage = async (message, sourceLanguage, finalLanguage) => {
+    const subscriptionKey = "3f9c828f2abc46359519882f4a0e96ad"
+
+    let options = {
+        method: 'POST',
+        baseUrl: 'https://api.cognitive.microsofttranslator.com/',
+        url: 'translate',
+        qs: {
+          'api-version': '3.0',
+          'to': [finalLanguage]
+        },
+        headers: {
+          'Ocp-Apim-Subscription-Key': subscriptionKey,
+          'Content-type': 'application/json',
+          'X-ClientTraceId': uuidv4().toString()
+        },
+        body: [{
+              'text': message
+        }],
+        json: true,
+    };
+
+    request(options, function(err, res, body){
+        console.log("res", res)
+
+        console.log("err", err)
+
+        console.log("body", JSON.stringify(body, null, 4));
+
+        return (message)
+    });
 }
 
 // handle getMessages and sendMessage function

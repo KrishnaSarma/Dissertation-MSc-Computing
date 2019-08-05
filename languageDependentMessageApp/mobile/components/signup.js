@@ -14,6 +14,8 @@ export default class SignupScreen extends Component{
         }
     }
 
+    // @todo make a get request for languages to sever for the language drop down list.
+
     validateTextInput(){
         if (this.state.username.trim() === "") {
             this.setState(() => ({ nameError: "Username required." }));
