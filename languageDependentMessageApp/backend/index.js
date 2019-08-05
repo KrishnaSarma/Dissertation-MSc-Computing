@@ -65,36 +65,36 @@ io.on("connection", socket => {
         const senderLanguage = "en";
 
         if(recieverLanguage != senderLanguage){
-             convertMessage(msg.message, recieverLanguage).then((res)=>{
-                console.log("3.1 returned", res)
-                // msg.reciever_message = res
-            }).catch((err)=>{
-                console.log('async errorrrrr',err)
-            })
+
+            msg.reciever_message = await convertMessage(msg.message, recieverLanguage)
+            console.log("3.1 recieverLanguage", msg.reciever_message)
+            //  convertMessage(msg.message, recieverLanguage).then((res)=>{
+            //     console.log("3.1 returned", res)
+            //     msg.reciever_message = res
+            // }).catch((err)=>{
+            //     console.log('async errorrrrr',err)
+            // })
             
         }
 
         else{
             msg.reciever_message = msg.message
+        }      
+
+        console.log("4 msg to save", msg)
+        if(reciever_socket == {}){
+        saveMessage(msg, 0);
         }
-
-        setTimeout( function(){            
-
-            console.log("4 msg to save", msg)
-            if(reciever_socket == {}){
-            saveMessage(msg, 0);
+        else{
+            saveMessage(msg, 1);
+            console.log("reciever socket", reciever_socket)
+            let msgToSend = {
+                sender: msg.sender,
+                message: msg.reciever_message
             }
-            else{
-                saveMessage(msg, 1);
-                console.log("reciever socket", reciever_socket)
-                let msgToSend = {
-                    sender: msg.sender,
-                    message: msg.reciever_message
-                }
-                socket.to(reciever_socket).emit("Chat Message", msgToSend);
-                // socket.emit("Chat Message", msgToSend)
-            }
-        }, 3000)        
+            socket.to(reciever_socket).emit("Chat Message", msgToSend);
+            // socket.emit("Chat Message", msgToSend)
+        }        
     });
      
     socket.on("disconnect", data => {

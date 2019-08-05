@@ -119,7 +119,7 @@ export const saveMessage = async(msg, sent) => {
 
 export const convertMessage =  (message, finalLanguage) => {
     return new Promise( (resolve,reject) => {
-    const subscriptionKey = "3f9c828f2abc46359519882f4a0e96ad"
+    const subscriptionKey = ""
 
     let options = {
         method: 'POST',
@@ -149,7 +149,7 @@ export const convertMessage =  (message, finalLanguage) => {
 
         console.log("3 body", JSON.stringify(body, null, 4));
 
-        console.log("3.0 translated", body[0].translations[0].text)
+        console.log("err translator", err);
 
        
             if(!err){
