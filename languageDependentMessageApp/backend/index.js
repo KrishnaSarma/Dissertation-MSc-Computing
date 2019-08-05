@@ -51,9 +51,9 @@ io.on("connection", socket => {
 
     })
     
-    socket.on("Chat Message", msg => {
+    socket.on("Chat Message", async msg => {
         let reciever_socket = {}
-        console.log("reciever", msg.reciever);
+        console.log("1 reciever", msg.reciever);
         for(var user of users){
             if (user.uname == msg.reciever){
                 reciever_socket = user.socket
@@ -65,26 +65,36 @@ io.on("connection", socket => {
         const senderLanguage = "en";
 
         if(recieverLanguage != senderLanguage){
-            msg.reciever_message = convertMessage(msg.message, senderLanguage, recieverLanguage)
+             convertMessage(msg.message, recieverLanguage).then((res)=>{
+                console.log("3.1 returned", res)
+                // msg.reciever_message = res
+            }).catch((err)=>{
+                console.log('async errorrrrr',err)
+            })
+            
         }
 
         else{
             msg.reciever_message = msg.message
         }
 
-        if(reciever_socket == {}){
+        setTimeout( function(){            
+
+            console.log("4 msg to save", msg)
+            if(reciever_socket == {}){
             saveMessage(msg, 0);
-        }
-        else{
-            saveMessage(msg, 1);
-            console.log("reciever socket", reciever_socket)
-            let msgToSend = {
-                sender: msg.sender,
-                message: msg.reciever_message
             }
-            socket.to(reciever_socket).emit("Chat Message", msgToSend);
-            // socket.emit("Chat Message", msgToSend)
-        }        
+            else{
+                saveMessage(msg, 1);
+                console.log("reciever socket", reciever_socket)
+                let msgToSend = {
+                    sender: msg.sender,
+                    message: msg.reciever_message
+                }
+                socket.to(reciever_socket).emit("Chat Message", msgToSend);
+                // socket.emit("Chat Message", msgToSend)
+            }
+        }, 3000)        
     });
      
     socket.on("disconnect", data => {

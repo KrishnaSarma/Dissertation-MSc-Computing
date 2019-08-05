@@ -82,7 +82,7 @@ export const saveMessage = async(msg, sent) => {
 
     await users.findOne({email: msg.sender})
     .then( (user) => {
-        console.log("user", user._id)
+        console.log("5 user", user._id)
         sender = user
     })
     .catch( (err) => {
@@ -91,13 +91,13 @@ export const saveMessage = async(msg, sent) => {
 
     await users.findOne({email: msg.reciever})
     .then( (user) => {
-        console.log("user", user._id)
+        console.log("6 user", user._id)
         reciever = user
     })
     .catch( (err) => {
         console.log("err", err)
     })
-    console.log("msg", msg)
+    console.log("7 msg", msg)
     let newMessage = new messages({
         text: msg.message,
         sender: sender._id,
@@ -110,14 +110,15 @@ export const saveMessage = async(msg, sent) => {
     .then((res)=>{
         
         if(res){
-            console.log("message saved", res)
+            console.log("8 message saved", res)
         }        
     }).catch((err)=>{
         console.log(err)
     })
 }
 
-export const convertMessage = async (message, sourceLanguage, finalLanguage) => {
+export const convertMessage =  (message, finalLanguage) => {
+    return new Promise( (resolve,reject) => {
     const subscriptionKey = "3f9c828f2abc46359519882f4a0e96ad"
 
     let options = {
@@ -139,14 +140,26 @@ export const convertMessage = async (message, sourceLanguage, finalLanguage) => 
         json: true,
     };
 
-    request(options, function(err, res, body){
-        console.log("res", res)
+     request(options, function(err, res, body){
+        // console.log("res", res)
 
-        console.log("err", err)
+        // console.log("err", err)
 
-        console.log("body", JSON.stringify(body, null, 4));
+        console.log("2 json body", body)
 
-        return (message)
+        console.log("3 body", JSON.stringify(body, null, 4));
+
+        console.log("3.0 translated", body[0].translations[0].text)
+
+       
+            if(!err){
+                resolve((body[0].translations[0].text))
+
+            }
+            if(err){
+                reject('error')
+            }
+        }) 
     });
 }
 
