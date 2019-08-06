@@ -6,7 +6,8 @@ const port = 3000;
 const mongoose = require("mongoose");
 const bodyParser = require('body-parser');
 
-import {saveMessage, convertMessage} from "./controllers/chatController";
+import {saveMessage} from "./controllers/chatController";
+import {translateText} from "./controllers/translatorController";
 
 import routes from './routes';
 
@@ -66,7 +67,7 @@ io.on("connection", socket => {
 
         if(recieverLanguage != senderLanguage){
 
-            msg.reciever_message = await convertMessage(msg.message, recieverLanguage)
+            msg.reciever_message = await translateText(msg.message, recieverLanguage)
             console.log("3.1 recieverLanguage", msg.reciever_message)
             //  convertMessage(msg.message, recieverLanguage).then((res)=>{
             //     console.log("3.1 returned", res)

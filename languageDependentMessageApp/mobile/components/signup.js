@@ -14,7 +14,34 @@ export default class SignupScreen extends Component{
         }
     }
 
-    // @todo make a get request for languages to sever for the language drop down list.
+    componentDidMount = async () =>{
+        await this.getLanguages();
+    }
+
+    getLanguages(){
+        axios.get("http://192.168.0.12:3000/getLanguages")
+            .then((response) => {
+                console.log("languages response", response)
+                let languages = []
+                if (response.status == 201){
+                    for(var lang of response.data.body.dictionary){
+                        console.log("lang", lang)
+                        languages.push(lang.name);
+                    }
+                    this.setState({
+                        languages : languages
+                    })
+                }
+                console.log("language list", this.state.languages)
+                
+            })
+            .catch(err => {
+                console.log("error in language", err)
+                alert("Couldn't load languages. Please refresh page and try again.", [{
+                    text: "Okay"
+                }])
+            })
+    }
 
     validateTextInput(){
         if (this.state.username.trim() === "") {
@@ -40,7 +67,7 @@ export default class SignupScreen extends Component{
 
     signup(){
 
-        axios.post("http://192.168.0.10:3000/signup", {
+        axios.post("http://192.168.0.12:3000/signup", {
             username: this.state.username,
             password: this.state.password
         })

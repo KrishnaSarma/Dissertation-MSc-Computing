@@ -1,9 +1,6 @@
 import messages from '../models/MsgDb';
 import users from '../models/UsersDb';
 
-import request from "request";
-import uuidv4 from "uuid/v4";
-
 export const getMessages = async (req, response) => {
     let sender = {}
     let reciever = {}
@@ -67,13 +64,13 @@ export const getMessages = async (req, response) => {
     console.log("get all messages between 2 users");
 }
 
-export const sendMessage = (req, res) => {
-    console.log("sent message");
-}
+// export const sendMessage = (req, res) => {
+//     console.log("sent message");
+// }
 
-export const recieveMessage = (req, res) => {
-    console.log("recieved message")
-}
+// export const recieveMessage = (req, res) => {
+//     console.log("recieved message")
+// }
 
 export const saveMessage = async(msg, sent) => {
 
@@ -116,52 +113,3 @@ export const saveMessage = async(msg, sent) => {
         console.log(err)
     })
 }
-
-export const convertMessage =  (message, finalLanguage) => {
-    return new Promise( (resolve,reject) => {
-    const subscriptionKey = ""
-
-    let options = {
-        method: 'POST',
-        baseUrl: 'https://api.cognitive.microsofttranslator.com/',
-        url: 'translate',
-        qs: {
-          'api-version': '3.0',
-          'to': [finalLanguage]
-        },
-        headers: {
-          'Ocp-Apim-Subscription-Key': subscriptionKey,
-          'Content-type': 'application/json',
-          'X-ClientTraceId': uuidv4().toString()
-        },
-        body: [{
-              'text': message
-        }],
-        json: true,
-    };
-
-     request(options, function(err, res, body){
-        // console.log("res", res)
-
-        // console.log("err", err)
-
-        console.log("2 json body", body)
-
-        console.log("3 body", JSON.stringify(body, null, 4));
-
-        console.log("err translator", err);
-
-       
-            if(!err){
-                resolve((body[0].translations[0].text))
-
-            }
-            if(err){
-                reject('error')
-            }
-        }) 
-    });
-}
-
-// handle getMessages and sendMessage function
-
