@@ -3,6 +3,7 @@ import {Text, View, Button, FlatList, ActivityIndicator, TouchableHighlight } fr
 // import { List, ListItem, SearchBar } from "react-native-elements";
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
+import {ipAddress} from "../constants"
 
 // import { FlatList } from 'react-native-gesture-handler';
 
@@ -11,7 +12,7 @@ export default class UsersScreen extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            username: "",
+            email: "",
             users: [],
             loading: false,
             page: 1,
@@ -30,16 +31,16 @@ export default class UsersScreen extends Component{
 
     getUserList = () => {
 
-        axios.get("http://192.168.0.12:3000/users", {
+        axios.get("http://"+ipAddress+":3000/users", {
             params: {
-                username: this.state.username
+                email: this.state.email
             }
         })
             .then((response) => {
                 console.log("users response", response)
                 if (response.status == 201){
                     this.setState({
-                        users : response.data.username 
+                        users : response.data 
                     })
                 }
                 console.log("user list", this.state.users)
@@ -55,12 +56,12 @@ export default class UsersScreen extends Component{
 
     getUsername = async () => {
         try{
-            const user = await AsyncStorage.getItem('username')
-            console.log("username in user screen", user);
+            const user = await AsyncStorage.getItem('email')
+            console.log("email in user screen", user);
             await this.setState({
-                username: user
+                email: user
             })
-            console.log("username in state", this.state.username)
+            console.log("email in state", this.state.email)
         }
         catch(e){
             console.log(e);
@@ -71,7 +72,7 @@ export default class UsersScreen extends Component{
     removeValue = async () => {
         try {
             await AsyncStorage.removeItem('isLoggedIn')
-            await AsyncStorage.removeItem('username')
+            await AsyncStorage.removeItem('email')
         } catch(e) {
             console.log(e)
         }
@@ -184,12 +185,12 @@ export default class UsersScreen extends Component{
                 renderItem={({item, index, separators}) => (
                     <TouchableHighlight
                       onPress={() => navigate('Chat', {
-                                reciever: item
+                                reciever: item.email
                             })}
                       onShowUnderlay={separators.highlight}
                       onHideUnderlay={separators.unhighlight}>
                       <View style={{backgroundColor: 'white'}}>
-                        <Text>{item}</Text>
+                        <Text>{item.username}</Text>
                       </View>
                     </TouchableHighlight>
                   )}

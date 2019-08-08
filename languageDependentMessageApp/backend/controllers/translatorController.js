@@ -17,17 +17,19 @@ export const getLanguages = async (req, response) => {
     };
 
     request(options, function(err, res, body){
-        // console.log(JSON.stringify(body, null, 4));
 
-        // console.log("json body", body.dictionary)
-        // let languages = []
+        // @todo: add error handling here
 
-        // for (var lang of body.dictionary){
-        //     languages.push(lang.name)
-        // }
+        let languages = []
 
-        // console.log("languages list", languages)
-        return response.status(201).json({body})
+        for (var lang in body.dictionary){
+            languages.push({
+                name: body.dictionary[lang].name,
+                code: lang
+            })
+        }  
+
+        return response.status(201).json(languages)
     });
 
     
@@ -58,9 +60,9 @@ export const translateText = (message, finalLanguage) => {
 
         request(options, function(err, res, body){
 
-            console.log("2 json body", body)
+            console.log("4 json body", body)
 
-            console.log("3 body", JSON.stringify(body, null, 4));
+            console.log("5 body", JSON.stringify(body, null, 4));
 
             console.log("err translator", err);
 

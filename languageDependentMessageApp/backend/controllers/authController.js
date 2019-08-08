@@ -1,10 +1,9 @@
 import users from '../models/UsersDb';
-import { type } from 'os';
 
 export const login = (req, response) => {
-    var username = req.body.username;
+    var email = req.body.email;
     var password = req.body.password;
-    users.findOne({email: username})
+    users.findOne({email: email})
     .then((user)=>{
         if(user){
             if (user.password == password){       
@@ -27,9 +26,13 @@ export const login = (req, response) => {
 export const signup = (req, response) => {
     var username = req.body.username;
     var password = req.body.password;
+    var email = req.body.email;
+    var language = req.body.language
     var newUser = new users({
-        email: username,
-        password: password
+        email: email,
+        password: password,
+        username: username,
+        language: language
     })
     newUser.save()
     .then((res)=>{

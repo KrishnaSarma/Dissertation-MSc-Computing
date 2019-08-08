@@ -21,8 +21,6 @@ export const getMessages = async (req, response) => {
         console.log(err)
     })
 
-    console.log("sender", sender)
-
     messages.find({
         $or : [
             {
@@ -79,7 +77,7 @@ export const saveMessage = async(msg, sent) => {
 
     await users.findOne({email: msg.sender})
     .then( (user) => {
-        console.log("5 user", user._id)
+        console.log("7 user", user._id)
         sender = user
     })
     .catch( (err) => {
@@ -88,13 +86,13 @@ export const saveMessage = async(msg, sent) => {
 
     await users.findOne({email: msg.reciever})
     .then( (user) => {
-        console.log("6 user", user._id)
+        console.log("8 user", user._id)
         reciever = user
     })
     .catch( (err) => {
         console.log("err", err)
     })
-    console.log("7 msg", msg)
+    console.log("9 msg", msg)
     let newMessage = new messages({
         text: msg.message,
         sender: sender._id,
@@ -107,7 +105,7 @@ export const saveMessage = async(msg, sent) => {
     .then((res)=>{
         
         if(res){
-            console.log("8 message saved", res)
+            console.log("10 message saved", res)
         }        
     }).catch((err)=>{
         console.log(err)

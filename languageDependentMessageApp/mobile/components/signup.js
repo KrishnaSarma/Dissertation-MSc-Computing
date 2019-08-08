@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import {Text, View, Button, TextInput} from 'react-native';
+import {Text, View, Button, TextInput, Picker} from 'react-native';
 import axios from 'axios';
+import {ipAddress, languageDropdownPlaceholder} from "../constants"
 
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -9,8 +10,12 @@ export default class SignupScreen extends Component{
     constructor(props){
         super(props);
         this.state = {
+            email: "",
             username: "",
-            password: ""
+            password: "",
+            confirmPassword: "",
+            language: "",
+            languages: []
         }
     }
 
@@ -19,20 +24,19 @@ export default class SignupScreen extends Component{
     }
 
     getLanguages(){
-        axios.get("http://192.168.0.12:3000/getLanguages")
+        axios.get("http://"+ipAddress+":3000/getLanguages")
             .then((response) => {
-                console.log("languages response", response)
-                let languages = []
+                console.log("languages response", response);
+                let languages = response.data
+                languages.unshift({
+                    name: languageDropdownPlaceholder,
+                    code: "Placeholder"
+                })
                 if (response.status == 201){
-                    for(var lang of response.data.body.dictionary){
-                        console.log("lang", lang)
-                        languages.push(lang.name);
-                    }
-                    this.setState({
-                        languages : languages
-                    })
+                    this.setState({ languages })
                 }
-                console.log("language list", this.state.languages)
+
+                console.log("languages state", this.state.languages)
                 
             })
             .catch(err => {
@@ -44,12 +48,37 @@ export default class SignupScreen extends Component{
     }
 
     validateTextInput(){
-        if (this.state.username.trim() === "") {
-            this.setState(() => ({ nameError: "Username required." }));
-        } 
+
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ;
+
+        if (this.state.email.trim() === "") {
+            this.setState(() => ({ nameError: "Email required." }));
+        }
+        
+        else if (reg.test(this.state.email.trim()) === false) {
+            this.setState(() => ({nameError: "Invalid Email"}));
+        }
+
+        else if (this.state.username.trim() == "") {
+            this.setState(() => ({nameError: "Username required."}));
+        }
+
         else if (this.state.password.trim() == "") {
             this.setState(() => ({nameError: "Password required."}));
         }
+
+        else if (this.state.confirmPassword.trim() == "") {
+            this.setState(() => ({nameError: "Confirm Password required."}));
+        }
+
+        else if (this.state.password.trim() != this.state.confirmPassword.trim()){
+            this.setState(() => ({nameError: "Password don't match"}));
+        }
+
+        else if (this.state.language == "") {
+            this.setState(() => ({nameError: "Select Language"}));
+        }
+
         else {
             this.setState(() => ({ nameError: null }));
             this.signup()
@@ -58,28 +87,30 @@ export default class SignupScreen extends Component{
 
     setValue = async () => {
         try {
-            await AsyncStorage.setItem('isLoggedIn', 'True');
-            await AsyncStorage.setItem('username', this.state.username);
+            await AsyncStorage.setItem('isLoggedIn', 'True');            
+            await AsyncStorage.setItem('email', this.state.email);
+            console.log("Async Storage email", await AsyncStorage.getItem('email'));
         } catch(e) {
             console.log(e)
         }
-      }
+    }
 
     signup(){
 
-        axios.post("http://192.168.0.12:3000/signup", {
+        axios.post("http://"+ipAddress+":3000/signup", {
+            email: this.state.email,
             username: this.state.username,
-            password: this.state.password
+            password: this.state.password,
+            language: this.state.language,
         })
-        .then((response) => {
+        .then(async (response) => {
             console.log("response signup", response);
             if (response.status == 201){                
-                this.setValue()
+                await this.setValue()
                 alert("Sign up successful", [{
                     text: "Okay"
                 }])
                 
-                console.log("login", this.state.username+" "+this.state.password)
                 const {navigate} = this.props.navigation
                 navigate('Users')
             }
@@ -88,7 +119,8 @@ export default class SignupScreen extends Component{
         .catch(err => {
             var error = err.response
             if (error.status == 404){
-                alert("Enter correct username/password.", [{
+                console.log("signup", error)
+                alert("This email Id is already used", [{
                     text: "Okay"
                 }])
             }
@@ -113,6 +145,14 @@ export default class SignupScreen extends Component{
                 <Text style = {{height: 40, width: 400, textAlign: "center"}}>
                     Enter your details below:
                 </Text>
+
+                <TextInput
+                    style={{height: 40, width: 400, textAlign: "center"}}
+                    placeholder= "Enter email here..."
+                    onChangeText= {(email) => this.setState({email})}
+                    value = {this.state.email}
+                />
+
                 <TextInput
                     style={{height: 40, width: 400, textAlign: "center"}}
                     placeholder= "Enter username here..."
@@ -128,9 +168,29 @@ export default class SignupScreen extends Component{
                     value = {this.state.password}
                 />
 
+                <TextInput
+                    style={{height: 40, width: 400, textAlign: "center"}}
+                    placeholder="Renter password here..."
+                    secureTextEntry = {true}
+                    onChangeText= {(password) => this.setState({confirmPassword: password})}
+                    value = {this.state.confirmPassword}
+                />
+
                 {!!this.state.nameError && (
                     <Text style={{ color: "red" }}>{this.state.nameError}</Text>
                 )}
+
+                <Picker
+                    style={{ height: 40, width : 400, textAlign: "center" }}
+                    mode="dropdown"
+                    selectedValue={this.state.language}
+                    onValueChange={(itemValue)=>{
+                        this.setState({ language: itemValue })
+                    }}>
+                    {this.state.languages.map((item, index) => {
+                        return (<Picker.Item label={item.name} value={item.code} key={index}/>) 
+                    })}
+                </Picker>
 
                 <Button 
                     style={{ height: 40, width : 40 }}

@@ -3,6 +3,7 @@ import {Text, View, Button, Tex, StyleSheet, TextInput, FlatList, ActivityIndica
 import io from "socket.io-client";
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
+import { ipAddress } from '../constants';
 
 export default class ChatScreen extends Component{
 
@@ -12,16 +13,16 @@ export default class ChatScreen extends Component{
         this.state = {
         chatMessage: "",
         chatMessages: [],
-        username: ""
+        email: ""
         };
     }
 
     componentDidMount = async () => {
         const { navigation } = this.props;
 
-        this.socket = io('http://192.168.0.12:3000');
+        this.socket = io("http://"+ipAddress+":3000");
         await this.getUsername();
-        this.socket.emit("User Name", this.state.username);
+        this.socket.emit("User Name", this.state.email);
 
         this.blurListener = navigation.addListener("willBlur", () => {
             this.socket.close();
@@ -29,7 +30,7 @@ export default class ChatScreen extends Component{
 
         this.setState(() => ({ reciever: navigation.state.params.reciever }));
         
-        await this.getChatMessages(this.state.username, this.state.reciever)
+        await this.getChatMessages(this.state.email, this.state.reciever)
 
         this.socket.on("Chat Message", msg => {
             this.setState({ chatMessages: [...this.state.chatMessages, msg] });
@@ -39,10 +40,10 @@ export default class ChatScreen extends Component{
 
     getUsername = async () => {
         try{
-            const user = await AsyncStorage.getItem('username')
-            console.log("username in user screen", user);
+            const user = await AsyncStorage.getItem('email')
+            console.log("email in user screen", user);
             await this.setState({
-                username: user
+                email: user
             })
         }
         catch(e){
@@ -52,7 +53,7 @@ export default class ChatScreen extends Component{
     }
 
     getChatMessages(sender, reciever){
-        axios.get("http://192.168.0.12:3000/getMessages", {
+        axios.get("http://"+ipAddress+":3000/getMessages", {
             params: {
                 sender: sender,
                 reciever: reciever
@@ -78,13 +79,13 @@ export default class ChatScreen extends Component{
     submitChatMessage(){
         console.log("pressing submit")
         var message = {
-            sender: this.state.username,
+            sender: this.state.email,
             reciever: this.state.reciever,
             message: this.state.chatMessage
         }
         this.socket.emit("Chat Message", message);
         var stateMsg = {
-            sender: this.state.username,
+            sender: this.state.email,
             message: this.state.chatMessage
         }
         this.setState({ 

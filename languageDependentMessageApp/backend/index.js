@@ -8,6 +8,7 @@ const bodyParser = require('body-parser');
 
 import {saveMessage} from "./controllers/chatController";
 import {translateText} from "./controllers/translatorController";
+import {getUserLanguage} from "./controllers/usersController";
 
 import routes from './routes';
 
@@ -62,19 +63,15 @@ io.on("connection", socket => {
             }
         }
 
-        const recieverLanguage = "de";
-        const senderLanguage = "en";
+        var recieverLanguage = await getUserLanguage(msg.reciever);
+        var senderLanguage = await getUserLanguage(msg.sender);
+
+        console.log("3 languages", recieverLanguage);
 
         if(recieverLanguage != senderLanguage){
 
             msg.reciever_message = await translateText(msg.message, recieverLanguage)
             console.log("3.1 recieverLanguage", msg.reciever_message)
-            //  convertMessage(msg.message, recieverLanguage).then((res)=>{
-            //     console.log("3.1 returned", res)
-            //     msg.reciever_message = res
-            // }).catch((err)=>{
-            //     console.log('async errorrrrr',err)
-            // })
             
         }
 
@@ -82,9 +79,9 @@ io.on("connection", socket => {
             msg.reciever_message = msg.message
         }      
 
-        console.log("4 msg to save", msg)
+        console.log("6 msg to save", msg)
         if(reciever_socket == {}){
-        saveMessage(msg, 0);
+            saveMessage(msg, 0);
         }
         else{
             saveMessage(msg, 1);

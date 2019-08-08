@@ -3,6 +3,8 @@ import {Text, View, Button, TextInput} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 
+import {ipAddress} from "../constants"
+
 export default class LoginScreen extends Component{
 
     // static navigationOptions = {
@@ -12,15 +14,23 @@ export default class LoginScreen extends Component{
     constructor(props){
         super(props);
         this.state = {
-            username: "",
+            email: "",
             password: ""
         }
     }
 
     validateTextInput(){
-        if (this.state.username.trim() === "") {
-            this.setState(() => ({ nameError: "Username required." }));
-        } 
+
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ;
+
+        if (this.state.email.trim() === "") {
+            this.setState(() => ({ nameError: "Email required." }));
+        }
+        
+        else if (reg.test(this.state.email.trim()) === false) {
+            this.setState(() => ({nameError: "Invalid Email"}));
+        }
+
         else if (this.state.password.trim() == "") {
             this.setState(() => ({nameError: "Password required."}));
         }
@@ -31,15 +41,15 @@ export default class LoginScreen extends Component{
     }
     login(){
         console.log("in login")
-        axios.post("http://192.168.0.12:3000/login", {
-            username: this.state.username,
+        axios.post("http://"+ipAddress+":3000/login", {
+            email: this.state.email,
             password: this.state.password
         })
         .then(async (response) => {
             console.log("response login", response);
             if (response.status == 201){
                 await this.setValue()
-                console.log("login", this.state.username+" "+this.state.password)
+                console.log("login", this.state.email+" "+this.state.password)
                 const {navigate} = this.props.navigation
                 navigate('Users')
             }
@@ -48,7 +58,7 @@ export default class LoginScreen extends Component{
         .catch(err => {
             var error = err.response
             if (error.status == 404){
-                alert("Enter correct username/password.", [{
+                alert("Enter correct email/password.", [{
                     text: "Okay"
                 }])
             }
@@ -68,8 +78,8 @@ export default class LoginScreen extends Component{
     setValue = async () => {
         try {
             await AsyncStorage.setItem('isLoggedIn', 'True');            
-            await AsyncStorage.setItem('username', this.state.username);
-            console.log("Async Storage username", await AsyncStorage.getItem('username'));
+            await AsyncStorage.setItem('email', this.state.email);
+            console.log("Async Storage email", await AsyncStorage.getItem('email'));
         } catch(e) {
             console.log(e)
         }
@@ -83,9 +93,9 @@ export default class LoginScreen extends Component{
                 </Text>
                 <TextInput
                     style={{height: 40, width: 400, textAlign: "center"}}
-                    placeholder= "Enter username here..."
-                    onChangeText= {(username) => this.setState({username})}
-                    value = {this.state.username}
+                    placeholder= "Enter email here..."
+                    onChangeText= {(email) => this.setState({email})}
+                    value = {this.state.email}
                 />
 
                 <TextInput
