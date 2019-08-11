@@ -6,7 +6,8 @@ const usersSchema = new Schema({
     email: String,
     password: String,
     username: String,
-    language: {type: String, default: "En" }
+    language: {type: String, default: "En" },
+    topicName: String
 });
 
 module.exports = mongoose.model("users", usersSchema);

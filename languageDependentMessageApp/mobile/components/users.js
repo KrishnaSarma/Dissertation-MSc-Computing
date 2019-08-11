@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View, Button, FlatList, ActivityIndicator, TouchableHighlight } from 'react-native';
+import {Text, View, Button, FlatList, ActivityIndicator, TouchableHighlight, Alert } from 'react-native';
 // import { List, ListItem, SearchBar } from "react-native-elements";
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
@@ -13,6 +13,7 @@ export default class UsersScreen extends Component{
     constructor(props) {
         super(props);
         this.state = {
+            topicName : "",
             email: "",
             users: [],
             loading: false,
@@ -27,9 +28,17 @@ export default class UsersScreen extends Component{
         console.log("in users")
 
         await this.getUsername();
-        await this.getUserList();
 
         this.createNotificationListeners();
+
+        if(this.state.email){
+            await this.getTopicName()
+            await this.fcmTopicSubscription();            
+            await this.getUserList();
+        }
+        else {
+            this.props.navigation.navigate("Home");
+        }
     }
 
     getUserList = () => {
@@ -72,6 +81,22 @@ export default class UsersScreen extends Component{
         
     }
 
+    getTopicName = async () => {
+        try{
+            const topicName = await AsyncStorage.getItem('fcmTopicName')
+            console.log("topic name", topicName);
+            await this.setState({topicName})
+            console.log("topic in state", this.state.topicName)
+        }
+        catch(e){
+            console.log(e);
+        }
+    }
+
+    fcmTopicSubscription = async () => {
+        await firebase.messaging().subscribeToTopic(this.state.topicName);
+    }
+
     createNotificationListeners = async () => {
         /*
         * Triggered when a particular notification has been received in foreground
@@ -111,16 +136,13 @@ export default class UsersScreen extends Component{
     }
     
     showAlert(title, body) {
-        alert("OK", [{
-            text: "Okay"
-        }])
-        // Alert.alert(
-        //     title, body,
-        //     [
-        //         { text: 'OK', onPress: () => console.log('OK Pressed') },
-        //     ],
-        //     { cancelable: false },
-        // );
+        Alert.alert(
+            title, body,
+            [
+                { text: 'OK', onPress: () => console.log('OK Pressed') },
+            ],
+            { cancelable: false },
+        );
     }
     
     removeValue = async () => {
@@ -135,6 +157,7 @@ export default class UsersScreen extends Component{
     logout = async (navigate) => {
         console.log('logout pressed');
         this.removeValue()
+        await firebase.messaging().unsubscribeFromTopic(this.state.topicName);
         navigate("Home")
     }    
 

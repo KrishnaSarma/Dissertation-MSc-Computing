@@ -85,10 +85,11 @@ export default class SignupScreen extends Component{
         }
     }
 
-    setValue = async () => {
+    setValue = async (topicName) => {
         try {
             await AsyncStorage.setItem('isLoggedIn', 'True');            
             await AsyncStorage.setItem('email', this.state.email);
+            await AsyncStorage.setItem("fcmTopicName", topicName)
             console.log("Async Storage email", await AsyncStorage.getItem('email'));
         } catch(e) {
             console.log(e)
@@ -106,7 +107,7 @@ export default class SignupScreen extends Component{
         .then(async (response) => {
             console.log("response signup", response);
             if (response.status == 201){                
-                await this.setValue()
+                await this.setValue(response.data.topicName)
                 alert("Sign up successful", [{
                     text: "Okay"
                 }])

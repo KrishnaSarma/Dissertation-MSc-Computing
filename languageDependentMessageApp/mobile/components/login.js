@@ -48,10 +48,10 @@ export default class LoginScreen extends Component{
         .then(async (response) => {
             console.log("response login", response);
             if (response.status == 201){
-                await this.setValue()
+                // await this.setValue(response.data.topicName)
+                await this.setValue("abc")
                 console.log("login", this.state.email+" "+this.state.password)
-                const {navigate} = this.props.navigation
-                navigate('Users')
+                this.props.navigation.navigate('Users')
             }
             
         })
@@ -75,10 +75,11 @@ export default class LoginScreen extends Component{
           });
     }
 
-    setValue = async () => {
+    setValue = async (topicName) => {
         try {
             await AsyncStorage.setItem('isLoggedIn', 'True');            
             await AsyncStorage.setItem('email', this.state.email);
+            await AsyncStorage.setItem("fcmTopicName", topicName)
             console.log("Async Storage email", await AsyncStorage.getItem('email'));
         } catch(e) {
             console.log(e)

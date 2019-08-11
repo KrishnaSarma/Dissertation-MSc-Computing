@@ -8,7 +8,8 @@ export const login = (req, response) => {
         if(user){
             if (user.password == password){       
                 return response.status(201).json({
-                    signin: true
+                    signin: true,
+                    topicName: user.topicName
                 });
             }
         }
@@ -28,17 +29,20 @@ export const signup = (req, response) => {
     var password = req.body.password;
     var email = req.body.email;
     var language = req.body.language
+    var topicName = email.replace("@","_")
     var newUser = new users({
         email: email,
         password: password,
         username: username,
-        language: language
+        language: language,
+        topicName: topicName
     })
     newUser.save()
     .then((res)=>{
         if(res){
             return response.status(201).json({
-                signin: true
+                signin: true,
+                topicName: res.topicName
             })
         }        
     }).catch((err)=>{
