@@ -3,7 +3,8 @@ import {Text, View, Button, FlatList, ActivityIndicator, TouchableHighlight } fr
 // import { List, ListItem, SearchBar } from "react-native-elements";
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
-import {ipAddress} from "../constants"
+import {ipAddress} from "../constants";
+import firebase from "react-native-firebase";
 
 // import { FlatList } from 'react-native-gesture-handler';
 
@@ -27,6 +28,8 @@ export default class UsersScreen extends Component{
 
         await this.getUsername();
         await this.getUserList();
+
+        this.createNotificationListeners();
     }
 
     getUserList = () => {
@@ -68,6 +71,57 @@ export default class UsersScreen extends Component{
         }
         
     }
+
+    createNotificationListeners = async () => {
+        /*
+        * Triggered when a particular notification has been received in foreground
+        * */
+        this.notificationListener = firebase.notifications().onNotification((notification) => {
+            const { title, body } = notification;
+            console.log("on notification listener", notification);
+            this.showAlert(title, body);
+        });
+    
+        /*
+        * If your app is in background, you can listen for when a notification is clicked / tapped / opened as follows:
+        * */
+        this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen) => {
+            const { title, body } = notificationOpen.notification;
+            console.log("on notification opened listener");
+            this.showAlert(title, body);
+        });
+    
+        /*
+        * If your app is closed, you can check if it was opened by a notification being clicked / tapped / opened as follows:
+        * */
+        const notificationOpen = await firebase.notifications().getInitialNotification();
+        if (notificationOpen) {
+            const { title, body } = notificationOpen.notification;
+            console.log("on notification open if app closed listener");
+            this.showAlert(title, body);
+        }
+        /*
+        * Triggered for data only payload in foreground
+        * */
+        this.messageListener = firebase.messaging().onMessage((message) => {
+          //process data message
+          console.log("message")
+          console.log(JSON.stringify(message));
+        });
+    }
+    
+    showAlert(title, body) {
+        alert("OK", [{
+            text: "Okay"
+        }])
+        // Alert.alert(
+        //     title, body,
+        //     [
+        //         { text: 'OK', onPress: () => console.log('OK Pressed') },
+        //     ],
+        //     { cancelable: false },
+        // );
+    }
     
     removeValue = async () => {
         try {
@@ -82,6 +136,12 @@ export default class UsersScreen extends Component{
         console.log('logout pressed');
         this.removeValue()
         navigate("Home")
+    }    
+
+    //Remove listeners allocated in createNotificationListeners()
+    componentWillUnmount() {
+        this.notificationListener();
+        this.notificationOpenedListener();
     }
 
     // handleRefresh = () => {

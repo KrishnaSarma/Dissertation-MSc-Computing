@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import AsyncStorage, { useAsyncStorage } from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-community/async-storage';
 // import {TextInput, StyleSheet, Text, View, Button} from 'react-native';
 import {createStackNavigator, createAppContainer, createSwitchNavigator} from 'react-navigation';
 import HomeScreen from "./components/home";
@@ -7,16 +7,48 @@ import ChatScreen from "./components/chat";
 import UsersScreen from "./components/users";
 import LoginScreen from "./components/login";
 import SignupScreen from "./components/signup";
+import firebase from "react-native-firebase";
 
 export default class App extends Component {
 
   constructor(props){
     super(props);
-    this.state = {
-      // loggedIn: false
+  }
+
+  componentDidMount = () => {
+    this.checkNotificationPermissions();    
+  }
+
+  checkNotificationPermissions =async () => {
+    const enabled = await firebase.messaging().hasPermission();
+    if (enabled) {
+      this.getToken()
+    } else {
+      this.requestPermission()
     }
   }
 
+  getToken = async () => {
+    let fcmToken = await AsyncStorage.getItem('fcmToken');
+    if (!fcmToken) {
+      fcmToken = await firebase.messaging().getToken();
+      if (fcmToken) {
+        console.log('fcmToken:', fcmToken);
+        await AsyncStorage.setItem('fcmToken', fcmToken);
+      }
+    }
+    console.log('fcmToken:', fcmToken);
+  }
+  
+  requestPermission = async () => {
+    try {
+      await firebase.messaging().requestPermission();
+      this.getToken();
+    } catch (error) {
+      console.log('permission rejected');
+    }
+  }
+  
   getData = async () => {
     try {
       const loggedin = await AsyncStorage.getItem('isLoggedIn')
@@ -30,8 +62,6 @@ export default class App extends Component {
       console.log(e)
     }
   }
-
-
 
   render() {
 

@@ -131,6 +131,7 @@ android {
         applicationId "com.mobile"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
+        multiDexEnabled true
         versionCode 1
         versionName "1.0"
     }
@@ -188,14 +189,21 @@ android {
 }
 
 dependencies {
+    implementation 'com.android.support:multidex:1.0.3'
     implementation project(':react-native-firebase')
     implementation project(':react-native-vector-icons')
     implementation project(':@react-native-community_async-storage')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
-    implementation "com.google.android.gms:play-services-base:16.1.0"
-    implementation "com.google.firebase:firebase-core:16.0.9"
+    implementation "com.google.android.gms:play-services-base:17.0.0"
+    implementation "com.google.firebase:firebase-core:17.0.1"
+    implementation "com.google.firebase:firebase-messaging:19.0.0"
+    implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
+
+    compile(project(':react-native-firebase')) {   
+       transitive = false
+    }
 
     if (enableHermes) {
       def hermesPath = "../../node_modules/hermesvm/android/";
