@@ -38,3 +38,21 @@ export const getUserLanguage = async (userEmail) => {
     })    
     return language
 }
+
+export const getUserTopicName = async (userEmail) => {
+
+    // todo: do error handling here
+
+    let topicName = ""
+
+    await users.findOne({email: userEmail})
+    .then( (user) => {
+        console.log("2 user", user)
+        console.log("2.1 language", user.topicName, typeof(user.topicName))
+        topicName = user.topicName
+    })
+    .catch( (err) => {
+        console.log("err", err)
+    })    
+    return topicName
+}

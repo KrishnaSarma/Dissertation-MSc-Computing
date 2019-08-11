@@ -48,8 +48,7 @@ export default class LoginScreen extends Component{
         .then(async (response) => {
             console.log("response login", response);
             if (response.status == 201){
-                // await this.setValue(response.data.topicName)
-                await this.setValue("abc")
+                await this.setValue(response.data.topicName)
                 console.log("login", this.state.email+" "+this.state.password)
                 this.props.navigation.navigate('Users')
             }

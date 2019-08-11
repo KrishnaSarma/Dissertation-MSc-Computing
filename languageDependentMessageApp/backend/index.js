@@ -8,7 +8,9 @@ const bodyParser = require('body-parser');
 
 import {saveMessage} from "./controllers/chatController";
 import {translateText} from "./controllers/translatorController";
-import {getUserLanguage} from "./controllers/usersController";
+import {getUserLanguage, getUserTopicName} from "./controllers/usersController";
+
+import {sendNotification} from "./controllers/firebaseController";
 
 import routes from './routes';
 
@@ -54,7 +56,7 @@ io.on("connection", socket => {
     })
     
     socket.on("Chat Message", async msg => {
-        let reciever_socket = {}
+        let reciever_socket = ""
         console.log("1 reciever", msg.reciever);
         for(var user of users){
             if (user.uname == msg.reciever){
@@ -80,12 +82,18 @@ io.on("connection", socket => {
         }      
 
         console.log("6 msg to save", msg)
-        if(reciever_socket == {}){
+        if(reciever_socket == ""){
+            console.log("no reciever socket")
             saveMessage(msg, 0);
+            var topicName = await getUserTopicName(msg.reciever)
+            console.log("topic name", topicName)
+            await sendNotification(msg.sender, topicName, msg.reciever_message)
+
+            // call for fcm notification message here
         }
-        else{
+        else if (reciever_socket){
             saveMessage(msg, 1);
-            console.log("reciever socket", reciever_socket)
+            console.log("reciever socket", reciever_socket, typeof(reciever_socket))
             let msgToSend = {
                 sender: msg.sender,
                 message: msg.reciever_message
