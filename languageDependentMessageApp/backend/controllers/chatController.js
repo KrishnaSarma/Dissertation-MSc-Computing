@@ -10,7 +10,7 @@ export const getMessages = async (req, response) => {
         sender = user
     })
     .catch( (err) => {
-        console.log(err)
+        console.log("Find sender error", err)
     })
 
     await users.findOne({email: req.query.reciever})
@@ -18,7 +18,7 @@ export const getMessages = async (req, response) => {
         reciever = user
     })
     .catch( (err) => {
-        console.log(err)
+        console.log("Find reciever error", err)
     })
 
     messages.find({
@@ -34,7 +34,6 @@ export const getMessages = async (req, response) => {
         ]        
     })
     .then((messages) => {
-        console.log("messages returned", messages)
         let msgList = []
 
         for(let msg of messages){
@@ -57,20 +56,13 @@ export const getMessages = async (req, response) => {
         return response.status(201).json({
             msgList
         });
-    }).catch((err) => {
-        console.log(err)
+    }).catch((err)=>{
+        console.log("Error getting message list", err)
+        return response.status(500).json({
+            data: "Internal server error!"
+        });
     })
-
-    console.log("get all messages between 2 users");
 }
-
-// export const sendMessage = (req, res) => {
-//     console.log("sent message");
-// }
-
-// export const recieveMessage = (req, res) => {
-//     console.log("recieved message")
-// }
 
 export const saveMessage = async(msg, sent) => {
 
@@ -79,22 +71,19 @@ export const saveMessage = async(msg, sent) => {
 
     await users.findOne({email: msg.sender})
     .then( (user) => {
-        console.log("7 user", user._id)
         sender = user
     })
     .catch( (err) => {
-        console.log("err", err)
+        console.log("Find sender error", err)
     })
 
     await users.findOne({email: msg.reciever})
     .then( (user) => {
-        console.log("8 user", user._id)
         reciever = user
     })
     .catch( (err) => {
-        console.log("err", err)
+        console.log("Find reciever error", err)
     })
-    console.log("9 msg", msg)
     let newMessage = new messages({
         text: msg.message,
         sender: sender._id,
@@ -105,11 +94,10 @@ export const saveMessage = async(msg, sent) => {
 
     newMessage.save()
     .then((res)=>{
-        
         if(res){
-            console.log("10 message saved", res)
+            console.log("Message saved", res)
         }        
     }).catch((err)=>{
-        console.log(err)
+        console.log("Message saving error", err)
     })
 }

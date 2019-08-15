@@ -67,9 +67,19 @@ export default class ChatScreen extends Component{
             console.log("chat Messages", this.state.chatMessages)
             
         })
-        .catch((err) => {
-            console.log("err", err)
-        })
+        .catch(err => {
+            var error = err.response
+            if (err.status == 500){
+                alert("Couldn't load messages. Please refresh page and try again.", [{
+                    text: "Okay"
+                }])
+            }
+            else{
+                alert(err, [{
+                    text: "Okay"
+                }])
+            }
+          });
     }
 
     componentWillUnmount = () => {

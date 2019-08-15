@@ -59,11 +59,18 @@ export default class UsersScreen extends Component{
                 
             })
             .catch(err => {
-                alert("Couldn't load users. Please refresh page and try again.", [{
-                    text: "Okay"
-                }])
-            })
-
+                var error = err.response
+                if (err.status == 500){
+                    alert("Couldn't load users. Please refresh page and try again.", [{
+                        text: "Okay"
+                    }])
+                }
+                else{
+                    alert(err, [{
+                        text: "Okay"
+                    }])
+                }
+              });
     }
 
     getUsername = async () => {

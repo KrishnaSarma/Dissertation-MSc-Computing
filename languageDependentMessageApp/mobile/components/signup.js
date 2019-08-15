@@ -41,10 +41,17 @@ export default class SignupScreen extends Component{
             })
             .catch(err => {
                 console.log("error in language", err)
-                alert("Couldn't load languages. Please refresh page and try again.", [{
-                    text: "Okay"
-                }])
-            })
+                if (err.status == 500){
+                    alert("Internal server error. Please try again.", [{
+                        text: "Okay"
+                    }])
+                }
+                else{
+                    alert(err, [{
+                        text: "Okay"
+                    }])
+                }
+              });
     }
 
     validateTextInput(){

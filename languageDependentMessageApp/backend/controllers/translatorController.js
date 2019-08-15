@@ -18,18 +18,24 @@ export const getLanguages = async (req, response) => {
 
     request(options, function(err, res, body){
 
-        // @todo: add error handling here
+        if(!err){
+            let languages = []
 
-        let languages = []
+            for (var lang in body.dictionary){
+                languages.push({
+                    name: body.dictionary[lang].name,
+                    code: lang
+                })
+            }  
 
-        for (var lang in body.dictionary){
-            languages.push({
-                name: body.dictionary[lang].name,
-                code: lang
-            })
-        }  
-
-        return response.status(201).json(languages)
+            return response.status(201).json(languages)
+        }
+        else{
+            console.log("API Language fetch error")
+            return response.status(500).json({
+                data: "Internal server error!"
+            });
+        }        
     });
 
     
@@ -59,21 +65,15 @@ export const translateText = (message, finalLanguage) => {
         };
 
         request(options, function(err, res, body){
-
-            console.log("4 json body", body)
-
-            console.log("5 body", JSON.stringify(body, null, 4));
-
-            console.log("err translator", err);
-
         
-                if(!err){
-                    resolve((body[0].translations[0].text))
+            if(!err){
+                resolve((body[0].translations[0].text))
 
-                }
-                if(err){
-                    reject('error')
-                }
-            }) 
+            }
+            else{
+                console.log("Translation error", err);
+                reject('Translation error')
+            }
+        }) 
     });
 }

@@ -18,6 +18,11 @@ export const findAll = (request, response) => {
             }
             console.log("username", username)
             return response.status(201).json(username)
+        }).catch((err)=>{
+            console.log("Error getting all users", err)
+            return response.status(500).json({
+                data: "Internal server error!"
+            });
         })
 }
 
@@ -29,12 +34,10 @@ export const getUserLanguage = async (userEmail) => {
 
     await users.findOne({email: userEmail})
     .then( (user) => {
-        console.log("2 user", user)
-        console.log("2.1 language", user.language, typeof(user.language))
         language = user.language
     })
     .catch( (err) => {
-        console.log("err", err)
+        console.log("Error finding user by email", err)
     })    
     return language
 }
@@ -47,12 +50,10 @@ export const getUserTopicName = async (userEmail) => {
 
     await users.findOne({email: userEmail})
     .then( (user) => {
-        console.log("2 user", user)
-        console.log("2.1 language", user.topicName, typeof(user.topicName))
         topicName = user.topicName
     })
     .catch( (err) => {
-        console.log("err", err)
+        console.log("Error finding user by email", err)
     })    
     return topicName
 }

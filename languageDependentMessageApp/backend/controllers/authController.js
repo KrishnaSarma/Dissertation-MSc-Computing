@@ -17,6 +17,7 @@ export const login = (req, response) => {
             signin: false
         });
     }).catch((err)=>{
+        console.log("Error authenticating", err)
         return response.status(500).json({
             data: "Internal server error!"
         });
@@ -46,23 +47,10 @@ export const signup = (req, response) => {
             })
         }        
     }).catch((err)=>{
+        console.log("Error authenticating", err)
         return response.status(500).json({
             data: "Internal server error!"
         });
     })
     
 }
-
-// The login function will login the user if the email id is present
-// and if not, it will add new email id to the db.
-
-
-// login function
-
-// export const login = (req, res) => {
-
-//  add google authentication  
-
-// const { errors, isValid } = validateLoginInput(req.body);
-// 
-// }  
