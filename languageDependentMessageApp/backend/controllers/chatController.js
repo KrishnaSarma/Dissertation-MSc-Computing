@@ -46,7 +46,9 @@ export const getMessages = async (req, response) => {
             else{
                 reformedMsg.sender = reciever.email
                 reformedMsg.message = msg.reciever_text
+
             }
+            reformedMsg.originalMessage = msg.text
             reformedMsg.timestamp = msg.dateTime
             reformedMsg.delivered = msg.delivered
             msgList.push(reformedMsg)

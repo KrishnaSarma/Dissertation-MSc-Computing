@@ -75,6 +75,15 @@ export default class ChatScreen extends Component{
     componentWillUnmount = () => {
         this.blurListener.remove();
     }
+
+    _onLongPress(msg){
+        if(msg.message != msg.originalMessage){
+            return msg.originalMessage
+        }
+        else{
+            return msg.message
+        }
+    }
     
     submitChatMessage(){
         console.log("pressing submit")
@@ -103,7 +112,25 @@ export default class ChatScreen extends Component{
 
         return(
             <View style={styles.container}>
-                {chatMessages}
+                {/* {chatMessages} */}
+                <FlatList
+                data={this.state.chatMessages}
+                renderItem={({item, index, separators}) => (
+                    <TouchableHighlight
+                    //   onPress={() => navigate('Chat', {
+                    //             reciever: item.email
+                    //         })}
+                        onLongPress = {() => {
+                            item.message = this._onLongPress(item)
+                        }}
+                        onShowUnderlay={separators.highlight}
+                        onHideUnderlay={separators.unhighlight}>
+                        <View style={{backgroundColor: 'white'}}>
+                            <Text>{item.sender}: {item.message}</Text>
+                        </View>
+                    </TouchableHighlight>
+                  )}
+                />
                 {/* <FlatList
                 data={this.state.chatMessages}
                 renderItem={({item, index, separators}) => (
