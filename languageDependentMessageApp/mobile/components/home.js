@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
-import {View, Text, ActivityIndicator, Button, ImageBackground} from 'react-native';
+import {View, Text, ActivityIndicator, Button, ImageBackground, TouchableHighlight} from 'react-native';
+import {homeStyles} from "../style/homeScreen";
+
 export default class HomeScreen extends Component{
 
     constructor(props) {
@@ -21,93 +23,51 @@ export default class HomeScreen extends Component{
         const {navigate} = this.props.navigation;
         return(        
             <View
-            style = {{
-                // flex: 1,
-                // flexDirection: "column",
-                justifyContent: 'center',
-                alignSelf: "center",
-                backgroundColor: "red"
-                // width: "100%"
-            }}>
+            style = {[{flex: 1}, homeStyles.container]}>
                 {
                     this.state.loading ? (
                         <View><ActivityIndicator size="large" color="grey" /></View>
                     ) : (
                         <View 
-                        style = {{height: "100%",
-                        width: "100%",
-                        flex: 1,
-                        justifyContent: "center",
-                        alignSelf: "center"
-                        }}>                       
-                            <ImageBackground source={require('../images/welcome_background1.jpg')} style={{
-                            // flex: 1,
-                            resizeMode: 'cover',
-                            justifyContent: "center",
-                            width: "100%",
-                            height: "100%"
-                            // opacity: 0.5
-                            }}>
+                        style = {homeStyles.container}>                       
+                            <ImageBackground 
+                            source={require('../images/homeBackground.jpg')} 
+                            style={homeStyles.backgroundImage}>
                                 <View 
                                 style = {{
-                                justifyContent: "space-around",
-                                alignSelf: "center",
-                                backgroundColor: "transparent",
-                                height: "80%",
-                                width: "90%"
+                                    justifyContent: "space-around",
+                                    alignSelf: "center",
+                                    height: "80%",
+                                    width: "90%"
                                 }}>
-                                    <View style={
-                                        {flex: 1,
-                                        backgroundColor: "pink",
-                                    justifyContent: "center"}
-                                    }>
+                                    <View 
+                                    style={{
+                                        flex: 3,
+                                        justifyContent: "center"
+                                    }}>
 
-                                    <Text style={{
-                                        // margin: 20,
-                                                fontSize: 45,
-                                                fontWeight: "bold",
-                                                textAlign: "center"
-                                            }}>
-                                        Welcome to
-                                    </Text>
-                                    <Text style = {{
-                                        // margin: 20,
-                                                fontSize: 40,
-                                                fontWeight: "bold",
-                                                textAlign: "center",
-                                                color: "red"
-                                            }}>
-                                        myChat
-                                    </Text>
+                                        <Text 
+                                        style={homeStyles.titleText}>
+                                            Welcome to
+                                        </Text>
+                                        <Text 
+                                        style = {homeStyles.appNameText}>
+                                            myChat
+                                        </Text>
                                     </View>
-                                    <View style= {{flex: 1, backgroundColor: "green", justifyContent: "center"}}>
-
-                                    <Button
-                                        style={{ 
-                                            // justifyContent: "center",
-                                            alignSelf: "center", 
-                                            textAlign: "center",
-                                            fontSize: 20}}
-                                        onPress={() => navigate('Login')}
-                                        title="LOG IN">
-                                    </Button>
-                                    <Button
-                                        style={{ 
-                                            // justifyContent: "center",
-                                            alignSelf: "center", 
-                                            textAlign: "center",
-                                            fontSize: 20}}
-                                        onPress={() => navigate('Signup')}
-                                        title="SIGN UP">
-                                    </Button>
-                                    {/* <Button 
-                                        style={{ height : 40, width : 40 }}
-                                        onPress={() => navigate('Login')}
-                                        title="Sign In"
-                                    /> */}
-                                    {/* <Text style = {{height : 40, width : 500, textAlign: "center"}} onPress = {() => navigate('Signup')}>
-                                        New to the app? Signup here!
-                                    </Text> */}
+                                    <View style= {{flex: 1, justifyContent: "center"}}>
+                                        <TouchableHighlight 
+                                        style={homeStyles.button}
+                                        onPress={() => navigate('Login')} >
+                                            <Text style= {homeStyles.buttonText}>LOGIN</Text>
+                                        </TouchableHighlight>
+                                    </View>
+                                    <View style= {{flex: 1, justifyContent: "center"}}>
+                                        <TouchableHighlight 
+                                        style={homeStyles.button}
+                                        onPress={() => navigate('Signup')}>
+                                            <Text style= {homeStyles.buttonText}>SIGN UP</Text>
+                                        </TouchableHighlight>
                                     </View>
                                 </View>
                             </ImageBackground>
