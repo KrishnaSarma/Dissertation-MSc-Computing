@@ -1,17 +1,25 @@
 import {StyleSheet} from "react-native";
+import {primaryColor, secondaryColor} from "../constants";
 
 export const homeStyles = StyleSheet.create({
     container: {
+        flex: 1,
         height: "100%",
         width: "100%",
         justifyContent: "center",
-        alignSelf: "center"
+        alignSelf: "center",
+        backgroundColor: primaryColor
     },
-    backgroundImage : {
-        resizeMode: 'cover',
-        justifyContent: "center",
-        width: "100%",
-        height: "100%"
+    content: {
+        justifyContent: "space-around",
+        alignSelf: "center",
+        height: "80%",
+        width: "90%"
+    },
+    icon: {
+        width: 150,
+        height: 150,
+        alignSelf: "center"
     },
     button: {
         height: "60%",
@@ -19,7 +27,7 @@ export const homeStyles = StyleSheet.create({
         justifyContent: "center",
         alignSelf: "center", 
         alignItems: 'center',
-        backgroundColor: "#c5c4c4",
+        backgroundColor: secondaryColor,
         borderRadius: 50
     },
     buttonText: {
@@ -27,17 +35,16 @@ export const homeStyles = StyleSheet.create({
         fontSize: 22
     },
     titleText: {
-        color: "#c5c4c4",
-        margin: 20,
+        color: secondaryColor,
         fontSize: 70,
         fontWeight: "bold",
         textAlign: "center"
     },
     appNameText: {
-        color: "#FD817D",
-        margin: 10,
+        color: secondaryColor,
+        marginBottom: 30,
         fontSize: 65,
-        fontStyle: "italic",
+        // fontStyle: "italic",
         fontWeight: "bold",
         textAlign: "center"
     }

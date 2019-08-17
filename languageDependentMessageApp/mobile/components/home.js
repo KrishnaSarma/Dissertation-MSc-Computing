@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import {View, Text, ActivityIndicator, Button, ImageBackground, TouchableHighlight} from 'react-native';
-import {homeStyles} from "../style/homeScreen";
+import {View, Text, ActivityIndicator, Image, TouchableHighlight} from 'react-native';
+import {homeStyles} from "../style/homeScreenStyle";
 
 export default class HomeScreen extends Component{
 
@@ -23,54 +23,46 @@ export default class HomeScreen extends Component{
         const {navigate} = this.props.navigation;
         return(        
             <View
-            style = {[{flex: 1}, homeStyles.container]}>
+            style = {homeStyles.container}>
                 {
                     this.state.loading ? (
                         <View><ActivityIndicator size="large" color="grey" /></View>
                     ) : (
                         <View 
-                        style = {homeStyles.container}>                       
-                            <ImageBackground 
-                            source={require('../images/homeBackground.jpg')} 
-                            style={homeStyles.backgroundImage}>
-                                <View 
-                                style = {{
-                                    justifyContent: "space-around",
-                                    alignSelf: "center",
-                                    height: "80%",
-                                    width: "90%"
-                                }}>
-                                    <View 
-                                    style={{
-                                        flex: 3,
-                                        justifyContent: "center"
-                                    }}>
+                        style = {homeStyles.content}>
+                            <Image
+                            style={homeStyles.icon}
+                            source={require('../images/icon.png')}
+                            />
+                            <View 
+                            style={{
+                                flex: 4,
+                                justifyContent: "center"
+                            }}>
 
-                                        <Text 
-                                        style={homeStyles.titleText}>
-                                            Welcome to
-                                        </Text>
-                                        <Text 
-                                        style = {homeStyles.appNameText}>
-                                            myChat
-                                        </Text>
-                                    </View>
-                                    <View style= {{flex: 1, justifyContent: "center"}}>
-                                        <TouchableHighlight 
-                                        style={homeStyles.button}
-                                        onPress={() => navigate('Login')} >
-                                            <Text style= {homeStyles.buttonText}>LOGIN</Text>
-                                        </TouchableHighlight>
-                                    </View>
-                                    <View style= {{flex: 1, justifyContent: "center"}}>
-                                        <TouchableHighlight 
-                                        style={homeStyles.button}
-                                        onPress={() => navigate('Signup')}>
-                                            <Text style= {homeStyles.buttonText}>SIGN UP</Text>
-                                        </TouchableHighlight>
-                                    </View>
-                                </View>
-                            </ImageBackground>
+                                <Text 
+                                style={homeStyles.titleText}>
+                                    Welcome to
+                                </Text>
+                                <Text 
+                                style = {homeStyles.appNameText}>
+                                    myChat
+                                </Text>
+                            </View>
+                            <View style= {{flex: 1, justifyContent: "center"}}>
+                                <TouchableHighlight 
+                                style={homeStyles.button}
+                                onPress={() => navigate('Login')} >
+                                    <Text style= {homeStyles.buttonText}>LOGIN</Text>
+                                </TouchableHighlight>
+                            </View>
+                            <View style= {{flex: 1, justifyContent: "center"}}>
+                                <TouchableHighlight 
+                                style={homeStyles.button}
+                                onPress={() => navigate('Signup')}>
+                                    <Text style= {homeStyles.buttonText}>SIGN UP</Text>
+                                </TouchableHighlight>
+                            </View>
                         </View>
                     )
                 }
