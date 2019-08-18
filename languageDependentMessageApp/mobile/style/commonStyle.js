@@ -11,5 +11,19 @@ export const commonStyles = StyleSheet.create({
     },
     header: {
         backgroundColor: primaryColor
-    }
+    },
+    button: {
+        marginTop: 20,
+        height: 50,
+        width: "50%",
+        justifyContent: "center",
+        alignSelf: "center", 
+        alignItems: 'center',
+        backgroundColor: secondaryColor,
+        borderRadius: 25
+    },
+    buttonText: {
+        fontWeight: "bold",
+        fontSize: 22
+    },
 })

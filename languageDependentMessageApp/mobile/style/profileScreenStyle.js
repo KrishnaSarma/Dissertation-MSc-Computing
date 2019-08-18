@@ -2,23 +2,7 @@ import {StyleSheet} from "react-native";
 import {primaryColor, secondaryColor, disabledColor} from "../constants";
 
 export const profileStyles = StyleSheet.create({
-    content: {
-        // backgroundColor: "blue"
-    },
-    button: {
-        marginTop: 20,
-        height: 50,
-        width: "50%",
-        justifyContent: "center",
-        alignSelf: "center", 
-        alignItems: 'center',
-        backgroundColor: secondaryColor,
-        borderRadius: 25
-    },
-    buttonText: {
-        fontWeight: "bold",
-        fontSize: 22
-    },
+    
     picture: {
         height: 150,
         width: 150,

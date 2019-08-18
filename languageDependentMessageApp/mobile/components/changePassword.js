@@ -1,9 +1,14 @@
 import React, {Component} from 'react';
-import {Text, View, Button, TextInput, Picker} from 'react-native';
+import {TouchableHighlight} from 'react-native';
 import axios from 'axios';
-import {ipAddress} from "../constants"
 
 import AsyncStorage from '@react-native-community/async-storage';
+
+import { Container, Content, Header, Left,
+    Body, Button, Icon, Title, Item, Input, Text, Form, Label } from 'native-base';
+
+import {ipAddress, secondaryColor, primaryColor, disabledColor} from "../constants"
+import { commonStyles } from '../style/commonStyle';
 
 export default class SignupScreen extends Component{
     
@@ -11,37 +16,87 @@ export default class SignupScreen extends Component{
         super(props);
         this.state = {
             email: "",
-            username: "",
-            password: "",
+            currentPassword: "",
+            newPassword: "",
             confirmPassword: "",
-            language: "",
-            languages: []
+            changed: false
         }
     }
 
     componentDidMount = async () =>{
-        await this.getLanguages();
+        await this.getUserEmail();
     }
 
-    getLanguages(){
-        axios.get("http://"+ipAddress+":3000/getLanguages")
-            .then((response) => {
-                console.log("languages response", response);
-                let languages = response.data
-                languages.unshift({
-                    name: "Please select a language",
-                    code: "Placeholder"
-                })
-                if (response.status == 201){
-                    this.setState({ languages })
-                }
+    getUserEmail = async () => {
+        try{
+            const email = await AsyncStorage.getItem('email')
+            console.log("email in user screen", email);
+            await this.setState({
+                newEmail: email,
+                prevEmail: email
+            })
+            console.log("email in state", this.state.prevEmail)
+        }
+        catch(e){
+            console.log(e);
+        }
+        
+    }
 
-                console.log("languages state", this.state.languages)
+    validateTextInput(){
+
+        if (this.state.newPassword.trim() == "") {
+            this.setState(() => ({nameError: "Password required."}));
+            return false
+        }
+
+        else if (this.state.confirmPassword.trim() == "") {
+            this.setState(() => ({nameError: "Confirm Password required."}));
+            return false
+        }
+
+        else if (this.state.newPassword.trim() != this.state.confirmPassword.trim()){
+            this.setState(() => ({nameError: "Password don't match"}));
+            return false
+        }
+
+        else if (this.state.language == "") {
+            this.setState(() => ({nameError: "Select Language"}));
+            return false
+        }
+
+        else {
+            this.setState(() => ({ nameError: null }));
+            return true
+        }
+    }
+
+    savePassoword = async() => {
+        if(await this.validateTextInput()){
+            console.log("need to add save route")
+            axios.post("http://"+ipAddress+":3000/saveNewPassword", {
+                email: this.state.email,
+                currentPassword: then.state.currentPassword,
+                newPassword: this.state.newPassword
+            })
+            .then(async (response) => {
+                console.log("response signup", response);
+                if (response.status == 201){
+                    alert("Change Password successful", [{
+                        text: "Okay"
+                    }])
+                }
                 
             })
             .catch(err => {
-                console.log("error in language", err)
-                if (err.status == 500){
+                var error = err.response
+                if (error.status == 404){
+                    console.log("password change", error)
+                    alert("The current password entered is wrong", [{
+                        text: "Okay"
+                    }])
+                }
+                else if (err.status == 500){
                     alert("Internal server error. Please try again.", [{
                         text: "Okay"
                     }])
@@ -51,160 +106,72 @@ export default class SignupScreen extends Component{
                         text: "Okay"
                     }])
                 }
-              });
-    }
-
-    validateTextInput(){
-
-        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ;
-
-        if (this.state.email.trim() === "") {
-            this.setState(() => ({ nameError: "Email required." }));
+            });
         }
-        
-        else if (reg.test(this.state.email.trim()) === false) {
-            this.setState(() => ({nameError: "Invalid Email"}));
+        else{
+            alert(this.state.nameError, [{
+                text: "Okay"
+            }])
         }
-
-        else if (this.state.username.trim() == "") {
-            this.setState(() => ({nameError: "Username required."}));
-        }
-
-        else if (this.state.password.trim() == "") {
-            this.setState(() => ({nameError: "Password required."}));
-        }
-
-        else if (this.state.confirmPassword.trim() == "") {
-            this.setState(() => ({nameError: "Confirm Password required."}));
-        }
-
-        else if (this.state.password.trim() != this.state.confirmPassword.trim()){
-            this.setState(() => ({nameError: "Password don't match"}));
-        }
-
-        else if (this.state.language == "") {
-            this.setState(() => ({nameError: "Select Language"}));
-        }
-
-        else {
-            this.setState(() => ({ nameError: null }));
-            this.signup()
-        }
-    }
-
-    setValue = async (topicName) => {
-        try {
-            await AsyncStorage.setItem('isLoggedIn', 'True');            
-            await AsyncStorage.setItem('email', this.state.email);
-            await AsyncStorage.setItem("fcmTopicName", topicName)
-            console.log("Async Storage email", await AsyncStorage.getItem('email'));
-        } catch(e) {
-            console.log(e)
-        }
-    }
-
-    signup(){
-
-        axios.post("http://"+ipAddress+":3000/signup", {
-            email: this.state.email,
-            username: this.state.username,
-            password: this.state.password,
-            language: this.state.language,
-        })
-        .then(async (response) => {
-            console.log("response signup", response);
-            if (response.status == 201){                
-                await this.setValue(response.data.topicName)
-                alert("Sign up successful", [{
-                    text: "Okay"
-                }])
-                
-                const {navigate} = this.props.navigation
-                navigate('Users')
-            }
-            
-        })
-        .catch(err => {
-            var error = err.response
-            if (error.status == 404){
-                console.log("signup", error)
-                alert("This email Id is already used", [{
-                    text: "Okay"
-                }])
-            }
-            else if (err.status == 500){
-                alert("Internal server error. Please try again.", [{
-                    text: "Okay"
-                }])
-            }
-            else{
-                alert(err, [{
-                    text: "Okay"
-                }])
-            }
-          });
-
     }
 
     render(){
+        const {navigate} = this.props.navigation;
         return(
-            <View>
-                <Text style = {{height: 40, width: 400, textAlign: "center"}}>
-                    Enter your details below:
-                </Text>
-
-                <TextInput
-                    style={{height: 40, width: 400, textAlign: "center"}}
-                    placeholder= "Enter email here..."
-                    onChangeText= {(email) => this.setState({email})}
-                    value = {this.state.email}
-                />
-
-                <TextInput
-                    style={{height: 40, width: 400, textAlign: "center"}}
-                    placeholder= "Enter username here..."
-                    onChangeText= {(username) => this.setState({username})}
-                    value = {this.state.username}
-                />
-
-                <TextInput
-                    style={{height: 40, width: 400, textAlign: "center"}}
-                    placeholder="Enter password here..."
-                    secureTextEntry = {true}
-                    onChangeText= {(password) => this.setState({password})}
-                    value = {this.state.password}
-                />
-
-                <TextInput
-                    style={{height: 40, width: 400, textAlign: "center"}}
-                    placeholder="Renter password here..."
-                    secureTextEntry = {true}
-                    onChangeText= {(password) => this.setState({confirmPassword: password})}
-                    value = {this.state.confirmPassword}
-                />
-
-                {!!this.state.nameError && (
-                    <Text style={{ color: "red" }}>{this.state.nameError}</Text>
-                )}
-
-                <Picker
-                    style={{ height: 40, width : 400, textAlign: "center" }}
-                    mode="dropdown"
-                    selectedValue={this.state.language}
-                    onValueChange={(itemValue)=>{
-                        this.setState({ language: itemValue })
-                    }}>
-                    {this.state.languages.map((item, index) => {
-                        return (<Picker.Item label={item.name} value={item.code} key={index}/>) 
-                    })}
-                </Picker>
-
-                <Button 
-                    style={{ height: 40, width : 40 }}
-                    onPress={() => this.validateTextInput()}
-                    title="Sign Up"
-                />
-            </View>
+            <Container style={commonStyles.container}>
+                <Header style={commonStyles.header}>
+                    <Left>
+                        <Button transparent
+                        onPress={() => {navigate('Profile')}}>
+                        <Icon name='arrow-back' />
+                        </Button>
+                    </Left>
+                    <Body>
+                        <Title style={{alignSelf: "flex-start", color: secondaryColor, fontSize: 22}}>CHANGE PASSWORD</Title>
+                    </Body>
+                </Header>
+                <Content>
+                    <Form>
+                        <Item floatingLabel>
+                            <Label>Current Password</Label>
+                            <Input onChangeText={(currPass) => {
+                                this.setState({
+                                    currentPassword: currPass
+                                })
+                            }} />
+                        </Item>
+                        <Item floatingLabel last>
+                            <Label>New Password</Label>
+                            <Input onChangeText={(newPass) => {
+                                this.setState({
+                                    newPassword: newPass
+                                })
+                            }} />
+                        </Item>
+                        <Item floatingLabel last>
+                            <Label>Confirm Password</Label>
+                            <Input onChangeText={(confPass) => {
+                                this.setState({
+                                    confirmPassword: confPass,
+                                    changed: true
+                                })
+                            }} />
+                        </Item>
+                    </Form>
+                    {this.state.changed?(
+                            <TouchableHighlight 
+                            style={commonStyles.button}
+                            onPress={() => {this.savePassoword()}} >
+                                <Text style= {commonStyles.buttonText}>SAVE</Text>
+                            </TouchableHighlight>
+                        ):(
+                            <TouchableHighlight 
+                            style={[commonStyles.button, { backgroundColor: disabledColor }]}>
+                                <Text style= {commonStyles.buttonText}>SAVE</Text>
+                            </TouchableHighlight>
+                        )}
+                </Content>
+            </Container>
         )
     }
 }

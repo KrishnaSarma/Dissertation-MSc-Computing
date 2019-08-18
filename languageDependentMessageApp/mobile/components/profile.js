@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import {View, TouchableHighlight} from 'react-native';
+import {TouchableHighlight} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
+import firebase from "react-native-firebase";
 
 import { Container, Content, Header, Left,
     Body, Right, Button, Icon, Title,
@@ -20,13 +21,18 @@ export default class ProfileScreen extends Component{
             prevUsername: "",
             newEmail: "",
             newUsername: "",
-            changed: false
+            changed: false,
+            topicName: "",
+            prevLanguage: "",
+            newLanguage: ""
         }
     }
 
     componentDidMount = async() => {
         await this.getUsername();
         await this.getUserEmail();
+        await this.getTopicName(),
+        await this.getLanguage()
     }
 
     getUsername = async () => {
@@ -34,6 +40,7 @@ export default class ProfileScreen extends Component{
             const username = await AsyncStorage.getItem('username')
             console.log("username in profile screen", username);
             await this.setState({
+                newUsername: username,
                 prevUsername: username
             })
             console.log("username in state", this.state.prevUsername)
@@ -49,6 +56,7 @@ export default class ProfileScreen extends Component{
             const email = await AsyncStorage.getItem('email')
             console.log("email in user screen", email);
             await this.setState({
+                newEmail: email,
                 prevEmail: email
             })
             console.log("email in state", this.state.prevEmail)
@@ -57,6 +65,30 @@ export default class ProfileScreen extends Component{
             console.log(e);
         }
         
+    }
+
+    getTopicName = async () => {
+        try{
+            const topicName = await AsyncStorage.getItem('fcmTopicName')
+            console.log("topic name", topicName);
+            await this.setState({topicName})
+            console.log("topic in state", this.state.topicName)
+        }
+        catch(e){
+            console.log(e);
+        }
+    }
+
+    getLanguage = async () => {
+        try{
+            const language = await AsyncStorage.getItem('language')
+            console.log("language", language);
+            await this.setState({language})
+            console.log("topic in state", this.state.language)
+        }
+        catch(e){
+            console.log(e);
+        }
     }
 
     validateEmail(){       
@@ -81,14 +113,16 @@ export default class ProfileScreen extends Component{
         if(await this.validateEmail()){
             console.log("need to add save route")
             axios.post("http://"+ipAddress+":3000/saveUserDetails", {
-            email: this.state.email,
-            username: this.state.username
+                prevEmail: this.state.prevEmail,
+                newEmail: this.state.newEmail,
+                newUsername: this.state.newUsername,
+                newLanguage: this.newLanguage
             })
             .then(async (response) => {
                 console.log("response signup", response);
                 if (response.status == 201){                
                     await this.setValue(response.data.topicName)
-                    alert("Sign up successful", [{
+                    alert("User Details saved", [{
                         text: "Okay"
                     }])
                 }
@@ -97,7 +131,7 @@ export default class ProfileScreen extends Component{
             .catch(err => {
                 var error = err.response
                 if (error.status == 404){
-                    console.log("signup", error)
+                    console.log("profile", error)
                     alert("This email Id is already used", [{
                         text: "Okay"
                     }])
@@ -115,9 +149,41 @@ export default class ProfileScreen extends Component{
             });
         }
         else{
-            // alert
+            alert(this.state.nameError, [{
+                text: "Okay"
+            }])
         }
     }
+
+    changeFirebaseTopic = async() => {        
+        await firebase.messaging().unsubscribeFromTopic(this.state.topicName);
+        await firebase.messaging().subscribeToTopic(this.state.topicName);
+    }
+
+    setValue = async (topicName) => {
+        try {          
+            await AsyncStorage.setItem('email', this.state.email);
+            await AsyncStorage.setItem('username', this.state.username);
+            await AsyncStorage.setItem('language', this.state.newLanguage);
+            await AsyncStorage.setItem("fcmTopicName", topicName)
+            console.log("Async Storage email", await AsyncStorage.getItem('email'));
+            if(this.state.prevEmail != this.state.newEmail){
+                await changeFirebaseTopic();
+            }
+        } catch(e) {
+            console.log(e)
+        }
+    }
+    
+    removeValue = async () => {
+        try {
+            await AsyncStorage.removeItem('isLoggedIn')
+            await AsyncStorage.removeItem('email')
+        } catch(e) {
+            console.log(e)
+        }
+    }    
+
 
     logout = async (navigate) => {
         console.log('logout pressed');
@@ -138,11 +204,11 @@ export default class ProfileScreen extends Component{
                         </Button>
                     </Left>
                     <Body>
-                        <Title style={{alignSelf: "flex-end", color: secondaryColor, fontSize: 22}}>Profile</Title>
+                        <Title style={{alignSelf: "flex-end", color: secondaryColor, fontSize: 22}}>PROFILE</Title>
                     </Body>
                     <Right />
                 </Header>
-                <Content style={profileStyles.content}>
+                <Content>
                     <Thumbnail 
                     style={profileStyles.picture} 
                     large 
@@ -165,6 +231,15 @@ export default class ProfileScreen extends Component{
                                 changed: true
                             })}} />
                     </Item>
+                    <Item style= {{flexDirection: "row"}} regular>
+                        <Text style= {profileStyles.text}>Language</Text>
+                        <Input style={profileStyles.input} placeholder={this.state.prevLanguage}
+                        onChangeText={(language) => {
+                            this.setState({
+                                newLanguage: language,
+                                changed: true
+                            })}} />
+                    </Item>
                     <List>
                         <ListItem onPress={()=>navigate('passwordChange')}>
                             <Left>
@@ -177,39 +252,22 @@ export default class ProfileScreen extends Component{
                     </List>
                     {this.state.changed?(
                         <TouchableHighlight 
-                        style={profileStyles.button}
+                        style={commonStyles.button}
                         onPress={() => {this.saveChanges()}} >
-                            <Text style= {profileStyles.buttonText}>SAVE</Text>
+                            <Text style= {commonStyles.buttonText}>SAVE</Text>
                         </TouchableHighlight>
                     ):(
                         <TouchableHighlight 
-                        style={[profileStyles.button, { backgroundColor: disabledColor }]}>
-                            <Text style= {profileStyles.buttonText}>SAVE</Text>
+                        style={[commonStyles.button, { backgroundColor: disabledColor }]}>
+                            <Text style= {commonStyles.buttonText}>SAVE</Text>
                         </TouchableHighlight>
                     )}
 
-                    {!!this.state.nameError && (
-                        <Text style={{ color: "red" }}>{this.state.nameError}</Text>
-                    )}
-
                     <TouchableHighlight 
-                    style={profileStyles.button}
+                    style={commonStyles.button}
                     onPress={() => {this.logout(navigate)}} >
-                        <Text style= {profileStyles.buttonText}>LOGOUT</Text>
+                        <Text style= {commonStyles.buttonText}>LOGOUT</Text>
                     </TouchableHighlight>
-
-                    {/* <List>
-                        <ListItem>
-                            <Text>Simon Mignolet</Text>
-                            <Text>Simon Mignolet</Text>
-                        </ListItem>
-                        <ListItem>
-                            <Text>Nathaniel Clyne</Text>
-                        </ListItem>
-                        <ListItem>
-                            <Text>Dejan Lovren</Text>
-                        </ListItem>
-                    </List> */}
                 </Content>
             </Container>
         )

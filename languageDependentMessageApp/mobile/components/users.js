@@ -152,15 +152,6 @@ export default class UsersScreen extends Component{
         );
     }
     
-    removeValue = async () => {
-        try {
-            await AsyncStorage.removeItem('isLoggedIn')
-            await AsyncStorage.removeItem('email')
-        } catch(e) {
-            console.log(e)
-        }
-    }    
-
     //Remove listeners allocated in createNotificationListeners()
     componentWillUnmount() {
         this.notificationListener();
