@@ -10,7 +10,8 @@ export const login = (req, response) => {
                 return response.status(201).json({
                     signin: true,
                     topicName: user.topicName,
-                    username: user.username
+                    username: user.username,
+                    language: user.language
                 });
             }
         }
