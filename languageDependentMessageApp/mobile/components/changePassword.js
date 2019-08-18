@@ -2,12 +2,10 @@ import React, {Component} from 'react';
 import {TouchableHighlight} from 'react-native';
 import axios from 'axios';
 
-import AsyncStorage from '@react-native-community/async-storage';
-
 import { Container, Content, Header, Left,
     Body, Button, Icon, Title, Item, Input, Text, Form, Label } from 'native-base';
 
-import {ipAddress, secondaryColor, primaryColor, disabledColor} from "../constants"
+import {ipAddress, secondaryColor, disabledColor} from "../constants"
 import { commonStyles } from '../style/commonStyle';
 
 import {getUserEmail} from "./commonGetMethods";
@@ -33,21 +31,18 @@ export default class SignupScreen extends Component{
     validateTextInput(){
 
         if (this.state.newPassword.trim() == "") {
-            // this.setState(() => ({nameError: "Password required."}));
             alert("Password required.", [{
                 text: "Okay"
             }])
         }
 
         else if (this.state.confirmPassword.trim() == "") {
-            // this.setState(() => ({nameError: "Confirm Password required."}));
             alert("Confirm Password required.", [{
                 text: "Okay"
             }])
         }
 
         else if (this.state.newPassword.trim() != this.state.confirmPassword.trim()){
-            // this.setState(() => ({nameError: "Password don't match"}));
             alert("Password don't match", [{
                 text: "Okay"
             }])

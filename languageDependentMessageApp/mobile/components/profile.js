@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {TouchableHighlight, Picker} from 'react-native';
+import {TouchableHighlight, Picker, TouchableOpacity} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import firebase from "react-native-firebase";
@@ -81,17 +81,19 @@ export default class ProfileScreen extends Component{
 
     saveChanges = async() => {
         if(await this.validateEmail()){
-            console.log("need to add save route")
             axios.post("http://"+ipAddress+":3000/saveUserDetails", {
                 prevEmail: this.state.prevEmail,
                 newEmail: this.state.newEmail,
                 newUsername: this.state.newUsername,
-                newLanguage: this.newLanguage
+                newLanguage: this.state.newLanguage
             })
             .then(async (response) => {
-                console.log("response signup", response);
+                console.log("response save user details", response);
                 if (response.status == 201){                
                     await this.setValue(response.data.topicName)
+                    await this.setState({
+                        changed: false
+                    })
                     alert("User Details saved", [{
                         text: "Okay"
                     }])
@@ -132,8 +134,8 @@ export default class ProfileScreen extends Component{
 
     setValue = async (topicName) => {
         try {          
-            await AsyncStorage.setItem('email', this.state.email);
-            await AsyncStorage.setItem('username', this.state.username);
+            await AsyncStorage.setItem('email', this.state.newEmail);
+            await AsyncStorage.setItem('username', this.state.newUsername);
             await AsyncStorage.setItem('language', this.state.newLanguage);
             await AsyncStorage.setItem("fcmTopicName", topicName)
             console.log("Async Storage email", await AsyncStorage.getItem('email'));
@@ -230,16 +232,16 @@ export default class ProfileScreen extends Component{
                         </ListItem>
                     </List>
                     {this.state.changed?(
-                        <TouchableHighlight 
+                        <TouchableOpacity 
                         style={commonStyles.button}
                         onPress={() => {this.saveChanges()}} >
                             <Text style= {commonStyles.buttonText}>SAVE</Text>
-                        </TouchableHighlight>
+                        </TouchableOpacity>
                     ):(
-                        <TouchableHighlight 
+                        <TouchableOpacity 
                         style={[commonStyles.button, { backgroundColor: disabledColor }]}>
                             <Text style= {commonStyles.buttonText}>SAVE</Text>
-                        </TouchableHighlight>
+                        </TouchableOpacity>
                     )}
 
                     <TouchableHighlight 
