@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {TouchableHighlight} from 'react-native';
+import {TouchableHighlight, Picker} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import firebase from "react-native-firebase";
@@ -11,6 +11,8 @@ import { Container, Content, Header, Left,
 import {ipAddress, secondaryColor, primaryColor, disabledColor} from "../constants"
 import { commonStyles } from '../style/commonStyle';
 import { profileStyles } from "../style/profileScreenStyle";
+
+import {getUserLanguage, getUserEmail, getUserTopicName, getUsername, getAvailableLanguages} from "./commonGetMethods";
 
 export default class ProfileScreen extends Component{
 
@@ -24,72 +26,40 @@ export default class ProfileScreen extends Component{
             changed: false,
             topicName: "",
             prevLanguage: "",
-            newLanguage: ""
+            newLanguage: "",
+            languages: []
         }
     }
 
     componentDidMount = async() => {
-        await this.getUsername();
-        await this.getUserEmail();
-        await this.getTopicName(),
-        await this.getLanguage()
+        var username = await getUsername();
+        var email = await getUserEmail();
+        var topicName = await getUserTopicName();
+        var language = await getUserLanguage()
+        var languages = await getAvailableLanguages()
+        console.log("languages returned", languages)
+        await this.setStateVariables(username, email, topicName, language, languages)
     }
 
-    getUsername = async () => {
+    setStateVariables = async (username, email, topicName, language, languages) => {
         try{
-            const username = await AsyncStorage.getItem('username')
-            console.log("username in profile screen", username);
             await this.setState({
                 newUsername: username,
-                prevUsername: username
-            })
-            console.log("username in state", this.state.prevUsername)
-        }
-        catch(e){
-            console.log(e);
-        }
-        
-    }
-
-    getUserEmail = async () => {
-        try{
-            const email = await AsyncStorage.getItem('email')
-            console.log("email in user screen", email);
-            await this.setState({
+                prevUsername: username,
+                prevEmail: email,
                 newEmail: email,
-                prevEmail: email
+                prevLanguage: language,
+                newLanguage: language,
+                topicName: topicName,
+                languages: languages
             })
-            console.log("email in state", this.state.prevEmail)
         }
         catch(e){
             console.log(e);
         }
         
     }
-
-    getTopicName = async () => {
-        try{
-            const topicName = await AsyncStorage.getItem('fcmTopicName')
-            console.log("topic name", topicName);
-            await this.setState({topicName})
-            console.log("topic in state", this.state.topicName)
-        }
-        catch(e){
-            console.log(e);
-        }
-    }
-
-    getLanguage = async () => {
-        try{
-            const language = await AsyncStorage.getItem('language')
-            console.log("language", language);
-            await this.setState({language})
-            console.log("topic in state", this.state.language)
-        }
-        catch(e){
-            console.log(e);
-        }
-    }
+    
 
     validateEmail(){       
 
@@ -233,12 +203,21 @@ export default class ProfileScreen extends Component{
                     </Item>
                     <Item style= {{flexDirection: "row"}} regular>
                         <Text style= {profileStyles.text}>Language</Text>
-                        <Input style={profileStyles.input} placeholder={this.state.prevLanguage}
-                        onChangeText={(language) => {
-                            this.setState({
-                                newLanguage: language,
-                                changed: true
-                            })}} />
+
+                        <Picker
+                        style={{ height: 40, width: 267, textAlign: "center"}}
+                        mode="dropdown"
+                        selectedValue={this.state.newLanguage}
+                        onValueChange={(itemValue)=>{
+                            this.setState({ 
+                                newLanguage: itemValue,
+                                changed: true })
+                        }}>
+                            {this.state.languages.map((item, index) => {
+                                return (<Picker.Item 
+                                    style= {{width: 267, fontSize: 22}} label={item.name} value={item.code} key={index}/>) 
+                            })}
+                        </Picker>
                     </Item>
                     <List>
                         <ListItem onPress={()=>navigate('passwordChange')}>

@@ -14,6 +14,7 @@ export const commonStyles = StyleSheet.create({
     },
     button: {
         marginTop: 20,
+        marginBottom: 10,
         height: 50,
         width: "50%",
         justifyContent: "center",

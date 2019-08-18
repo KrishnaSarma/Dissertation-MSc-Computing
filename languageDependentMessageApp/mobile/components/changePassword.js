@@ -85,6 +85,8 @@ export default class SignupScreen extends Component{
                     alert("Change Password successful", [{
                         text: "Okay"
                     }])
+
+                    this.props.navigation.navigate('Profile')
                 }
                 
             })
@@ -132,7 +134,7 @@ export default class SignupScreen extends Component{
                 </Header>
                 <Content>
                     <Form>
-                        <Item floatingLabel>
+                        <Item stackedLabel>
                             <Label>Current Password</Label>
                             <Input onChangeText={(currPass) => {
                                 this.setState({
@@ -140,7 +142,7 @@ export default class SignupScreen extends Component{
                                 })
                             }} />
                         </Item>
-                        <Item floatingLabel last>
+                        <Item stackedLabel last>
                             <Label>New Password</Label>
                             <Input onChangeText={(newPass) => {
                                 this.setState({
@@ -148,7 +150,7 @@ export default class SignupScreen extends Component{
                                 })
                             }} />
                         </Item>
-                        <Item floatingLabel last>
+                        <Item stackedLabel last>
                             <Label>Confirm Password</Label>
                             <Input onChangeText={(confPass) => {
                                 this.setState({
