@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {View, Text, ActivityIndicator, Image, TouchableHighlight} from 'react-native';
 import {homeStyles} from "../style/homeScreenStyle";
-
+import { commonStyles } from '../style/commonStyle';
 export default class HomeScreen extends Component{
 
     constructor(props) {
@@ -23,7 +23,7 @@ export default class HomeScreen extends Component{
         const {navigate} = this.props.navigation;
         return(        
             <View
-            style = {homeStyles.container}>
+            style = {[commonStyles.container, homeStyles.container]}>
                 {
                     this.state.loading ? (
                         <View><ActivityIndicator size="large" color="grey" /></View>
@@ -31,7 +31,7 @@ export default class HomeScreen extends Component{
                         <View 
                         style = {homeStyles.content}>
                             <Image
-                            style={homeStyles.icon}
+                            style={[{flex: 2}, homeStyles.icon]}
                             source={require('../images/icon.png')}
                             />
                             <View 
@@ -59,7 +59,10 @@ export default class HomeScreen extends Component{
                             <View style= {{flex: 1, justifyContent: "center"}}>
                                 <TouchableHighlight 
                                 style={homeStyles.button}
-                                onPress={() => navigate('Signup')}>
+                                onPress={() => {
+                                    console.log("Signup pressed")
+                                    navigate('Signup')
+                                }}>
                                     <Text style= {homeStyles.buttonText}>SIGN UP</Text>
                                 </TouchableHighlight>
                             </View>

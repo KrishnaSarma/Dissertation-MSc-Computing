@@ -96,7 +96,6 @@ export default class SignupScreen extends Component{
         try {
             await AsyncStorage.setItem('isLoggedIn', 'True');            
             await AsyncStorage.setItem('email', this.state.email);
-            await AsyncStorage.setItem('username', this.state.username);
             await AsyncStorage.setItem("fcmTopicName", topicName)
             console.log("Async Storage email", await AsyncStorage.getItem('email'));
         } catch(e) {

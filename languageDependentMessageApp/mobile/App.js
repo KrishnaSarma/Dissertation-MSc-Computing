@@ -7,6 +7,8 @@ import ChatScreen from "./components/chat";
 import UsersScreen from "./components/users";
 import LoginScreen from "./components/login";
 import SignupScreen from "./components/signup";
+import ProfileScreen from "./components/profile";
+import ChangePasswordScreen from "./components/changePassword";
 import firebase from "react-native-firebase";
 
 export default class App extends Component {
@@ -74,7 +76,19 @@ export default class App extends Component {
           header: null
         }
       },
-      Chat: {screen: ChatScreen}
+      Chat: {screen: ChatScreen},
+      Profile: {
+        screen: ProfileScreen,
+        navigationOptions: {
+          header: null
+        }
+      },
+      passwordChange: {
+        screen: ChangePasswordScreen,
+        navigationOptions: {
+          header: null
+        }
+      }
     })
   
     const AuthNavigator = createStackNavigator({

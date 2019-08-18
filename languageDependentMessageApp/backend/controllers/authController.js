@@ -9,7 +9,8 @@ export const login = (req, response) => {
             if (user.password == password){       
                 return response.status(201).json({
                     signin: true,
-                    topicName: user.topicName
+                    topicName: user.topicName,
+                    username: user.username
                 });
             }
         }

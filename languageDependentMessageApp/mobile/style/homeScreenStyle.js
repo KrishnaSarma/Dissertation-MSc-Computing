@@ -3,11 +3,6 @@ import {primaryColor, secondaryColor} from "../constants";
 
 export const homeStyles = StyleSheet.create({
     container: {
-        flex: 1,
-        height: "100%",
-        width: "100%",
-        justifyContent: "center",
-        alignSelf: "center",
         backgroundColor: primaryColor
     },
     content: {

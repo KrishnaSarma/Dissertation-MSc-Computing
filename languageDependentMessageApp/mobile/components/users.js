@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View, Button, FlatList, ActivityIndicator, TouchableHighlight, Alert } from 'react-native';
+import {Text, View, Button, FlatList, ActivityIndicator, DrawerLayoutAndroid, TouchableHighlight, Alert } from 'react-native';
 // import { List, ListItem, SearchBar } from "react-native-elements";
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
@@ -159,13 +159,6 @@ export default class UsersScreen extends Component{
         } catch(e) {
             console.log(e)
         }
-    }
-
-    logout = async (navigate) => {
-        console.log('logout pressed');
-        this.removeValue()
-        await firebase.messaging().unsubscribeFromTopic(this.state.topicName);
-        navigate("Home")
     }    
 
     //Remove listeners allocated in createNotificationListeners()
@@ -236,12 +229,14 @@ export default class UsersScreen extends Component{
     render(){
 
         const {navigate} = this.props.navigation;
-        return(
-            <View>                
+
+        return( 
+            <View>
+
                 <Button 
                     style={{ height : 40, width : 40 }}
-                    onPress={() => this.logout(navigate)}
-                    title="Logout"
+                    onPress={() => navigate('Profile')}
+                    title="Profile"
                 />
                 {/* <Text style = {{height: 40, width: 50}}>
                     "User Screen"
