@@ -20,6 +20,8 @@ mongoose.connect('mongodb://localhost:27017/my_chat_app', { useNewUrlParser: tru
     console.log("Error on db connection", err);
 });
 
+mongoose.set('useFindAndModify', false);
+
 var users = [];
 
 io.on("connection", socket => {

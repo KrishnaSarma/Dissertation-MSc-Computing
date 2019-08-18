@@ -10,6 +10,8 @@ import { Container, Content, Header, Left,
 import {ipAddress, secondaryColor, primaryColor, disabledColor} from "../constants"
 import { commonStyles } from '../style/commonStyle';
 
+import {getUserEmail} from "./commonGetMethods";
+
 export default class SignupScreen extends Component{
     
     constructor(props){
@@ -24,97 +26,75 @@ export default class SignupScreen extends Component{
     }
 
     componentDidMount = async () =>{
-        await this.getUserEmail();
-    }
-
-    getUserEmail = async () => {
-        try{
-            const email = await AsyncStorage.getItem('email')
-            console.log("email in user screen", email);
-            await this.setState({
-                newEmail: email,
-                prevEmail: email
-            })
-            console.log("email in state", this.state.prevEmail)
-        }
-        catch(e){
-            console.log(e);
-        }
-        
+        var email = await getUserEmail();
+        await this.setState({email})
     }
 
     validateTextInput(){
 
         if (this.state.newPassword.trim() == "") {
-            this.setState(() => ({nameError: "Password required."}));
-            return false
+            // this.setState(() => ({nameError: "Password required."}));
+            alert("Password required.", [{
+                text: "Okay"
+            }])
         }
 
         else if (this.state.confirmPassword.trim() == "") {
-            this.setState(() => ({nameError: "Confirm Password required."}));
-            return false
+            // this.setState(() => ({nameError: "Confirm Password required."}));
+            alert("Confirm Password required.", [{
+                text: "Okay"
+            }])
         }
 
         else if (this.state.newPassword.trim() != this.state.confirmPassword.trim()){
-            this.setState(() => ({nameError: "Password don't match"}));
-            return false
-        }
-
-        else if (this.state.language == "") {
-            this.setState(() => ({nameError: "Select Language"}));
-            return false
+            // this.setState(() => ({nameError: "Password don't match"}));
+            alert("Password don't match", [{
+                text: "Okay"
+            }])
         }
 
         else {
-            this.setState(() => ({ nameError: null }));
-            return true
+            this.savePassoword()
         }
     }
 
     savePassoword = async() => {
-        if(await this.validateTextInput()){
-            console.log("need to add save route")
-            axios.post("http://"+ipAddress+":3000/saveNewPassword", {
-                email: this.state.email,
-                currentPassword: then.state.currentPassword,
-                newPassword: this.state.newPassword
-            })
-            .then(async (response) => {
-                console.log("response signup", response);
-                if (response.status == 201){
-                    alert("Change Password successful", [{
-                        text: "Okay"
-                    }])
+        axios.post("http://"+ipAddress+":3000/changePassword", {
+            email: this.state.email,
+            currentPassword: this.state.currentPassword,
+            newPassword: this.state.newPassword
+        })
+        .then((response) => {
+            console.log("response signup", response);
+            if (response.status == 201){
+                alert("Change Password successful", [{
+                    text: "Okay"
+                }])
 
-                    this.props.navigation.navigate('Profile')
-                }
-                
-            })
-            .catch(err => {
-                var error = err.response
-                if (error.status == 404){
-                    console.log("password change", error)
-                    alert("The current password entered is wrong", [{
-                        text: "Okay"
-                    }])
-                }
-                else if (err.status == 500){
-                    alert("Internal server error. Please try again.", [{
-                        text: "Okay"
-                    }])
-                }
-                else{
-                    alert(err, [{
-                        text: "Okay"
-                    }])
-                }
-            });
-        }
-        else{
-            alert(this.state.nameError, [{
-                text: "Okay"
-            }])
-        }
+                this.props.navigation.navigate('Profile')
+            }
+            
+        })
+        .catch(err => {
+            var error = err.response
+            if (error.status == 404){
+                console.log("password change", error)
+                alert("The current password entered is wrong", [{
+                    text: "Okay"
+                }])
+            }
+            else if (err.status == 500){
+                alert("Internal server error. Please try again.", [{
+                    text: "Okay"
+                }])
+            }
+            else{
+                alert(err, [{
+                    text: "Okay"
+                }])
+            }
+        });
+        
     }
 
     render(){
@@ -163,7 +143,7 @@ export default class SignupScreen extends Component{
                     {this.state.changed?(
                             <TouchableHighlight 
                             style={commonStyles.button}
-                            onPress={() => {this.savePassoword()}} >
+                            onPress={() => {this.validateTextInput()}} >
                                 <Text style= {commonStyles.buttonText}>SAVE</Text>
                             </TouchableHighlight>
                         ):(

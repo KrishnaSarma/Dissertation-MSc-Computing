@@ -57,3 +57,76 @@ export const getUserTopicName = async (userEmail) => {
     })    
     return topicName
 }
+
+export const changePassword = (request, response) => {
+        
+        var email= request.body.email
+        var oldPassword = request.body.currentPassword
+        var newPassword = request.body.newPassword
+
+        users.findOneAndUpdate(
+            {
+                $and:[{"email": email},{"password": oldPassword}]
+            },
+            {
+                password: newPassword
+            },
+            {
+                new: true
+            })
+            .then(usr => {
+                if(usr){
+                    return response.status(201).json({
+                        passwordChanged: true
+                    });
+                }
+                else{
+                    return response.status(404).json({
+                        passwordChanged: false
+                    });
+                }
+            })
+            .catch((err)=>{
+                console.log("Error getting all users", err)
+                return response.status(500).json({
+                    data: "Internal server error!"
+                });
+            })
+}
+
+export const saveUserDetails = (request, response) => {
+    var oldemail= request.body.email
+    var oldemail= request.body.email
+    var oldemail= request.body.email
+    var oldemail= request.body.email
+    users.findOne({email: email})
+        .then(async (user) => {
+            if(user){
+                if (user.password == oldPassword){  
+                    user.password == newPassword
+                    await user.save()
+                    .then((updatedUser) => {
+                        if(updatedUser){
+                            return response.status(201).json({
+                                passwordChanged: true
+                            });
+                        }
+                    })
+                    .catch((err)=>{
+                        console.log("Error getting all users", err)
+                        return response.status(500).json({
+                            data: "Internal server error!"
+                        });
+                    }) 
+                }
+            }
+            return response.status(404).json({
+                passwordChanged: false
+            });
+        }).catch((err)=>{
+            console.log("Error getting all users", err)
+            return response.status(500).json({
+                data: "Internal server error!"
+            });
+        })
+}

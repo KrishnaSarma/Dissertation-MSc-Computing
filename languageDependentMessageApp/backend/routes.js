@@ -11,6 +11,7 @@ routes.post("/signup", authController.signup);
 routes.get("/users", userController.findAll);
 routes.get("/getMessages", chatController.getMessages);
 routes.get("/getLanguages", translatorController.getLanguages);
-// routes.post("/sentMessage", chatController.sendMessage);
+routes.post("/changePassword", userController.changePassword);
+routes.post("/saveUserDetails", userController.saveUserDetails);
 
 export default routes;
