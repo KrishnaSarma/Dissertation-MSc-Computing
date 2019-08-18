@@ -238,10 +238,10 @@ export default class ProfileScreen extends Component{
                             <Text style= {commonStyles.buttonText}>SAVE</Text>
                         </TouchableOpacity>
                     ):(
-                        <TouchableOpacity 
+                        <TouchableHighlight 
                         style={[commonStyles.button, { backgroundColor: disabledColor }]}>
                             <Text style= {commonStyles.buttonText}>SAVE</Text>
-                        </TouchableOpacity>
+                        </TouchableHighlight>
                     )}
 
                     <TouchableHighlight 
