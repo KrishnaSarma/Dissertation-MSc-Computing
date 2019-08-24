@@ -12,6 +12,12 @@ export const commonStyles = StyleSheet.create({
     header: {
         backgroundColor: primaryColor
     },
+    icon: {
+        width: 150,
+        height: 150,
+        alignSelf: "center",
+        borderRadius: 150
+    },
     button: {
         marginTop: 20,
         marginBottom: 10,

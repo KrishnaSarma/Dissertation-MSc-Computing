@@ -31,8 +31,8 @@ export default class HomeScreen extends Component{
                         <View 
                         style = {homeStyles.content}>
                             <Image
-                            style={[{flex: 2}, homeStyles.icon]}
-                            source={require('../images/icon.png')}
+                            style={[{flex: 2}, commonStyles.icon]}
+                            source={require('../images/icon.jpg')}
                             />
                             <View 
                             style={{

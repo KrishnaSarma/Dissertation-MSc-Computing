@@ -92,8 +92,15 @@ export default class App extends Component {
           header: null
         }
       },
-      Login: {screen: LoginScreen},
-      Signup: {screen: SignupScreen}
+      Login: {
+        screen: LoginScreen,
+        navigationOptions: {
+          header: null
+        }
+      },
+      Signup: {
+        screen: SignupScreen
+      }
     },
     {
       initialRouteName: 'Home'

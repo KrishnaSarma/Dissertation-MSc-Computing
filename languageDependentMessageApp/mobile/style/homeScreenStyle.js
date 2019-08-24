@@ -11,11 +11,6 @@ export const homeStyles = StyleSheet.create({
         height: "80%",
         width: "90%"
     },
-    icon: {
-        width: 150,
-        height: 150,
-        alignSelf: "center"
-    },
     button: {
         height: "60%",
         width: "65%",
