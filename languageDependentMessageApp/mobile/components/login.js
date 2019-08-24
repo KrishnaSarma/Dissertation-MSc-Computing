@@ -7,6 +7,8 @@ import firebase from "react-native-firebase";
 
 import {ipAddress} from "../constants"
 
+import {passwordReset} from "./commonGetMethods";
+
 export default class LoginScreen extends Component{
 
     constructor(props){
@@ -71,39 +73,6 @@ export default class LoginScreen extends Component{
                 text: "Okay"
             }])
         });
-
-
-        // axios.post("http://"+ipAddress+":3000/login", {
-        //     email: this.state.email,
-        //     password: this.state.password
-        // })
-        // .then(async (response) => {
-        //     console.log("response login", response);
-        //     if (response.status == 201){
-        //         await this.setValue(response.data.topicName, response.data.username, response.data.language)
-        //         console.log("login", this.state.email+" "+this.state.password)
-        //         this.props.navigation.navigate('Users')
-        //     }
-            
-        // })
-        // .catch(err => {
-        //     var error = err.response
-        //     if (error.status == 404){
-        //         alert("Enter correct email/password.", [{
-        //             text: "Okay"
-        //         }])
-        //     }
-        //     else if (err.status == 500){
-        //         alert("Internal server error. Please try again.", [{
-        //             text: "Okay"
-        //         }])
-        //     }
-        //     else{
-        //         alert(err, [{
-        //             text: "Okay"
-        //         }])
-        //     }
-        //   });
     }
 
     setValue = async (topicName, username, language) => {
@@ -117,6 +86,16 @@ export default class LoginScreen extends Component{
         } catch(e) {
             console.log(e)
         }
+    }
+    
+    forgotPassword = () => {
+
+        if (this.state.email.trim() === "") {
+            this.setState(() => ({ nameError: "Email required." }));
+        }
+        else{
+            passwordReset(this.state.email)
+        }        
     }
 
     render(){
@@ -148,6 +127,12 @@ export default class LoginScreen extends Component{
                     style={{ height: 40, width : 40 }}
                     onPress={() => this.validateTextInput()}
                     title="Login"
+                />
+
+                <Button 
+                    style={{ height: 40, width : 40 }}
+                    onPress={() => this.forgotPassword()}
+                    title="Forgot Password"
                 />
             </View>
         )

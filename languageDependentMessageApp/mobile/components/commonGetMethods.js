@@ -64,3 +64,14 @@ export const getAvailableLanguages = () => {
           });
         }); 
 }
+
+export const passwordReset = (email) => {
+    firebase.auth().sendPasswordResetEmail(email)
+      .then(function (user) {
+        alert('Please check your email for the password reset link.', [{
+            text: "Okay"
+        }] )
+      }).catch(function (e) {
+        console.log(e)
+      })
+}

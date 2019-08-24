@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
-// import {TextInput, StyleSheet, Text, View, Button} from 'react-native';
 import {createStackNavigator, createAppContainer, createSwitchNavigator} from 'react-navigation';
 import HomeScreen from "./components/home";
 import ChatScreen from "./components/chat";
@@ -8,7 +7,6 @@ import UsersScreen from "./components/users";
 import LoginScreen from "./components/login";
 import SignupScreen from "./components/signup";
 import ProfileScreen from "./components/profile";
-import ChangePasswordScreen from "./components/changePassword";
 import firebase from "react-native-firebase";
 
 export default class App extends Component {
@@ -22,20 +20,6 @@ export default class App extends Component {
 
     console.log("in app.js")
     await this.checkNotificationPermissions(); 
-    
-    // this.authSubscription = firebase.auth().onAuthStateChanged( async (user) => {
-    //   console.log("before user in app.js", user)
-    //   if(user){
-    //     await AsyncStorage.setItem("email", user._user.email)
-    //   }
-    //   console.log("app js asyncstorage email", )
-    //   await this.setState({
-    //     // loading: false,
-    //     user
-    //   });
-    // });
-
-    // console.log("user in app.js", this.state.user)
   }
 
   checkNotificationPermissions =async () => {
@@ -81,11 +65,6 @@ export default class App extends Component {
     }
   }
 
-  // componentWillUnmount(){
-  //   console.log("app unmounted")
-  //   this.authSubscription();
-  // }
-
   render() {
 
     var signedIn = this.getData();
@@ -100,12 +79,6 @@ export default class App extends Component {
       Chat: {screen: ChatScreen},
       Profile: {
         screen: ProfileScreen,
-        navigationOptions: {
-          header: null
-        }
-      },
-      passwordChange: {
-        screen: ChangePasswordScreen,
         navigationOptions: {
           header: null
         }
