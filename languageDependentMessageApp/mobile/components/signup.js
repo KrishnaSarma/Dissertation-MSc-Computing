@@ -119,8 +119,7 @@ export default class SignupScreen extends Component{
             if(response.status == 201){
                 console.log("3.5", response.data.topicName)
                 await this.setValue(response.data.topicName)
-                // console.log("add user data", response)
-                // 
+                this.props.navigation.navigate('Users')
             }
         })
         .catch((err) => {
@@ -143,12 +142,9 @@ export default class SignupScreen extends Component{
             console.log("1 after signup", user)
             if(user){
                 await this.addUserData()
-                // console.log("4", topicName)
-                // await this.setValue(topicName)
                 await alert("Signup successful", [{
                         text: "Okay"
                     }])
-                this.props.navigation.navigate('Users')
             }
 
         })
@@ -160,49 +156,6 @@ export default class SignupScreen extends Component{
             }])
         });
     }
-
-    // signup(){
-
-    //     axios.post("http://"+ipAddress+":3000/signup", {
-    //         email: this.state.email,
-    //         username: this.state.username,
-    //         password: this.state.password,
-    //         language: this.state.language,
-    //     })
-    //     .then(async (response) => {
-    //         console.log("response signup", response);
-    //         if (response.status == 201){                
-    //             await this.setValue(response.data.topicName)
-    //             alert("Sign up successful", [{
-    //                 text: "Okay"
-    //             }])
-                
-    //             const {navigate} = this.props.navigation
-    //             navigate('Users')
-    //         }
-            
-    //     })
-    //     .catch(err => {
-    //         var error = err.response
-    //         if (error.status == 404){
-    //             console.log("signup", error)
-    //             alert("This email Id is already used", [{
-    //                 text: "Okay"
-    //             }])
-    //         }
-    //         else if (err.status == 500){
-    //             alert("Internal server error. Please try again.", [{
-    //                 text: "Okay"
-    //             }])
-    //         }
-    //         else{
-    //             alert(err, [{
-    //                 text: "Okay"
-    //             }])
-    //         }
-    //       });
-
-    // }
 
     render(){
         return(

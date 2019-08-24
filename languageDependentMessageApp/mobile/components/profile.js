@@ -161,6 +161,7 @@ export default class ProfileScreen extends Component{
         console.log('logout pressed');
         this.removeValue()
         await firebase.messaging().unsubscribeFromTopic(this.state.topicName);
+        await firebase.auth().signOut()
         navigate("Home")
     }
 

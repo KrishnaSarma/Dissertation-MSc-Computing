@@ -3,6 +3,8 @@ import {Text, View, Button, TextInput} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 
+import firebase from "react-native-firebase";
+
 import {ipAddress} from "../constants"
 
 export default class LoginScreen extends Component{
@@ -35,39 +37,73 @@ export default class LoginScreen extends Component{
             this.login()
         }
     }
+
+    getUserData = () => {
+        axios.get("http://"+ipAddress+":3000/getUserData", {
+            params:{
+                email: this.state.email
+            }
+        })
+        .then( async (response) => {
+            console.log("get user data response", response)
+            await this.setValue(response.data.topicName, response.data.username, response.data.language)            
+            this.props.navigation.navigate('Users')
+        })
+    }
+
     login(){
         console.log("in login")
-        axios.post("http://"+ipAddress+":3000/login", {
-            email: this.state.email,
-            password: this.state.password
-        })
-        .then(async (response) => {
-            console.log("response login", response);
-            if (response.status == 201){
-                await this.setValue(response.data.topicName, response.data.username, response.data.language)
-                console.log("login", this.state.email+" "+this.state.password)
-                this.props.navigation.navigate('Users')
+
+        firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+        .then(async (user) => {
+            console.log("1 after login", user)
+            if(user){
+                await this.getUserData()
+                await alert("Login Successful", [{
+                    text: "Okay"
+                }])
             }
+        })
+        .catch((error) => {
+            const { code, message } = error;
+            console.log("signup error", code, message)
+            alert(message, [{
+                text: "Okay"
+            }])
+        });
+
+
+        // axios.post("http://"+ipAddress+":3000/login", {
+        //     email: this.state.email,
+        //     password: this.state.password
+        // })
+        // .then(async (response) => {
+        //     console.log("response login", response);
+        //     if (response.status == 201){
+        //         await this.setValue(response.data.topicName, response.data.username, response.data.language)
+        //         console.log("login", this.state.email+" "+this.state.password)
+        //         this.props.navigation.navigate('Users')
+        //     }
             
-        })
-        .catch(err => {
-            var error = err.response
-            if (error.status == 404){
-                alert("Enter correct email/password.", [{
-                    text: "Okay"
-                }])
-            }
-            else if (err.status == 500){
-                alert("Internal server error. Please try again.", [{
-                    text: "Okay"
-                }])
-            }
-            else{
-                alert(err, [{
-                    text: "Okay"
-                }])
-            }
-          });
+        // })
+        // .catch(err => {
+        //     var error = err.response
+        //     if (error.status == 404){
+        //         alert("Enter correct email/password.", [{
+        //             text: "Okay"
+        //         }])
+        //     }
+        //     else if (err.status == 500){
+        //         alert("Internal server error. Please try again.", [{
+        //             text: "Okay"
+        //         }])
+        //     }
+        //     else{
+        //         alert(err, [{
+        //             text: "Okay"
+        //         }])
+        //     }
+        //   });
     }
 
     setValue = async (topicName, username, language) => {
