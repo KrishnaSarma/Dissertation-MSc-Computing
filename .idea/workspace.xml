@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="53b49c50-a9ed-4637-9b80-70733dea3654" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/languageDependentMessageApp/backend/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/languageDependentMessageApp/backend/routes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/languageDependentMessageApp/mobile/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/languageDependentMessageApp/mobile/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/languageDependentMessageApp/mobile/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/languageDependentMessageApp/mobile/android/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/languageDependentMessageApp/mobile/android/app/src/main/java/com/mobile/MainApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/languageDependentMessageApp/mobile/android/app/src/main/java/com/mobile/MainApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/languageDependentMessageApp/mobile/components/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/languageDependentMessageApp/mobile/components/users.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -19,8 +15,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/languageDependentMessageApp/mobile/App.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="799">
-              <caret line="47" column="3" selection-start-line="47" selection-start-column="3" selection-end-line="47" selection-end-column="3" />
+            <state relative-caret-position="527">
+              <caret line="31" column="3" selection-start-line="31" selection-start-column="3" selection-end-line="31" selection-end-column="3" />
             </state>
           </provider>
         </entry>
@@ -46,8 +42,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/languageDependentMessageApp/mobile/components/login.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="493">
-              <caret line="29" column="40" selection-start-line="29" selection-start-column="40" selection-end-line="29" selection-end-column="40" />
+            <state relative-caret-position="595">
+              <caret line="35" column="40" selection-start-line="35" selection-start-column="40" selection-end-line="35" selection-end-column="40" />
             </state>
           </provider>
         </entry>
@@ -74,7 +70,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="950" />
     <option name="width" value="980" />
     <option name="height" value="1040" />
@@ -87,6 +83,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
@@ -116,7 +113,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -153,8 +149,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
-    <editor active="true" />
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="7" />
     <layout>
       <window_info id="Captures" order="0" weight="0.25" />
       <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.019828156" />
@@ -234,18 +229,12 @@
     <entry file="file://$PROJECT_DIR$/languageDependentMessageApp/backend/routes.js">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/languageDependentMessageApp/backend/controllers/authController.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="26" selection-start-line="5" selection-start-column="26" selection-end-line="5" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/languageDependentMessageApp/backend/controllers/authController.js" />
     <entry file="file://$PROJECT_DIR$/languageDependentMessageApp/mobile/screens/login.js" />
     <entry file="file://$PROJECT_DIR$/languageDependentMessageApp/mobile/App.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="799">
-          <caret line="47" column="3" selection-start-line="47" selection-start-column="3" selection-end-line="47" selection-end-column="3" />
+        <state relative-caret-position="527">
+          <caret line="31" column="3" selection-start-line="31" selection-start-column="3" selection-end-line="31" selection-end-column="3" />
         </state>
       </provider>
     </entry>
@@ -258,8 +247,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/languageDependentMessageApp/mobile/components/login.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="29" column="40" selection-start-line="29" selection-start-column="40" selection-end-line="29" selection-end-column="40" />
+        <state relative-caret-position="595">
+          <caret line="35" column="40" selection-start-line="35" selection-start-column="40" selection-end-line="35" selection-end-column="40" />
         </state>
       </provider>
     </entry>

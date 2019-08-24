@@ -13,7 +13,8 @@ export const sendNotification = (sender, recieverTopic, message) => {
         },
         
         data: {  //you can send only notification or only data(or include both)
-            sender: message
+            title: sender,
+            body: message
         }
     }
     

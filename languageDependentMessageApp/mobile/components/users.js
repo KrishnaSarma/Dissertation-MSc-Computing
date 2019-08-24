@@ -6,8 +6,6 @@ import axios from 'axios';
 import {ipAddress} from "../constants";
 import firebase from "react-native-firebase";
 
-// import { FlatList } from 'react-native-gesture-handler';
-
 export default class UsersScreen extends Component{
 
     constructor(props) {
@@ -112,34 +110,25 @@ export default class UsersScreen extends Component{
             const { title, body } = notification;
             console.log("on notification listener", notification);
             this.showAlert(title, body);
+            // reassemble user list here or highlight the user
         });
-    
-        /*
-        * If your app is in background, you can listen for when a notification is clicked / tapped / opened as follows:
-        * */
-        this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen) => {
-            const { title, body } = notificationOpen.notification;
-            console.log("on notification opened listener");
-            this.showAlert(title, body);
+
+        this.notificationDisplayedListener = firebase.notifications().onNotificationDisplayed((notification) => {
+            console.log("on notification displayed", notification)
+            // Process your notification as required
+            // ANDROID: Remote notifications do not contain the channel ID. You will have to specify this manually if you'd like to re-display the notification.
         });
-    
-        /*
-        * If your app is closed, you can check if it was opened by a notification being clicked / tapped / opened as follows:
-        * */
         const notificationOpen = await firebase.notifications().getInitialNotification();
         if (notificationOpen) {
-            const { title, body } = notificationOpen.notification;
-            console.log("on notification open if app closed listener");
-            this.showAlert(title, body);
+            console.log("notification open", notificationOpen)
+            const { data } = notificationOpen.notification;
+            console.log("data", data)
+            console.log("on notification open if app closed listener", data.title, data.body);
+            // this.showAlert(data.title, data.body);
+            this.props.navigation.navigate('Chat', {
+                reciever: data.title
+            })
         }
-        /*
-        * Triggered for data only payload in foreground
-        * */
-        this.messageListener = firebase.messaging().onMessage((message) => {
-          //process data message
-          console.log("message")
-          console.log(JSON.stringify(message));
-        });
     }
     
     showAlert(title, body) {
@@ -155,67 +144,8 @@ export default class UsersScreen extends Component{
     //Remove listeners allocated in createNotificationListeners()
     componentWillUnmount() {
         this.notificationListener();
-        this.notificationOpenedListener();
+        this.notificationDisplayedListener();
     }
-
-    // handleRefresh = () => {
-    //     this.setState(
-    //     {
-    //         page: 1,
-    //         seed: this.state.seed + 1,
-    //         refreshing: true
-    //         },
-    //         () => {
-    //             this.getUserList();
-    //     }
-    //     );
-    // };
-    
-    // handleLoadMore = () => {
-    // this.setState(
-    //     {
-    //         page: this.state.page + 1
-    //     },
-    //     () => {
-    //         this.getUserList();
-    //     }
-    // );
-    // };
-    
-    // renderSeparator = () => {
-    // return (
-    //     <View
-    //     style={{
-    //         height: 1,
-    //         width: "86%",
-    //         backgroundColor: "#CED0CE",
-    //         marginLeft: "14%"
-    //     }}
-    //     />
-    // );
-    // };
-
-    // renderHeader = () => {
-    // return <SearchBar placeholder="Type Here..." lightTheme round />;
-    // };
-
-    // renderFooter = () => {
-    // if (!this.state.loading) return null;
-
-    // return (
-    //     <View
-    //         style={{
-    //             paddingVertical: 20,
-    //             borderTopWidth: 1,
-    //             borderColor: "#CED0CE"
-    //         }}
-    //         >
-    //         <ActivityIndicator animating size="large" />
-    //     </View>
-    // );
-    // };
-    
-
 
     render(){
 
@@ -229,32 +159,6 @@ export default class UsersScreen extends Component{
                     onPress={() => navigate('Profile')}
                     title="Profile"
                 />
-                {/* <Text style = {{height: 40, width: 50}}>
-                    "User Screen"
-                </Text> */}
-
-                {/* <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
-                    <FlatList
-                    data={this.state.users}
-                    renderItem={({ item }) => (
-                        <ListItem
-                        // roundAvatar
-                        title={`${item}`}
-                        // subtitle={item.email}
-                        // avatar={{ uri: item.picture.thumbnail }}
-                        containerStyle={{ borderBottomWidth: 0 }}
-                        />
-                    )}
-                    // keyExtractor={item => item.email}
-                    ItemSeparatorComponent={this.renderSeparator}
-                    ListHeaderComponent={this.renderHeader}
-                    ListFooterComponent={this.renderFooter}
-                    onRefresh={this.handleRefresh}
-                    refreshing={this.state.refreshing}
-                    onEndReached={this.handleLoadMore}
-                    onEndReachedThreshold={50}
-                    />
-                </List> */}
 
                 <FlatList
                 data={this.state.users}
@@ -271,14 +175,6 @@ export default class UsersScreen extends Component{
                     </TouchableHighlight>
                   )}
                 />
-
-                {/* <Button 
-                    style={{ height : 40, width : 40 }}
-                    onPress={() => navigate('Chat', {
-                        socket: this.socket
-                    })}
-                    title="Go to chat"
-                /> */}
             </View>
         )
     }
