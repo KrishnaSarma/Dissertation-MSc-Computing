@@ -194,7 +194,8 @@ dependencies {
     implementation project(':react-native-vector-icons')
     implementation project(':@react-native-community_async-storage')
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "com.facebook.react:react-native:+"  // From node_modules
+    implementation "com.facebook.react:react-native:+"
+    implementation "com.google.firebase:firebase-auth:17.0.0"
 
     implementation "com.google.android.gms:play-services-base:17.0.0"
     implementation "com.google.firebase:firebase-core:17.0.1"

@@ -27,15 +27,14 @@ export const login = (req, response) => {
     
 }
 
-export const signup = (req, response) => {
+export const addUserData = (req, response) => {
+    console.log("server add user data", req.body)
     var username = req.body.username;
-    var password = req.body.password;
     var email = req.body.email;
     var language = req.body.language
     var topicName = email.replace("@","_")
     var newUser = new users({
         email: email,
-        password: password,
         username: username,
         language: language,
         topicName: topicName
@@ -43,8 +42,8 @@ export const signup = (req, response) => {
     newUser.save()
     .then((res)=>{
         if(res){
+            console.log(res)
             return response.status(201).json({
-                signin: true,
                 topicName: res.topicName
             })
         }        

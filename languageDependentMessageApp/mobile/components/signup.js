@@ -5,6 +5,8 @@ import {ipAddress} from "../constants"
 
 import AsyncStorage from '@react-native-community/async-storage';
 
+import firebase from "react-native-firebase";
+
 export default class SignupScreen extends Component{
     
     constructor(props){
@@ -94,47 +96,35 @@ export default class SignupScreen extends Component{
 
     setValue = async (topicName) => {
         try {
-            await AsyncStorage.setItem('isLoggedIn', 'True');            
+            await AsyncStorage.setItem('isLoggedIn', "true");          
             await AsyncStorage.setItem('email', this.state.email);
             await AsyncStorage.setItem('username', this.state.username);
             await AsyncStorage.setItem('language', this.state.language);
             await AsyncStorage.setItem("fcmTopicName", topicName)
-            console.log("Async Storage email", await AsyncStorage.getItem('email'));
+            console.log("5 Async Storage email", await AsyncStorage.getItem('email'));
         } catch(e) {
             console.log(e)
         }
     }
 
-    signup(){
-
-        axios.post("http://"+ipAddress+":3000/signup", {
+    addUserData = async () => {
+        console.log("2 in add user data: http://"+ipAddress+":3000/addUserData")
+        await axios.post("http://"+ipAddress+":3000/addUserData", {
             email: this.state.email,
             username: this.state.username,
-            password: this.state.password,
-            language: this.state.language,
+            language: this.state.language
         })
         .then(async (response) => {
-            console.log("response signup", response);
-            if (response.status == 201){                
+            console.log("3 user data response", response)
+            if(response.status == 201){
+                console.log("3.5", response.data.topicName)
                 await this.setValue(response.data.topicName)
-                alert("Sign up successful", [{
-                    text: "Okay"
-                }])
-                
-                const {navigate} = this.props.navigation
-                navigate('Users')
+                // console.log("add user data", response)
+                // 
             }
-            
         })
-        .catch(err => {
-            var error = err.response
-            if (error.status == 404){
-                console.log("signup", error)
-                alert("This email Id is already used", [{
-                    text: "Okay"
-                }])
-            }
-            else if (err.status == 500){
+        .catch((err) => {
+            if (err.status == 500){
                 alert("Internal server error. Please try again.", [{
                     text: "Okay"
                 }])
@@ -144,9 +134,75 @@ export default class SignupScreen extends Component{
                     text: "Okay"
                 }])
             }
-          });
-
+        })
     }
+
+    signup(){
+        firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
+        .then(async (user) => {
+            console.log("1 after signup", user)
+            if(user){
+                await this.addUserData()
+                // console.log("4", topicName)
+                // await this.setValue(topicName)
+                await alert("Signup successful", [{
+                        text: "Okay"
+                    }])
+                this.props.navigation.navigate('Users')
+            }
+
+        })
+        .catch((error) => {
+            const { code, message } = error;
+            console.log("signup error", code, message)
+            alert(message, [{
+                text: "Okay"
+            }])
+        });
+    }
+
+    // signup(){
+
+    //     axios.post("http://"+ipAddress+":3000/signup", {
+    //         email: this.state.email,
+    //         username: this.state.username,
+    //         password: this.state.password,
+    //         language: this.state.language,
+    //     })
+    //     .then(async (response) => {
+    //         console.log("response signup", response);
+    //         if (response.status == 201){                
+    //             await this.setValue(response.data.topicName)
+    //             alert("Sign up successful", [{
+    //                 text: "Okay"
+    //             }])
+                
+    //             const {navigate} = this.props.navigation
+    //             navigate('Users')
+    //         }
+            
+    //     })
+    //     .catch(err => {
+    //         var error = err.response
+    //         if (error.status == 404){
+    //             console.log("signup", error)
+    //             alert("This email Id is already used", [{
+    //                 text: "Okay"
+    //             }])
+    //         }
+    //         else if (err.status == 500){
+    //             alert("Internal server error. Please try again.", [{
+    //                 text: "Okay"
+    //             }])
+    //         }
+    //         else{
+    //             alert(err, [{
+    //                 text: "Okay"
+    //             }])
+    //         }
+    //       });
+
+    // }
 
     render(){
         return(

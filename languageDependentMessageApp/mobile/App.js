@@ -15,10 +15,27 @@ export default class App extends Component {
 
   constructor(props){
     super(props);
+    this.state = {};
   }
 
-  componentDidMount = () => {
-    this.checkNotificationPermissions();    
+  componentDidMount = async () => {
+
+    console.log("in app.js")
+    await this.checkNotificationPermissions(); 
+    
+    // this.authSubscription = firebase.auth().onAuthStateChanged( async (user) => {
+    //   console.log("before user in app.js", user)
+    //   if(user){
+    //     await AsyncStorage.setItem("email", user._user.email)
+    //   }
+    //   console.log("app js asyncstorage email", )
+    //   await this.setState({
+    //     // loading: false,
+    //     user
+    //   });
+    // });
+
+    // console.log("user in app.js", this.state.user)
   }
 
   checkNotificationPermissions =async () => {
@@ -35,7 +52,6 @@ export default class App extends Component {
     if (!fcmToken) {
       fcmToken = await firebase.messaging().getToken();
       if (fcmToken) {
-        console.log('fcmToken:', fcmToken);
         await AsyncStorage.setItem('fcmToken', fcmToken);
       }
     }
@@ -64,6 +80,11 @@ export default class App extends Component {
       console.log(e)
     }
   }
+
+  // componentWillUnmount(){
+  //   console.log("app unmounted")
+  //   this.authSubscription();
+  // }
 
   render() {
 

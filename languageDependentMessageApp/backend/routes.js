@@ -7,7 +7,7 @@ import * as translatorController from "./controllers/translatorController"
 // import {authController, chatController, usersController} from './controllers';
 
 routes.post("/login", authController.login);
-routes.post("/signup", authController.signup);
+routes.post("/addUserData", authController.addUserData);
 routes.get("/users", userController.findAll);
 routes.get("/getMessages", chatController.getMessages);
 routes.get("/getLanguages", translatorController.getLanguages);
