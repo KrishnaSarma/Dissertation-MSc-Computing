@@ -4,6 +4,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import firebase from "react-native-firebase";
 
+import DialogInput from 'react-native-dialog-input';
+
 import { Container, Content, Header, Left,
     Body, Right, Button, Icon, Title,
     Thumbnail, List, ListItem, Item, Input, Text } from 'native-base';
@@ -27,7 +29,8 @@ export default class ProfileScreen extends Component{
             topicName: "",
             prevLanguage: "",
             newLanguage: "",
-            languages: []
+            languages: [],
+            isEmailChanged: false,
         }
     }
 
@@ -80,7 +83,15 @@ export default class ProfileScreen extends Component{
     }
 
     saveChanges = async() => {
+
         if(await this.validateEmail()){
+
+            if(this.state.newEmail != this.state.prevEmail){
+                this.setState({
+                    isEmailChanged: true
+                })
+            }
+
             axios.post("http://"+ipAddress+":3000/saveUserDetails", {
                 prevEmail: this.state.prevEmail,
                 newEmail: this.state.newEmail,
@@ -94,9 +105,6 @@ export default class ProfileScreen extends Component{
                     await this.setState({
                         changed: false
                     })
-                    alert("User Details saved", [{
-                        text: "Okay"
-                    }])
                 }
                 
             })
@@ -140,7 +148,7 @@ export default class ProfileScreen extends Component{
             await AsyncStorage.setItem("fcmTopicName", topicName)
             console.log("Async Storage email", await AsyncStorage.getItem('email'));
             if(this.state.prevEmail != this.state.newEmail){
-                await changeFirebaseTopic();
+                await this.changeFirebaseTopic();
             }
         } catch(e) {
             console.log(e)
@@ -167,6 +175,19 @@ export default class ProfileScreen extends Component{
 
     changePassword = () => {
         passwordReset(this.state.prevEmail)
+    }
+
+    changeFirebaseEmail = async (password) => {
+        var user = firebase.auth().currentUser;
+        var cred = firebase.auth.EmailAuthProvider.credential(user.email, password);
+        await user.reauthenticateWithCredential(cred);
+        user.updateEmail(this.state.newEmail).then(() => {
+            console.log("Email updated!");
+            this.setState({
+                isEmailChanged: false
+            })
+        })
+        .catch((error) => { console.log(error); });
     }
 
     render(){
@@ -208,6 +229,12 @@ export default class ProfileScreen extends Component{
                                 changed: true
                             })}} />
                     </Item>
+                    <DialogInput isDialogVisible={this.state.isEmailChanged}
+                        title={"Password"}
+                        message={"Enter your password"}
+                        submitInput={ (inputText) => {this.changeFirebaseEmail(inputText)} }
+                        closeDialog={ () =>this.setState({isEmailChanged:false})}>
+                    </DialogInput>
                     <Item style= {{flexDirection: "row"}} regular>
                         <Text style= {profileStyles.text}>Language</Text>
 
