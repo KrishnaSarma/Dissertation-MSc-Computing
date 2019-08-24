@@ -12,7 +12,7 @@ import {ipAddress, secondaryColor, primaryColor, disabledColor} from "../constan
 import { commonStyles } from '../style/commonStyle';
 import { profileStyles } from "../style/profileScreenStyle";
 
-import {getUserLanguage, getUserEmail, getUserTopicName, getUsername, getAvailableLanguages} from "./commonGetMethods";
+import {getUserLanguage, getUserEmail, getUserTopicName, getUsername, getAvailableLanguages, passwordReset} from "./commonGetMethods";
 
 export default class ProfileScreen extends Component{
 
@@ -161,7 +161,12 @@ export default class ProfileScreen extends Component{
         console.log('logout pressed');
         this.removeValue()
         await firebase.messaging().unsubscribeFromTopic(this.state.topicName);
+        await firebase.auth().signOut()
         navigate("Home")
+    }
+
+    changePassword = () => {
+        passwordReset(this.state.prevEmail)
     }
 
     render(){
@@ -222,13 +227,17 @@ export default class ProfileScreen extends Component{
                         </Picker>
                     </Item>
                     <List>
-                        <ListItem onPress={()=>navigate('passwordChange')}>
+                        <ListItem onPress={()=>this.changePassword()}>
                             <Left>
                                 <Text style={{fontSize: 22}}>Change Password</Text>
                             </Left>
-                            <Right>
-                                <Icon name="arrow-forward" />
-                            </Right>
+                        </ListItem>
+                    </List>
+                    <List>
+                        <ListItem onPress={()=>this.logout(navigate)}>
+                            <Left>
+                                <Text style={{fontSize: 22}}>Logout</Text>
+                            </Left>
                         </ListItem>
                     </List>
                     {this.state.changed?(
@@ -243,12 +252,6 @@ export default class ProfileScreen extends Component{
                             <Text style= {commonStyles.buttonText}>SAVE</Text>
                         </TouchableHighlight>
                     )}
-
-                    <TouchableHighlight 
-                    style={commonStyles.button}
-                    onPress={() => {this.logout(navigate)}} >
-                        <Text style= {commonStyles.buttonText}>LOGOUT</Text>
-                    </TouchableHighlight>
                 </Content>
             </Container>
         )

@@ -134,3 +134,59 @@ export const saveUserDetails = (request, response) => {
             });
         })
 }
+
+export const getUserData = (req, response) => {
+    console.log("getUserData", req.query)
+    var email = req.query.email;
+    users.findOne({email: email})
+    .then((user)=>{
+        if(user){
+            if (user){
+                console.log("user", user)       
+                return response.status(201).json({
+                    topicName: user.topicName,
+                    username: user.username,
+                    language: user.language
+                });
+            }
+        }
+        return response.status(404).json({
+            signin: false
+        });
+    }).catch((err)=>{
+        console.log("Error authenticating", err)
+        return response.status(500).json({
+            data: "Internal server error!"
+        });
+    })
+    
+}
+
+export const addUserData = (req, response) => {
+    console.log("server add user data", req.body)
+    var username = req.body.username;
+    var email = req.body.email;
+    var language = req.body.language
+    var topicName = email.replace("@","_")
+    var newUser = new users({
+        email: email,
+        username: username,
+        language: language,
+        topicName: topicName
+    })
+    newUser.save()
+    .then((res)=>{
+        if(res){
+            console.log(res)
+            return response.status(201).json({
+                topicName: res.topicName
+            })
+        }        
+    }).catch((err)=>{
+        console.log("Error authenticating", err)
+        return response.status(500).json({
+            data: "Internal server error!"
+        });
+    })
+    
+}
