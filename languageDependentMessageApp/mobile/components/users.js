@@ -27,7 +27,7 @@ export default class UsersScreen extends Component{
     componentDidMount = async () => {
         console.log("in users")
 
-        await this.getUsername();
+        await this.getUserEmail();
 
         this.createNotificationListeners();
 
@@ -73,7 +73,7 @@ export default class UsersScreen extends Component{
               });
     }
 
-    getUsername = async () => {
+    getUserEmail = async () => {
         try{
             const user = await AsyncStorage.getItem('email')
             console.log("email in user screen", user);

@@ -1,17 +1,23 @@
 import React, {Component} from 'react';
-import {Text, View, Button, TextInput} from 'react-native';
+import {Text, View, Button, TextInput, Switch} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 
+import firebase from "react-native-firebase";
+
 import {ipAddress} from "../constants"
+
+import {passwordReset} from "./commonGetMethods";
 
 export default class LoginScreen extends Component{
 
     constructor(props){
         super(props);
+        this.toggleSwitch = this.toggleSwitch.bind(this);
         this.state = {
             email: "",
-            password: ""
+            password: "",
+            showPassword: false
         }
     }
 
@@ -35,39 +41,40 @@ export default class LoginScreen extends Component{
             this.login()
         }
     }
+
+    getUserData = () => {
+        axios.get("http://"+ipAddress+":3000/getUserData", {
+            params:{
+                email: this.state.email
+            }
+        })
+        .then( async (response) => {
+            console.log("get user data response", response)
+            await this.setValue(response.data.topicName, response.data.username, response.data.language)            
+            this.props.navigation.navigate('Users')
+        })
+    }
+
     login(){
         console.log("in login")
-        axios.post("http://"+ipAddress+":3000/login", {
-            email: this.state.email,
-            password: this.state.password
+
+        firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+        .then(async (user) => {
+            console.log("1 after login", user)
+            if(user){
+                await this.getUserData()
+                await alert("Login Successful", [{
+                    text: "Okay"
+                }])
+            }
         })
-        .then(async (response) => {
-            console.log("response login", response);
-            if (response.status == 201){
-                await this.setValue(response.data.topicName, response.data.username, response.data.language)
-                console.log("login", this.state.email+" "+this.state.password)
-                this.props.navigation.navigate('Users')
-            }
-            
-        })
-        .catch(err => {
-            var error = err.response
-            if (error.status == 404){
-                alert("Enter correct email/password.", [{
-                    text: "Okay"
-                }])
-            }
-            else if (err.status == 500){
-                alert("Internal server error. Please try again.", [{
-                    text: "Okay"
-                }])
-            }
-            else{
-                alert(err, [{
-                    text: "Okay"
-                }])
-            }
-          });
+        .catch((error) => {
+            const { code, message } = error;
+            console.log("signup error", code, message)
+            alert(message, [{
+                text: "Okay"
+            }])
+        });
     }
 
     setValue = async (topicName, username, language) => {
@@ -81,6 +88,20 @@ export default class LoginScreen extends Component{
         } catch(e) {
             console.log(e)
         }
+    }
+    
+    forgotPassword = () => {
+
+        if (this.state.email.trim() === "") {
+            this.setState(() => ({ nameError: "Email required." }));
+        }
+        else{
+            passwordReset(this.state.email)
+        }        
+    }
+
+    toggleSwitch() {
+        this.setState({ showPassword: !this.state.showPassword });
     }
 
     render(){
@@ -99,10 +120,16 @@ export default class LoginScreen extends Component{
                 <TextInput
                     style={{height: 40, width: 400, textAlign: "center"}}
                     placeholder="Enter password here..."
-                    secureTextEntry = {true}
+                    secureTextEntry = {!this.state.showPassword}
                     onChangeText= {(password) => this.setState({password})}
                     value = {this.state.password}
                 />
+
+                <Switch
+                onValueChange={this.toggleSwitch}
+                value={!this.state.showPassword}
+                /> 
+                <Text>Show</Text>
 
                 {!!this.state.nameError && (
                     <Text style={{ color: "red" }}>{this.state.nameError}</Text>
@@ -112,6 +139,12 @@ export default class LoginScreen extends Component{
                     style={{ height: 40, width : 40 }}
                     onPress={() => this.validateTextInput()}
                     title="Login"
+                />
+
+                <Button 
+                    style={{ height: 40, width : 40 }}
+                    onPress={() => this.forgotPassword()}
+                    title="Forgot Password"
                 />
             </View>
         )

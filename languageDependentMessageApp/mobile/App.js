@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
-// import {TextInput, StyleSheet, Text, View, Button} from 'react-native';
 import {createStackNavigator, createAppContainer, createSwitchNavigator} from 'react-navigation';
 import HomeScreen from "./components/home";
 import ChatScreen from "./components/chat";
@@ -8,17 +7,19 @@ import UsersScreen from "./components/users";
 import LoginScreen from "./components/login";
 import SignupScreen from "./components/signup";
 import ProfileScreen from "./components/profile";
-import ChangePasswordScreen from "./components/changePassword";
 import firebase from "react-native-firebase";
 
 export default class App extends Component {
 
   constructor(props){
     super(props);
+    this.state = {};
   }
 
-  componentDidMount = () => {
-    this.checkNotificationPermissions();    
+  componentDidMount = async () => {
+
+    console.log("in app.js")
+    await this.checkNotificationPermissions(); 
   }
 
   checkNotificationPermissions =async () => {
@@ -35,7 +36,6 @@ export default class App extends Component {
     if (!fcmToken) {
       fcmToken = await firebase.messaging().getToken();
       if (fcmToken) {
-        console.log('fcmToken:', fcmToken);
         await AsyncStorage.setItem('fcmToken', fcmToken);
       }
     }
@@ -79,12 +79,6 @@ export default class App extends Component {
       Chat: {screen: ChatScreen},
       Profile: {
         screen: ProfileScreen,
-        navigationOptions: {
-          header: null
-        }
-      },
-      passwordChange: {
-        screen: ChangePasswordScreen,
         navigationOptions: {
           header: null
         }
