@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View, Button, TextInput} from 'react-native';
+import {Text, View, Button, TextInput, Switch} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 
@@ -13,9 +13,11 @@ export default class LoginScreen extends Component{
 
     constructor(props){
         super(props);
+        this.toggleSwitch = this.toggleSwitch.bind(this);
         this.state = {
             email: "",
-            password: ""
+            password: "",
+            showPassword: false
         }
     }
 
@@ -98,6 +100,10 @@ export default class LoginScreen extends Component{
         }        
     }
 
+    toggleSwitch() {
+        this.setState({ showPassword: !this.state.showPassword });
+    }
+
     render(){
         return(
             <View>
@@ -114,10 +120,16 @@ export default class LoginScreen extends Component{
                 <TextInput
                     style={{height: 40, width: 400, textAlign: "center"}}
                     placeholder="Enter password here..."
-                    secureTextEntry = {true}
+                    secureTextEntry = {!this.state.showPassword}
                     onChangeText= {(password) => this.setState({password})}
                     value = {this.state.password}
                 />
+
+                <Switch
+                onValueChange={this.toggleSwitch}
+                value={!this.state.showPassword}
+                /> 
+                <Text>Show</Text>
 
                 {!!this.state.nameError && (
                     <Text style={{ color: "red" }}>{this.state.nameError}</Text>

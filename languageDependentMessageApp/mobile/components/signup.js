@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View, Button, TextInput, Picker} from 'react-native';
+import {Text, View, Button, TextInput, Picker, Switch} from 'react-native';
 import axios from 'axios';
 import {ipAddress} from "../constants"
 
@@ -11,13 +11,17 @@ export default class SignupScreen extends Component{
     
     constructor(props){
         super(props);
+        this.toggleSwitch = this.toggleSwitch.bind(this);
+        this.toggleConfirmPasswordSwitch = this.toggleConfirmPasswordSwitch.bind(this);
         this.state = {
             email: "",
             username: "",
             password: "",
             confirmPassword: "",
             language: "",
-            languages: []
+            languages: [],            
+            showPassword: false,
+            showConfirmPassword: false
         }
     }
 
@@ -157,6 +161,14 @@ export default class SignupScreen extends Component{
         });
     }
 
+    togglePasswordSwitch() {
+        this.setState({ showPassword: !this.state.showPassword });
+    }
+
+    toggleConfirmPasswordSwitch() {
+        this.setState({ showConfirmPassword: !this.state.showConfirmPassword });
+    }
+
     render(){
         return(
             <View>
@@ -181,18 +193,28 @@ export default class SignupScreen extends Component{
                 <TextInput
                     style={{height: 40, width: 400, textAlign: "center"}}
                     placeholder="Enter password here..."
-                    secureTextEntry = {true}
+                    secureTextEntry = {!this.state.showPassword}
                     onChangeText= {(password) => this.setState({password})}
                     value = {this.state.password}
                 />
+                <Switch
+                onValueChange={this.toggleSwitch}
+                value={!this.state.showPassword}
+                /> 
+                <Text>Show</Text>
 
                 <TextInput
                     style={{height: 40, width: 400, textAlign: "center"}}
                     placeholder="Renter password here..."
-                    secureTextEntry = {true}
+                    secureTextEntry = {!this.state.showConfirmPassword}
                     onChangeText= {(password) => this.setState({confirmPassword: password})}
                     value = {this.state.confirmPassword}
                 />
+                <Switch
+                onValueChange={this.toggleConfirmPasswordSwitch}
+                value={!this.state.showConfirmPassword}
+                /> 
+                <Text>Show</Text>
 
                 {!!this.state.nameError && (
                     <Text style={{ color: "red" }}>{this.state.nameError}</Text>
