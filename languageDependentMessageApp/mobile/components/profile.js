@@ -212,7 +212,7 @@ export default class ProfileScreen extends Component{
                     large 
                     source={require('../images/profilePicture.jpg')} />
                     <Item style= {{flexDirection: "row"}} regular>
-                        <Text style= {profileStyles.text}>Username</Text>
+                        <Text style= {profileStyles.text}>USERNAME</Text>
                         <Input style={profileStyles.input} placeholder={this.state.prevUsername}
                         onChangeText={(username) => {
                             this.setState({
@@ -221,7 +221,7 @@ export default class ProfileScreen extends Component{
                             })}} />
                     </Item>
                     <Item style= {{flexDirection: "row"}} regular>
-                        <Text style= {profileStyles.text}>Email</Text>
+                        <Text style= {profileStyles.text}>EMAIL</Text>
                         <Input style={profileStyles.input} placeholder={this.state.prevEmail}
                         onChangeText={(email) => {
                             this.setState({
@@ -236,10 +236,10 @@ export default class ProfileScreen extends Component{
                         closeDialog={ () =>this.setState({isEmailChanged:false})}>
                     </DialogInput>
                     <Item style= {{flexDirection: "row"}} regular>
-                        <Text style= {profileStyles.text}>Language</Text>
+                        <Text style= {profileStyles.text}>LANGUAGE</Text>
 
                         <Picker
-                        style={{ height: 40, width: 267, textAlign: "center"}}
+                        style={{ height: 45, width: 267, textAlign: "center"}}
                         mode="dropdown"
                         selectedValue={this.state.newLanguage}
                         onValueChange={(itemValue)=>{
@@ -253,20 +253,25 @@ export default class ProfileScreen extends Component{
                             })}
                         </Picker>
                     </Item>
-                    <List>
-                        <ListItem onPress={()=>this.changePassword()}>
-                            <Left>
-                                <Text style={{fontSize: 22}}>Change Password</Text>
-                            </Left>
-                        </ListItem>
-                    </List>
-                    <List>
-                        <ListItem onPress={()=>this.logout(navigate)}>
-                            <Left>
-                                <Text style={{fontSize: 22}}>Logout</Text>
-                            </Left>
-                        </ListItem>
-                    </List>
+                    {/* {this.state.changed?(
+                        <TouchableOpacity 
+                        style={commonStyles.button}
+                        onPress={() => {this.saveChanges()}} >
+                            <Text style= {commonStyles.buttonText}>SAVE</Text>
+                        </TouchableOpacity>
+                    ):(
+                        <TouchableHighlight 
+                        style={[commonStyles.button, { backgroundColor: disabledColor }]}>
+                            <Text style= {commonStyles.buttonText}>SAVE</Text>
+                        </TouchableHighlight>
+                    )} */}
+                    <Item style={{height: 45, justifyContent: "center"}}>
+                        <Text style= {profileStyles.text} onPress={() => this.changePassword()}>CHANGE PASSWORD</Text>
+                    </Item>
+                    <Item style={{height: 45, justifyContent: "center"}}>
+                        <Text style= {profileStyles.text} onPress={() => this.logout(navigate)}>LOGOUT</Text>
+                    </Item>
+
                     {this.state.changed?(
                         <TouchableOpacity 
                         style={commonStyles.button}
@@ -279,6 +284,33 @@ export default class ProfileScreen extends Component{
                             <Text style= {commonStyles.buttonText}>SAVE</Text>
                         </TouchableHighlight>
                     )}
+
+                    {/* <TouchableOpacity 
+                        style={[commonStyles.button, {width:300}]}
+                        onPress={() => {this.changePassword()}} >
+                            <Text style= {commonStyles.buttonText}>CHANGE PASSWORD</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                        style={commonStyles.button}
+                        onPress={() => {this.logout(navigate)}} >
+                            <Text style= {commonStyles.buttonText}>LOGOUT</Text>
+                    </TouchableOpacity> */}
+
+
+                    {/* <List>
+                        <ListItem onPress={()=>this.changePassword()}>
+                            <Left>
+                                <Text style={profileStyles.listItemText}>Change Password</Text>
+                            </Left>
+                        </ListItem>
+                    </List>
+                        <ListItem onPress={()=>this.logout(navigate)}>
+                            <Left>
+                                <Text style={{fontSize: 22}}>Logout</Text>
+                            </Left>
+                        </ListItem>
+                    </List> */}
+                    
                 </Content>
             </Container>
         )

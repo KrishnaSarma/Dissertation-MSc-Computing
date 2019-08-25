@@ -18,7 +18,7 @@ export const profileStyles = StyleSheet.create({
     text: {
         flex: 1, 
         marginLeft: 15, 
-        fontSize: 22
+        fontSize: 20
     },
     list: {
         marginTop: 20

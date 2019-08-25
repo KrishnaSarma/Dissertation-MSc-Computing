@@ -1,10 +1,14 @@
 import React, {Component} from 'react';
-import {Text, View, Button, FlatList, ActivityIndicator, DrawerLayoutAndroid, TouchableHighlight, Alert } from 'react-native';
-// import { List, ListItem, SearchBar } from "react-native-elements";
+import {Alert } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
-import {ipAddress} from "../constants";
+import {ipAddress, secondaryColor} from "../constants";
 import firebase from "react-native-firebase";
+import { Container, Content, Header, Left, Thumbnail,
+    Body, Right, Button, Icon, Title,
+    List, ListItem, Text } from 'native-base';
+import { commonStyles } from '../style/commonStyle';
+
 
 export default class UsersScreen extends Component{
 
@@ -103,20 +107,14 @@ export default class UsersScreen extends Component{
     }
 
     createNotificationListeners = async () => {
-        /*
-        * Triggered when a particular notification has been received in foreground
-        * */
         this.notificationListener = firebase.notifications().onNotification((notification) => {
             const { title, body } = notification;
             console.log("on notification listener", notification);
             this.showAlert(title, body);
-            // reassemble user list here or highlight the user
         });
 
         this.notificationDisplayedListener = firebase.notifications().onNotificationDisplayed((notification) => {
             console.log("on notification displayed", notification)
-            // Process your notification as required
-            // ANDROID: Remote notifications do not contain the channel ID. You will have to specify this manually if you'd like to re-display the notification.
         });
         const notificationOpen = await firebase.notifications().getInitialNotification();
         if (notificationOpen) {
@@ -124,7 +122,6 @@ export default class UsersScreen extends Component{
             const { data } = notificationOpen.notification;
             console.log("data", data)
             console.log("on notification open if app closed listener", data.title, data.body);
-            // this.showAlert(data.title, data.body);
             this.props.navigation.navigate('Chat', {
                 reciever: data.title
             })
@@ -140,8 +137,7 @@ export default class UsersScreen extends Component{
             { cancelable: false },
         );
     }
-    
-    //Remove listeners allocated in createNotificationListeners()
+
     componentWillUnmount() {
         this.notificationListener();
         this.notificationDisplayedListener();
@@ -152,30 +148,45 @@ export default class UsersScreen extends Component{
         const {navigate} = this.props.navigation;
 
         return( 
-            <View>
-
-                <Button 
-                    style={{ height : 40, width : 40 }}
-                    onPress={() => navigate('Profile')}
-                    title="Profile"
-                />
-
-                <FlatList
-                data={this.state.users}
-                renderItem={({item, index, separators}) => (
-                    <TouchableHighlight
-                      onPress={() => navigate('Chat', {
-                                reciever: item.email
-                            })}
-                      onShowUnderlay={separators.highlight}
-                      onHideUnderlay={separators.unhighlight}>
-                      <View style={{backgroundColor: 'white'}}>
-                        <Text>{item.username}</Text>
-                      </View>
-                    </TouchableHighlight>
-                  )}
-                />
-            </View>
+            <Container style={commonStyles.container}>
+                <Header style={commonStyles.header}>
+                    <Left />
+                    <Body>
+                        <Title 
+                        style={{alignSelf: "flex-end", color: secondaryColor, fontSize: 22}}>
+                            CHATS
+                        </Title>
+                    </Body>
+                    <Right>
+                        <Button transparent onPress={() => navigate('Profile')}>
+                            <Icon name='settings' />
+                        </Button>
+                    </Right>
+                </Header>
+                <Content>
+                    <List dataArray={this.state.users}
+                    renderRow={(item) =>
+                        <ListItem avatar onPress={()=> {
+                            navigate("Chat", {
+                                reciever: item.email,
+                                username: item.username
+                            })
+                        }}>
+                            <Left>
+                                <Thumbnail source={require('../images/profilePicture.jpg')} />
+                            </Left>
+                            <Body>
+                                <Text style={{fontSize: 20}}>{item.username}</Text>
+                                <Text note style={{fontSize: 15}}>{item.email}</Text>
+                            </Body>
+                            <Right style={{justifyContent: "center"}}>
+                                <Icon name="arrow-forward" />
+                            </Right>
+                        </ListItem>
+                    }>
+                    </List>
+                </Content>
+            </Container>
         )
     }
 }
