@@ -99,7 +99,10 @@ export default class App extends Component {
         }
       },
       Signup: {
-        screen: SignupScreen
+        screen: SignupScreen,
+        navigationOptions: {
+          header: null
+        }
       }
     },
     {

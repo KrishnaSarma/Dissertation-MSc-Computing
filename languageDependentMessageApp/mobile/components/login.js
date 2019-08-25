@@ -5,7 +5,7 @@ import axios from 'axios';
 
 import { Container, Content, Header, Left,
     Body, Right, Button, Icon, Title,
-    Form, Thumbnail, Item, Input, Text} from 'native-base';
+    Form, Item, Input, Text} from 'native-base';
 
 import firebase from "react-native-firebase";
 import { commonStyles } from '../style/commonStyle';
@@ -123,7 +123,7 @@ export default class LoginScreen extends Component{
                 <Header style={commonStyles.header}>
                     <Left>
                         <Button transparent
-                        onPress={() => {navigate('Users')}}>
+                        onPress={() => {navigate('Home')}}>
                         <Icon name='arrow-back' />
                         </Button>
                     </Left>
@@ -146,7 +146,7 @@ export default class LoginScreen extends Component{
                     <Form >
                         <Item>
                             <Input 
-                            placeholder= "Username"
+                            placeholder= "Email"
                             onChangeText= {(email) => this.setState({email})}/>
                         </Item>
                         <Item>

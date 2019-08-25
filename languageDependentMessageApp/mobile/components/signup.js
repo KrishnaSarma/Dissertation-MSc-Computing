@@ -1,8 +1,13 @@
 import React, {Component} from 'react';
-import {Text, View, Button, TextInput, Picker, Switch} from 'react-native';
+import {TouchableOpacity, Image, Picker} from 'react-native';
 import axios from 'axios';
-import {ipAddress} from "../constants"
+import {ipAddress, secondaryColor} from "../constants"
 
+import { Container, Content, Header, Left,
+    Body, Right, Button, Icon, Title,
+    Form, Item, Input, Text} from 'native-base';
+
+import { commonStyles } from '../style/commonStyle';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import firebase from "react-native-firebase";
@@ -11,8 +16,6 @@ export default class SignupScreen extends Component{
     
     constructor(props){
         super(props);
-        this.toggleSwitch = this.toggleSwitch.bind(this);
-        this.toggleConfirmPasswordSwitch = this.toggleConfirmPasswordSwitch.bind(this);
         this.state = {
             email: "",
             username: "",
@@ -21,12 +24,20 @@ export default class SignupScreen extends Component{
             language: "",
             languages: [],            
             showPassword: false,
-            showConfirmPassword: false
+            showConfirmPassword: false,
+            icon: "eye",
+            cPIcon: "eye"
         }
     }
 
     componentDidMount = async () =>{
         await this.getLanguages();
+    }
+
+    showAlert = (msg) => {
+        alert(msg, [{
+            text: "Okay"
+        }])
     }
 
     getLanguages(){
@@ -48,14 +59,10 @@ export default class SignupScreen extends Component{
             .catch(err => {
                 console.log("error in language", err)
                 if (err.status == 500){
-                    alert("Internal server error. Please try again.", [{
-                        text: "Okay"
-                    }])
+                    this.showAlert("Internal server error")
                 }
                 else{
-                    alert(err, [{
-                        text: "Okay"
-                    }])
+                    this.showAlert(err)
                 }
               });
     }
@@ -65,31 +72,37 @@ export default class SignupScreen extends Component{
         let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ;
 
         if (this.state.email.trim() === "") {
-            this.setState(() => ({ nameError: "Email required." }));
+            this.showAlert("Email Required")
         }
         
         else if (reg.test(this.state.email.trim()) === false) {
-            this.setState(() => ({nameError: "Invalid Email"}));
+            this.showAlert("Invalid Email")
+            // this.setState(() => ({nameError: "Invalid Email"}));
         }
 
         else if (this.state.username.trim() == "") {
-            this.setState(() => ({nameError: "Username required."}));
+            this.showAlert("Username Required")
+            // this.setState(() => ({nameError: "Username required."}));
         }
 
         else if (this.state.password.trim() == "") {
-            this.setState(() => ({nameError: "Password required."}));
+            this.showAlert("Password Required")
+            // this.setState(() => ({nameError: "Password required."}));
         }
 
         else if (this.state.confirmPassword.trim() == "") {
-            this.setState(() => ({nameError: "Confirm Password required."}));
+            this.showAlert("Confirm Password Required")
+            // this.setState(() => ({nameError: "Confirm Password required."}));
         }
 
         else if (this.state.password.trim() != this.state.confirmPassword.trim()){
-            this.setState(() => ({nameError: "Password don't match"}));
+            this.showAlert("Password Don't Match")
+            // this.setState(() => ({nameError: "Password don't match"}));
         }
 
         else if (this.state.language == "") {
-            this.setState(() => ({nameError: "Select Language"}));
+            this.showAlert("Select Language")
+            // this.setState(() => ({nameError: "Select Language"}));
         }
 
         else {
@@ -128,14 +141,10 @@ export default class SignupScreen extends Component{
         })
         .catch((err) => {
             if (err.status == 500){
-                alert("Internal server error. Please try again.", [{
-                    text: "Okay"
-                }])
+                this.showAlert("Internal Server Error")
             }
             else{
-                alert(err, [{
-                    text: "Okay"
-                }])
+                this.showAlert(err)
             }
         })
     }
@@ -146,98 +155,108 @@ export default class SignupScreen extends Component{
             console.log("1 after signup", user)
             if(user){
                 await this.addUserData()
-                await alert("Signup successful", [{
-                        text: "Okay"
-                    }])
+                this.showAlert("Signup Successful")
             }
 
         })
         .catch((error) => {
             const { code, message } = error;
             console.log("signup error", code, message)
-            alert(message, [{
-                text: "Okay"
-            }])
+            this.showAlert(message)
         });
     }
 
-    togglePasswordSwitch() {
-        this.setState({ showPassword: !this.state.showPassword });
+    _changeIcon = () => {
+        this.setState(prevState => ({
+            icon: prevState.icon === 'eye' ? 'eye-off' : 'eye',
+            showPassword: !prevState.showPassword
+        }));
     }
 
-    toggleConfirmPasswordSwitch() {
-        this.setState({ showConfirmPassword: !this.state.showConfirmPassword });
+    _changeCPIcon = () =>{
+        this.setState(prevState => ({
+            cPIcon: prevState.cPicon === 'eye' ? 'eye-off' : 'eye',
+            showConfirmPassword: !prevState.showConfirmPassword
+        }));
     }
 
     render(){
+        const {navigate} = this.props.navigation;
         return(
-            <View>
-                <Text style = {{height: 40, width: 400, textAlign: "center"}}>
-                    Enter your details below:
-                </Text>
+            <Container style={commonStyles.container}>
+                <Header style={commonStyles.header}>
+                    <Left>
+                        <Button transparent
+                        onPress={() => {navigate('Home')}}>
+                        <Icon name='arrow-back' />
+                        </Button>
+                    </Left>
+                    <Body>
+                        <Title 
+                        style={{alignSelf: "flex-end", color: secondaryColor, fontSize: 22}}>
+                            SIGNUP
+                        </Title>
+                    </Body>
+                    <Right />
+                </Header>
+                <Content contentContainerStyle={{
+                    alignSelf: "center",
+                    width: "80%",
+                    flex: 1 }}>
+                    <Image
+                    style={[commonStyles.icon, {marginBottom: 50, marginTop: 30}]}
+                    source={require('../images/icon.jpg')}
+                    />
 
-                <TextInput
-                    style={{height: 40, width: 400, textAlign: "center"}}
-                    placeholder= "Enter email here..."
-                    onChangeText= {(email) => this.setState({email})}
-                    value = {this.state.email}
-                />
-
-                <TextInput
-                    style={{height: 40, width: 400, textAlign: "center"}}
-                    placeholder= "Enter username here..."
-                    onChangeText= {(username) => this.setState({username})}
-                    value = {this.state.username}
-                />
-
-                <TextInput
-                    style={{height: 40, width: 400, textAlign: "center"}}
-                    placeholder="Enter password here..."
-                    secureTextEntry = {!this.state.showPassword}
-                    onChangeText= {(password) => this.setState({password})}
-                    value = {this.state.password}
-                />
-                <Switch
-                onValueChange={this.toggleSwitch}
-                value={!this.state.showPassword}
-                /> 
-                <Text>Show</Text>
-
-                <TextInput
-                    style={{height: 40, width: 400, textAlign: "center"}}
-                    placeholder="Renter password here..."
-                    secureTextEntry = {!this.state.showConfirmPassword}
-                    onChangeText= {(password) => this.setState({confirmPassword: password})}
-                    value = {this.state.confirmPassword}
-                />
-                <Switch
-                onValueChange={this.toggleConfirmPasswordSwitch}
-                value={!this.state.showConfirmPassword}
-                /> 
-                <Text>Show</Text>
-
-                {!!this.state.nameError && (
-                    <Text style={{ color: "red" }}>{this.state.nameError}</Text>
-                )}
-
-                <Picker
-                    style={{ height: 40, width : 400, textAlign: "center" }}
-                    mode="dropdown"
-                    selectedValue={this.state.language}
-                    onValueChange={(itemValue)=>{
-                        this.setState({ language: itemValue })
-                    }}>
-                    {this.state.languages.map((item, index) => {
-                        return (<Picker.Item label={item.name} value={item.code} key={index}/>) 
-                    })}
-                </Picker>
-
-                <Button 
-                    style={{ height: 40, width : 40 }}
-                    onPress={() => this.validateTextInput()}
-                    title="Sign Up"
-                />
-            </View>
+                    <Form >
+                        <Item>
+                            <Input 
+                            placeholder= "Email"
+                            onChangeText= {(email) => this.setState({email})}/>
+                        </Item>
+                        <Item>
+                            <Input 
+                            placeholder= "Username"
+                            onChangeText= {(username) => this.setState({username})}/>
+                        </Item>
+                        <Item>
+                            <Input
+                            placeholder="Password"
+                            value={this.state.password} 
+                            secureTextEntry={!this.state.showPassword}
+                            onChangeText={(password) => this.setState({password})}/>                           
+                            <Icon name={this.state.icon} onPress={() => this._changeIcon()} />
+                        </Item>
+                        <Item>
+                            <Input
+                            placeholder="Confirm Password"
+                            value={this.state.confirmPassword} 
+                            secureTextEntry={!this.state.showConfirmPassword}
+                            onChangeText={(confirmPassword) => this.setState({confirmPassword})}/>                           
+                            <Icon name={this.state.cPIcon} onPress={() => this._changeCPIcon()} />
+                        </Item>
+                    </Form>
+                    <Picker
+                        style={{ height: 50, width: "100%", textAlign: "center", marginLeft: 15}}
+                        mode="dropdown"
+                        selectedValue={this.state.language}
+                        onValueChange={(itemValue)=>{
+                            this.setState({ 
+                                language: itemValue,
+                                changed: true })
+                        }}>
+                            {this.state.languages.map((item, index) => {
+                                return (<Picker.Item 
+                                    style= {{width: "100%"}} label={item.name} value={item.code} key={index}/>) 
+                            })}
+                    </Picker>
+                    <TouchableOpacity 
+                        style={commonStyles.button}
+                        onPress={() => {this.validateTextInput()}} >
+                            <Text style= {commonStyles.buttonText}>SIGN UP</Text>
+                    </TouchableOpacity>
+                </Content>
+            </Container>
         )
     }
 }
