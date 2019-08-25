@@ -9,7 +9,7 @@ import { Container, Content, Header, Left,
 
 import firebase from "react-native-firebase";
 import { commonStyles } from '../style/commonStyle';
-import {ipAddress, secondaryColor} from "../constants"
+import {ipAddress, secondaryColor, primaryColor} from "../constants"
 
 import {passwordReset} from "./commonGetMethods";
 
@@ -31,17 +31,14 @@ export default class LoginScreen extends Component{
 
         if (this.state.email.trim() === "") {
             this.showAlert("Email Required")
-            // this.setState(() => ({ nameError: "Email required." }));
         }
         
         else if (reg.test(this.state.email.trim()) === false) {
             this.showAlert("Invalid Email")
-            // this.setState(() => ({nameError: "Invalid Email"}));
         }
 
         else if (this.state.password.trim() == "") {
             this.showAlert("Password Required")
-            // this.setState(() => ({nameError: "Password required."}));
         }
         else {
             this.setState(() => ({ nameError: null }));
@@ -101,8 +98,13 @@ export default class LoginScreen extends Component{
     
     forgotPassword = () => {
 
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ;
+
         if (this.state.email.trim() === "") {
-            this.setState(() => ({ nameError: "Email required." }));
+            this.showAlert("Email Required")
+        }
+        else if (reg.test(this.state.email.trim()) === false) {
+            this.showAlert("Invalid Email")
         }
         else{
             passwordReset(this.state.email)
@@ -158,11 +160,23 @@ export default class LoginScreen extends Component{
                             <Icon name={this.state.icon} onPress={() => this._changeIcon()} />
                         </Item>
                     </Form>
+                    <Text 
+                    style={{fontSize: 15, fontStyle: "italic",
+                    color: primaryColor, alignSelf: "center",
+                    marginTop: 10}}
+                    onPress={() => {this.forgotPassword()}}>
+                        Forgot Password?
+                    </Text>
                     <TouchableOpacity 
                         style={commonStyles.button}
                         onPress={() => {this.validateTextInput()}} >
                             <Text style= {commonStyles.buttonText}>LOGIN</Text>
                     </TouchableOpacity>
+                    {/* <TouchableOpacity 
+                        style={[commonStyles.button, {width: 250}]}
+                        onPress={() => {this.forgotPassword()}} >
+                            <Text style= {commonStyles.buttonText}>Forgot Password</Text>
+                    </TouchableOpacity> */}
                 </Content>
             </Container>
         )
