@@ -18,6 +18,8 @@ export default class App extends Component {
 
   componentDidMount = async () => {
 
+    console.disableYellowBox = true;
+
     console.log("in app.js")
     await this.checkNotificationPermissions(); 
   }
