@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-import {StyleSheet, TouchableHighlight, FlatList, View} from 'react-native';
+import {StyleSheet, TouchableHighlight, FlatList, View, TouchableOpacity} from 'react-native';
 import io from "socket.io-client";
 import axios from 'axios';
 import { ipAddress, secondaryColor } from '../constants';
 import { Container, Content, Header, Left,
-    Body, Right, Button, Icon, Title,
-    Thumbnail, List, ListItem, Item, Input, Text, Footer } from 'native-base';
+    Body, Button, Icon, Title,
+    Thumbnail, Item, Input, Text, Footer } from 'native-base';
 import {commonStyles} from "./../style/commonStyle";
 import {getUserEmail} from "./commonGetMethods";
 import { chatScreen } from '../style/chatScreenStyle';
@@ -50,20 +50,6 @@ export default class ChatScreen extends Component{
       
     }
 
-    // getUsername = async () => {
-    //     try{
-    //         const user = await AsyncStorage.getItem('email')
-    //         console.log("email in user screen", user);
-    //         await this.setState({
-    //             email: user
-    //         })
-    //     }
-    //     catch(e){
-    //         console.log(e);
-    //     }
-        
-    // }
-
     getChatMessages(sender, reciever){
         axios.get("http://"+ipAddress+":3000/getMessages", {
             params: {
@@ -98,8 +84,9 @@ export default class ChatScreen extends Component{
         this.blurListener.remove();
     }
 
-    _onPress(msg){
+    changeText(msg){
         if(msg.message != msg.originalMessage){
+            console.log("long pressed")
             var temp = msg.message
             msg.message = msg.originalMessage
             msg.originalMessage = temp
@@ -142,9 +129,8 @@ export default class ChatScreen extends Component{
     renderChat = (item, separators) => {
         if(item.sender != this.state.email){
             return(
-                <TouchableHighlight
-                onPress = {() => {
-                    item = this._onPress(item)
+                <TouchableHighlight onLongPress = {() => {
+                    item = this.changeText(item)
                 }}
                 onShowUnderlay={separators.highlight}
                 onHideUnderlay={separators.unhighlight}
@@ -159,9 +145,6 @@ export default class ChatScreen extends Component{
         else{
             return(
                 <TouchableHighlight
-                onPress = {() => {
-                    item = this._onPress(item)
-                }}
                 onShowUnderlay={separators.highlight}
                 onHideUnderlay={separators.unhighlight}
                 style={chatScreen.senderMessage}>
