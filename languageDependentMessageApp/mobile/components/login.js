@@ -73,7 +73,6 @@ export default class LoginScreen extends Component{
             console.log("1 after login", user)
             if(user){
                 await this.getUserData()
-                await this.showAlert("Login Successful")
             }
         })
         .catch((error) => {

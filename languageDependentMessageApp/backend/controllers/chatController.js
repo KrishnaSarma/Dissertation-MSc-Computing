@@ -2,9 +2,58 @@ import messages from '../models/MsgDb';
 import users from '../models/UsersDb';
 
 const reformatTime = (timestamp) => {
-    console.log("input", timestamp.toString())
     var timestampArray = timestamp.toString().split(" ")
-    var date = timestampArray[3] + "-" + timestampArray[1] + "-" + timestampArray[2]
+    switch(timestampArray[1]){
+        case "Jan":
+            var num = 1;
+            timestampArray[1] = num.toString()
+            break;
+        case "Feb":
+            var num = 2;
+            timestampArray[1] = num.toString()
+            break;
+        case "Mar":
+            var num = 3;
+            timestampArray[1] = num.toString()
+            break;
+        case "Apr":
+            var num = 4;
+            timestampArray[1] = num.toString()
+            break;
+        case "May":
+            var num = 5;
+            timestampArray[1] = num.toString()
+            break;
+        case "Jun":
+            var num = 6;
+            timestampArray[1] = num.toString()
+            break;
+        case "Jul":
+            var num = 7;
+            timestampArray[1] = num.toString()
+            break;
+        case "Aug":
+            var num = 8;
+            timestampArray[1] = num.toString()
+            break;
+        case "Sep":
+            var num = 9;
+            timestampArray[1] = num.toString()
+            break;
+        case "Oct":
+            var num = 10;
+            timestampArray[1] = num.toString()
+            break;
+        case "Nov":
+            var num = 11;
+            timestampArray[1] = num.toString()
+            break;
+        case "Dec":
+            var num = 12;
+            timestampArray[1] = num.toString()
+            break;
+    }
+    var date = timestampArray[2] + "/" + timestampArray[1] + "/" + timestampArray[3]
     var time = timestampArray[4]
     return date + " " + time
 
@@ -59,7 +108,6 @@ export const getMessages = async (req, response) => {
             reformedMsg.originalMessage = msg.text
 
             var timestamp = reformatTime(msg.dateTime)
-            console.log("time", timestamp)
 
             reformedMsg.timestamp = timestamp
             reformedMsg.delivered = msg.delivered

@@ -5,9 +5,10 @@ import axios from 'axios';
 import { ipAddress, secondaryColor } from '../constants';
 import { Container, Content, Header, Left,
     Body, Right, Button, Icon, Title,
-    Thumbnail, List, ListItem, Item, Input, Text } from 'native-base';
+    Thumbnail, List, ListItem, Item, Input, Text, Footer } from 'native-base';
 import {commonStyles} from "./../style/commonStyle";
 import {getUserEmail} from "./commonGetMethods";
+import { chatScreen } from '../style/chatScreenStyle';
 
 export default class ChatScreen extends Component{
 
@@ -105,9 +106,21 @@ export default class ChatScreen extends Component{
         }
         return msg
     }
+
+    getDateTime = () => {
+        var date = new Date().getDate();
+        var month = new Date().getMonth() + 1;
+        var year = new Date().getFullYear();
+        var hours = new Date().getHours();
+        var min = new Date().getMinutes();
+        var sec = new Date().getSeconds();
+        return date + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec
+
+    }
     
     submitChatMessage(){
         console.log("pressing submit")
+        var dateTime = this.getDateTime();
         var message = {
             sender: this.state.email,
             reciever: this.state.reciever,
@@ -116,7 +129,9 @@ export default class ChatScreen extends Component{
         this.socket.emit("Chat Message", message);
         var stateMsg = {
             sender: this.state.email,
-            message: this.state.chatMessage
+            message: this.state.chatMessage,
+            originalMessage: this.state.chatMessage,
+            timestamp: dateTime
         }
         this.setState({ 
             chatMessage: "",
@@ -132,10 +147,11 @@ export default class ChatScreen extends Component{
                     item = this._onPress(item)
                 }}
                 onShowUnderlay={separators.highlight}
-                onHideUnderlay={separators.unhighlight}>
-                    <View style={{backgroundColor: "white"}}>
-                        <Text>{item.message}</Text>
-                        <Text >{item.timestamp}</Text>
+                onHideUnderlay={separators.unhighlight}
+                style={chatScreen.recieverMessage}>
+                    <View style={{margin: 10}}>
+                        <Text >{item.message}</Text>
+                        <Text note>{item.timestamp}</Text>
                     </View>
                 </TouchableHighlight>
             )            
@@ -147,10 +163,11 @@ export default class ChatScreen extends Component{
                     item = this._onPress(item)
                 }}
                 onShowUnderlay={separators.highlight}
-                onHideUnderlay={separators.unhighlight}>
-                    <View style={{backgroundColor: "#968282"}}>
+                onHideUnderlay={separators.unhighlight}
+                style={chatScreen.senderMessage}>
+                    <View style={{margin: 10}}>
                         <Text>{item.message}</Text>
-                        <Text >{item.timestamp}</Text>
+                        <Text note>{item.timestamp}</Text>
                     </View>
                 </TouchableHighlight>
             )
@@ -178,7 +195,7 @@ export default class ChatScreen extends Component{
                         </Title>
                     </Body>
                 </Header>
-                <Content>
+                <Content contentContainerStyle={{ height: "100%" }}>
                 <FlatList
                 data={this.state.chatMessages}
                 renderItem={({item, index, separators}) => (
@@ -186,43 +203,18 @@ export default class ChatScreen extends Component{
                   )}
                 />
                 </Content>
+                <Footer style={{backgroundColor: "transparent"}}>
+                <Item style={chatScreen.typeInput}>
+                    <Input value={this.state.chatMessage} onChangeText={
+                        chatMessage => {
+                            this.setState({chatMessage})
+                        }
+                    } />
+                    <Icon active name='send' onPress={() => {this.submitChatMessage()}} />
+                </Item>
+                </Footer>
+                
             </Container>
-            // <View style={styles.container}>
-            //     <FlatList
-            //     data={this.state.chatMessages}
-            //     renderItem={({item, index, separators}) => (
-            //         <TouchableHighlight
-            //         //   onPress={() => navigate('Chat', {
-            //         //             reciever: item.email
-            //         //         })}
-            //             onLongPress = {() => {
-            //                 item.message = this._onLongPress(item)
-            //             }}
-            //             onShowUnderlay={separators.highlight}
-            //             onHideUnderlay={separators.unhighlight}>
-            //             <View style={{backgroundColor: 'white'}}>
-            //                 <Text>{item.sender}: {item.message}</Text>
-            //             </View>
-            //         </TouchableHighlight>
-            //       )}
-            //     />
-            //     <TextInput 
-            //         style= {{ height: 40, borderWidth: 2 }} 
-            //         autoCorrect={false}
-            //         value={this.state.chatMessage}
-            //         // onSubmitEditing={() => this.submitChatMessage()}
-            //         onChangeText={
-            //             chatMessage => {
-            //                 this.setState({ chatMessage})
-            //             }
-            //         }
-            //     />
-            //     <Button 
-            //         style={{ height: 40, width : 40 }}
-            //         onPress={() => this.submitChatMessage()}
-            //         title="Send"
-            //     />
-            // </View>
         )
     }
 }
