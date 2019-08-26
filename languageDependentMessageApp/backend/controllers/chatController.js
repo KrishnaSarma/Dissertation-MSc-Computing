@@ -1,6 +1,15 @@
 import messages from '../models/MsgDb';
 import users from '../models/UsersDb';
 
+const reformatTime = (timestamp) => {
+    console.log("input", timestamp.toString())
+    var timestampArray = timestamp.toString().split(" ")
+    var date = timestampArray[3] + "-" + timestampArray[1] + "-" + timestampArray[2]
+    var time = timestampArray[4]
+    return date + " " + time
+
+}
+
 export const getMessages = async (req, response) => {
     let sender = {}
     let reciever = {}
@@ -48,7 +57,11 @@ export const getMessages = async (req, response) => {
 
             }
             reformedMsg.originalMessage = msg.text
-            reformedMsg.timestamp = msg.dateTime
+
+            var timestamp = reformatTime(msg.dateTime)
+            console.log("time", timestamp)
+
+            reformedMsg.timestamp = timestamp
             reformedMsg.delivered = msg.delivered
             msgList.push(reformedMsg)
         }

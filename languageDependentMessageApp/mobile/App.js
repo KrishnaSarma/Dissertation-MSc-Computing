@@ -78,7 +78,11 @@ export default class App extends Component {
           header: null
         }
       },
-      Chat: {screen: ChatScreen},
+      Chat: {screen: ChatScreen,
+        navigationOptions: {
+          header: null
+        }
+      },
       Profile: {
         screen: ProfileScreen,
         navigationOptions: {

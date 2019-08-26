@@ -173,7 +173,7 @@ export default class UsersScreen extends Component{
                             })
                         }}>
                             <Left>
-                                <Thumbnail source={require('../images/profilePicture.jpg')} />
+                                <Thumbnail source={require('../images/minions.jpg')} />
                             </Left>
                             <Body>
                                 <Text style={{fontSize: 20}}>{item.username}</Text>

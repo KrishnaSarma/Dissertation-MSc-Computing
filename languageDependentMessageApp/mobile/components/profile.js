@@ -8,7 +8,7 @@ import DialogInput from 'react-native-dialog-input';
 
 import { Container, Content, Header, Left,
     Body, Right, Button, Icon, Title,
-    Thumbnail, List, ListItem, Item, Input, Text } from 'native-base';
+    Thumbnail, Item, Input, Text } from 'native-base';
 
 import {ipAddress, secondaryColor, primaryColor, disabledColor} from "../constants"
 import { commonStyles } from '../style/commonStyle';

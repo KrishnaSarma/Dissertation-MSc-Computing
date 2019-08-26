@@ -1,9 +1,13 @@
 import React, {Component} from 'react';
-import {Text, View, Button, Tex, StyleSheet, TextInput, FlatList, ActivityIndicator, TouchableHighlight} from 'react-native';
+import {StyleSheet, TouchableHighlight, FlatList, View} from 'react-native';
 import io from "socket.io-client";
-import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
-import { ipAddress } from '../constants';
+import { ipAddress, secondaryColor } from '../constants';
+import { Container, Content, Header, Left,
+    Body, Right, Button, Icon, Title,
+    Thumbnail, List, ListItem, Item, Input, Text } from 'native-base';
+import {commonStyles} from "./../style/commonStyle";
+import {getUserEmail} from "./commonGetMethods";
 
 export default class ChatScreen extends Component{
 
@@ -13,7 +17,8 @@ export default class ChatScreen extends Component{
         this.state = {
         chatMessage: "",
         chatMessages: [],
-        email: ""
+        email: "",
+        recieverUsername: ""
         };
     }
 
@@ -21,36 +26,42 @@ export default class ChatScreen extends Component{
         const { navigation } = this.props;
 
         this.socket = io("http://"+ipAddress+":3000");
-        await this.getUsername();
+        var email = await getUserEmail(); 
+        await this.setState(() => ({ 
+            reciever: navigation.state.params.reciever,
+            email: email,
+            recieverUsername: navigation.state.params.username
+         }));
+
+         console.log("rec", this.state.email)
+
         this.socket.emit("User Name", this.state.email);
-
-        this.blurListener = navigation.addListener("willBlur", () => {
-            this.socket.close();
-        });
-
-        this.setState(() => ({ reciever: navigation.state.params.reciever }));
         
         await this.getChatMessages(this.state.email, this.state.reciever)
 
         this.socket.on("Chat Message", msg => {
             this.setState({ chatMessages: [...this.state.chatMessages, msg] });
+        });       
+
+        this.blurListener = navigation.addListener("willBlur", () => {
+            this.socket.close();
         });
       
     }
 
-    getUsername = async () => {
-        try{
-            const user = await AsyncStorage.getItem('email')
-            console.log("email in user screen", user);
-            await this.setState({
-                email: user
-            })
-        }
-        catch(e){
-            console.log(e);
-        }
+    // getUsername = async () => {
+    //     try{
+    //         const user = await AsyncStorage.getItem('email')
+    //         console.log("email in user screen", user);
+    //         await this.setState({
+    //             email: user
+    //         })
+    //     }
+    //     catch(e){
+    //         console.log(e);
+    //     }
         
-    }
+    // }
 
     getChatMessages(sender, reciever){
         axios.get("http://"+ipAddress+":3000/getMessages", {
@@ -86,13 +97,13 @@ export default class ChatScreen extends Component{
         this.blurListener.remove();
     }
 
-    _onLongPress(msg){
+    _onPress(msg){
         if(msg.message != msg.originalMessage){
-            return msg.originalMessage
+            var temp = msg.message
+            msg.message = msg.originalMessage
+            msg.originalMessage = temp
         }
-        else{
-            return msg.message
-        }
+        return msg
     }
     
     submitChatMessage(){
@@ -113,66 +124,105 @@ export default class ChatScreen extends Component{
          })
     }
 
-    render(){
-        const chatMessages = this.state.chatMessages.map((msg, i) => (
-            <View key={i}>
-                <Text style={{color: "blue"}}>{msg.sender}: {msg.message}</Text>
-            </View>
-        ));
+    renderChat = (item, separators) => {
+        if(item.sender != this.state.email){
+            return(
+                <TouchableHighlight
+                onPress = {() => {
+                    item = this._onPress(item)
+                }}
+                onShowUnderlay={separators.highlight}
+                onHideUnderlay={separators.unhighlight}>
+                    <View style={{backgroundColor: "white"}}>
+                        <Text>{item.message}</Text>
+                        <Text >{item.timestamp}</Text>
+                    </View>
+                </TouchableHighlight>
+            )            
+        }
+        else{
+            return(
+                <TouchableHighlight
+                onPress = {() => {
+                    item = this._onPress(item)
+                }}
+                onShowUnderlay={separators.highlight}
+                onHideUnderlay={separators.unhighlight}>
+                    <View style={{backgroundColor: "#968282"}}>
+                        <Text>{item.message}</Text>
+                        <Text >{item.timestamp}</Text>
+                    </View>
+                </TouchableHighlight>
+            )
+        }
+    }
 
+    render(){
+        const {navigate} = this.props.navigation;
         return(
-            <View style={styles.container}>
-                {/* {chatMessages} */}
+            <Container style={commonStyles.container}>
+                <Header style={commonStyles.header}>
+                    <Left style={{flex: 1}}>
+                        <Button transparent
+                        onPress={() => {navigate('Users')}}>
+                        <Icon name='arrow-back' />
+                        </Button>
+                    </Left>
+                    <Body
+                    style={{flexDirection: "row", justifyContent: "flex-start", flex: 7}}>
+                        <Thumbnail small source={require('../images/minions.jpg')} />
+                        <Title 
+                        style={{alignSelf: "flex-start", color: secondaryColor,
+                        fontSize: 22, marginLeft: "5%"}}>
+                            {this.state.recieverUsername}
+                        </Title>
+                    </Body>
+                </Header>
+                <Content>
                 <FlatList
                 data={this.state.chatMessages}
                 renderItem={({item, index, separators}) => (
-                    <TouchableHighlight
-                    //   onPress={() => navigate('Chat', {
-                    //             reciever: item.email
-                    //         })}
-                        onLongPress = {() => {
-                            item.message = this._onLongPress(item)
-                        }}
-                        onShowUnderlay={separators.highlight}
-                        onHideUnderlay={separators.unhighlight}>
-                        <View style={{backgroundColor: 'white'}}>
-                            <Text>{item.sender}: {item.message}</Text>
-                        </View>
-                    </TouchableHighlight>
+                    this.renderChat(item, separators)
                   )}
                 />
-                {/* <FlatList
-                data={this.state.chatMessages}
-                renderItem={({item, index, separators}) => (
-                    <TouchableHighlight
-                    //   onPress={() => navigate('Chat', {
-                    //             reciever: item
-                    //         })}
-                      onShowUnderlay={separators.highlight}
-                      onHideUnderlay={separators.unhighlight}>
-                      <View style={{backgroundColor: 'white'}}>
-                        <Text>{item}</Text>
-                      </View>
-                    </TouchableHighlight>
-                  )}
-                /> */}
-                <TextInput 
-                    style= {{ height: 40, borderWidth: 2 }} 
-                    autoCorrect={false}
-                    value={this.state.chatMessage}
-                    // onSubmitEditing={() => this.submitChatMessage()}
-                    onChangeText={
-                        chatMessage => {
-                            this.setState({ chatMessage})
-                        }
-                    }
-                />
-                <Button 
-                    style={{ height: 40, width : 40 }}
-                    onPress={() => this.submitChatMessage()}
-                    title="Send"
-                />
-            </View>
+                </Content>
+            </Container>
+            // <View style={styles.container}>
+            //     <FlatList
+            //     data={this.state.chatMessages}
+            //     renderItem={({item, index, separators}) => (
+            //         <TouchableHighlight
+            //         //   onPress={() => navigate('Chat', {
+            //         //             reciever: item.email
+            //         //         })}
+            //             onLongPress = {() => {
+            //                 item.message = this._onLongPress(item)
+            //             }}
+            //             onShowUnderlay={separators.highlight}
+            //             onHideUnderlay={separators.unhighlight}>
+            //             <View style={{backgroundColor: 'white'}}>
+            //                 <Text>{item.sender}: {item.message}</Text>
+            //             </View>
+            //         </TouchableHighlight>
+            //       )}
+            //     />
+            //     <TextInput 
+            //         style= {{ height: 40, borderWidth: 2 }} 
+            //         autoCorrect={false}
+            //         value={this.state.chatMessage}
+            //         // onSubmitEditing={() => this.submitChatMessage()}
+            //         onChangeText={
+            //             chatMessage => {
+            //                 this.setState({ chatMessage})
+            //             }
+            //         }
+            //     />
+            //     <Button 
+            //         style={{ height: 40, width : 40 }}
+            //         onPress={() => this.submitChatMessage()}
+            //         title="Send"
+            //     />
+            // </View>
         )
     }
 }
