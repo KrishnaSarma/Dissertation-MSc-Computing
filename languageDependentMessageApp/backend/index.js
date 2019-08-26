@@ -82,7 +82,9 @@ io.on("connection", socket => {
             saveMessage(msg, 1);
             let msgToSend = {
                 sender: msg.sender,
-                message: msg.reciever_message
+                message: msg.reciever_message,
+                originalMessage: msg.message,
+                timestamp: msg.timestamp
             }
             socket.to(reciever_socket).emit("Chat Message", msgToSend);
         }        

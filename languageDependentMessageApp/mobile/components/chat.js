@@ -111,7 +111,8 @@ export default class ChatScreen extends Component{
         var message = {
             sender: this.state.email,
             reciever: this.state.reciever,
-            message: this.state.chatMessage
+            message: this.state.chatMessage,
+            timestamp: dateTime
         }
         this.socket.emit("Chat Message", message);
         var stateMsg = {
