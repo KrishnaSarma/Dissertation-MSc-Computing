@@ -9,6 +9,8 @@ import { Container, Content, Header, Left, Thumbnail,
     List, ListItem, Text } from 'native-base';
 import { commonStyles } from '../style/commonStyle';
 
+import {getUserEmail, getUserTopicName} from "./commonGetMethods";
+
 
 export default class UsersScreen extends Component{
 
@@ -29,12 +31,15 @@ export default class UsersScreen extends Component{
     componentDidMount = async () => {
         console.log("in users")
 
-        await this.getUserEmail();
+        var email = await getUserEmail()
+
+        await this.setState({email})
 
         this.createNotificationListeners();
 
         if(this.state.email){
-            await this.getTopicName()
+            var topicName = await getUserTopicName();
+            await this.setState({topicName})
             await this.fcmTopicSubscription();            
             await this.getUserList();
         }
@@ -73,33 +78,6 @@ export default class UsersScreen extends Component{
                     }])
                 }
               });
-    }
-
-    getUserEmail = async () => {
-        try{
-            const user = await AsyncStorage.getItem('email')
-            console.log("email in user screen", user);
-            await this.setState({
-                email: user
-            })
-            console.log("email in state", this.state.email)
-        }
-        catch(e){
-            console.log(e);
-        }
-        
-    }
-
-    getTopicName = async () => {
-        try{
-            const topicName = await AsyncStorage.getItem('fcmTopicName')
-            console.log("topic name", topicName);
-            await this.setState({topicName})
-            console.log("topic in state", this.state.topicName)
-        }
-        catch(e){
-            console.log(e);
-        }
     }
 
     fcmTopicSubscription = async () => {
@@ -148,7 +126,7 @@ export default class UsersScreen extends Component{
     componentWillUnmount() {
         this.notificationListener();
         this.notificationDisplayedListener();
-        this.notificationOpenedListener();
+        // this.notificationOpenedListener();
     }
 
     render(){

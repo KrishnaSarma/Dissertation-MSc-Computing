@@ -4,7 +4,7 @@ import {primaryColor, secondaryColor} from "../constants";
 export const chatScreen = StyleSheet.create({
     senderMessage: {
         borderRadius: 10,
-        backgroundColor: "#968282",
+        backgroundColor: "#bfa7a7",
         alignSelf: "flex-end",
         margin: 10
     },

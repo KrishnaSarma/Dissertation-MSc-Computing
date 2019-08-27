@@ -28,6 +28,10 @@ export default class ChatScreen extends Component{
         const { navigation } = this.props;
 
         var email = await getUserEmail(); 
+        
+        if(!email){
+            navigation.navigate("Users")
+        }
         await this.setState(() => ({ 
             reciever: navigation.state.params.reciever,
             email: email,
@@ -184,7 +188,7 @@ export default class ChatScreen extends Component{
                 style={chatScreen.senderMessage}>
                     <View style={{margin: 10}}>
                         <Text>{item.message}</Text>
-                        <Text note>{item.timestamp}</Text>
+                        <Text note style={{color: "#7d7b7b"}}>{item.timestamp}</Text>
                     </View>
                 </TouchableHighlight>
             )
@@ -226,7 +230,8 @@ export default class ChatScreen extends Component{
                         chatMessage => {
                             this.setState({chatMessage})
                         }
-                    } />
+                    }
+                    placeholder="Start typing ..." />
                     <Icon active name='send' onPress={() => {this.submitChatMessage()}} />
                 </Item>
                 </Footer>

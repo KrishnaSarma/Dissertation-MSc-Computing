@@ -155,7 +155,6 @@ export default class SignupScreen extends Component{
             console.log("1 after signup", user)
             if(user){
                 await this.addUserData()
-                this.showAlert("Signup Successful")
             }
 
         })
