@@ -116,7 +116,14 @@ export default class UsersScreen extends Component{
         this.notificationDisplayedListener = firebase.notifications().onNotificationDisplayed((notification) => {
             console.log("on notification displayed", notification)
         });
+        
         const notificationOpen = await firebase.notifications().getInitialNotification();
+
+        this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen) => {
+            const { title, body } = notificationOpen.notification;
+            this.showAlert(title, body);
+        });
+        
         if (notificationOpen) {
             console.log("notification open", notificationOpen)
             const { data } = notificationOpen.notification;
@@ -141,6 +148,7 @@ export default class UsersScreen extends Component{
     componentWillUnmount() {
         this.notificationListener();
         this.notificationDisplayedListener();
+        this.notificationOpenedListener();
     }
 
     render(){

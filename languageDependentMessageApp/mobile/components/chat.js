@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, TouchableHighlight, FlatList, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, TouchableHighlight, FlatList, View, TouchableOpacity, AppState} from 'react-native';
 import io from "socket.io-client";
 import axios from 'axios';
 import { ipAddress, secondaryColor } from '../constants';
@@ -19,14 +19,14 @@ export default class ChatScreen extends Component{
         chatMessage: "",
         chatMessages: [],
         email: "",
-        recieverUsername: ""
+        recieverUsername: "",
+        appState: AppState.currentState
         };
     }
 
     componentDidMount = async () => {
         const { navigation } = this.props;
 
-        this.socket = io("http://"+ipAddress+":3000");
         var email = await getUserEmail(); 
         await this.setState(() => ({ 
             reciever: navigation.state.params.reciever,
@@ -35,20 +35,51 @@ export default class ChatScreen extends Component{
          }));
 
          console.log("rec", this.state.email)
-
-        this.socket.emit("User Name", this.state.email);
         
-        await this.getChatMessages(this.state.email, this.state.reciever)
-
-        this.socket.on("Chat Message", msg => {
-            this.setState({ chatMessages: [...this.state.chatMessages, msg] });
-        });       
+        await this.getChatMessages(this.state.email, this.state.reciever)        
+        
+        await this.openSocket()       
 
         this.blurListener = navigation.addListener("willBlur", () => {
             this.socket.close();
         });
+
+        AppState.addEventListener('change', this._handleAppStateChange);
       
     }
+
+    openSocket = () => {
+        this.socket = io("http://"+ipAddress+":3000");
+
+        console.log("socket opened", this.state.email)
+        
+        this.socket.emit("User Name", this.state.email);
+
+        this.socket.on("Chat Message", msg => {
+            this.setState({ chatMessages: [...this.state.chatMessages, msg] });
+        });
+    }
+
+    _handleAppStateChange = async (nextAppState) => {
+        this.setState({ appState: nextAppState });
+ 
+        if (nextAppState === 'background') {
+            this.socket.close()
+            console.log("App is in Background Mode.")
+        }
+    
+        if (nextAppState === 'active') {
+            await this.openSocket()
+            await this.getChatMessages(this.state.email, this.state.reciever)
+            console.log("App is in Active Foreground Mode.")
+        }
+    
+        if (nextAppState === 'inactive') {
+    
+        // Do something here on app inactive mode.
+        console.log("App is in inactive Mode.")
+        }
+    };
 
     getChatMessages(sender, reciever){
         axios.get("http://"+ipAddress+":3000/getMessages", {
@@ -81,7 +112,9 @@ export default class ChatScreen extends Component{
     }
 
     componentWillUnmount = () => {
+        console.log("unmount chat")
         this.blurListener.remove();
+        AppState.removeEventListener('change', this._handleAppStateChange);
     }
 
     changeText(msg){
