@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {Alert } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import {ipAddress, secondaryColor} from "../constants";
 import firebase from "react-native-firebase";
@@ -10,6 +9,8 @@ import { Container, Content, Header, Left, Thumbnail,
 import { commonStyles } from '../style/commonStyle';
 
 import {getUserEmail, getUserTopicName} from "./commonGetMethods";
+
+import {SearchBar} from "react-native-elements";
 
 
 export default class UsersScreen extends Component{
@@ -24,8 +25,10 @@ export default class UsersScreen extends Component{
             page: 1,
             seed: 1,
             error: null,
-            refreshing: false
+            refreshing: false,
+            search: ''
         };
+        this.userList = [];
     }
 
     componentDidMount = async () => {
@@ -58,6 +61,7 @@ export default class UsersScreen extends Component{
             .then((response) => {
                 console.log("users response", response)
                 if (response.status == 201){
+                    this.userList = response.data
                     this.setState({
                         users : response.data 
                     })
@@ -126,7 +130,15 @@ export default class UsersScreen extends Component{
     componentWillUnmount() {
         this.notificationListener();
         this.notificationDisplayedListener();
-        // this.notificationOpenedListener();
+        this.notificationOpenedListener();
+    }
+
+    searchFilterFunction = (text) => {
+        const newData = this.userList.filter( (user) => user.username.includes(text) || user.email.includes(text));
+        this.setState({
+            users: newData,
+            search:text,
+        });
     }
 
     render(){
@@ -150,6 +162,15 @@ export default class UsersScreen extends Component{
                     </Right>
                 </Header>
                 <Content>
+                <SearchBar
+                    round
+                    searchIcon={{ size: 24 }}
+                    onChangeText={text => this.searchFilterFunction(text)}
+                    onClear={text => this.searchFilterFunction('')}
+                    placeholder="Type Here..."
+                    value={this.state.search}
+                    style={{color: "white"}}
+                    />
                     <List dataArray={this.state.users}
                     renderRow={(item) =>
                         <ListItem avatar onPress={()=> {
