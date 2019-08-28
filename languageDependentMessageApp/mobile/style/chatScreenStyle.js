@@ -6,13 +6,15 @@ export const chatScreen = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: "#bfa7a7",
         alignSelf: "flex-end",
-        margin: 10
+        margin: 10,
+        maxWidth: "70%"
     },
     recieverMessage: {
         borderRadius: 10,
         backgroundColor: "#eee8e8",
         alignSelf: "flex-start",
-        margin: 10
+        margin: 10,
+        maxWidth: "70%"
     },
     typeInput: {
         position: "absolute",
