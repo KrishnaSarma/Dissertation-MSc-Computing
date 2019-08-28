@@ -101,10 +101,10 @@ export default class UsersScreen extends Component{
         
         const notificationOpen = await firebase.notifications().getInitialNotification();
 
-        this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen) => {
-            const { title, body } = notificationOpen.notification;
-            this.showAlert(title, body);
-        });
+        // this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen) => {
+        //     const { title, body } = notificationOpen.notification;
+        //     this.showAlert(title, body);
+        // });
         
         if (notificationOpen) {
             console.log("notification open", notificationOpen)
@@ -130,7 +130,7 @@ export default class UsersScreen extends Component{
     componentWillUnmount() {
         this.notificationListener();
         this.notificationDisplayedListener();
-        this.notificationOpenedListener();
+        // this.notificationOpenedListener();
     }
 
     searchFilterFunction = (text) => {

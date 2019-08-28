@@ -8,7 +8,7 @@ import DialogInput from 'react-native-dialog-input';
 
 import { Container, Content, Header, Left,
     Body, Right, Button, Icon, Title,
-    Thumbnail, Item, Input, Text } from 'native-base';
+    Thumbnail, Item, Input, Text, ListItem, Separator, List } from 'native-base';
 
 import {ipAddress, secondaryColor, primaryColor, disabledColor} from "../constants"
 import { commonStyles } from '../style/commonStyle';
@@ -204,14 +204,99 @@ export default class ProfileScreen extends Component{
                     <Body>
                         <Title style={{alignSelf: "flex-end", color: secondaryColor, fontSize: 22}}>PROFILE</Title>
                     </Body>
-                    <Right />
+                    <Right>
+                        {this.state.changed?(
+                            <Button transparent
+                            // style={commonStyles.button}
+                            onPress={() => {this.saveChanges()}} >
+                                <Text 
+                                style= {{color: secondaryColor}}>
+                                    SAVE
+                                </Text>
+                            </Button>
+                        ):(
+                            <Button transparent disabled>
+                                <Text>SAVE</Text>
+                            </Button>
+                        )}
+                    </Right>
                 </Header>
                 <Content>
                     <Thumbnail 
                     style={profileStyles.picture} 
                     large 
                     source={require('../images/profilePicture.jpg')} />
-                    <Item style= {{flexDirection: "row"}} regular>
+
+                    <List>
+                        <ListItem itemDivider>
+                            <Text>EMAIL</Text>
+                        </ListItem>
+                        <ListItem last>
+                            <Item>
+                                <Input 
+                                placeholder={this.state.prevEmail}
+                                onChangeText= { (email) => {
+                                    this.setState({
+                                        newEmail: email,
+                                        changed: true
+                                    })
+                                }} />
+                            </Item>
+                        </ListItem>
+                        <ListItem itemDivider>
+                            <Text>USERNAME</Text>
+                        </ListItem>
+                        <ListItem last>
+                            <Item>
+                                <Input 
+                                placeholder={this.state.prevUsername}
+                                onChangeText= { (username) => {
+                                    this.setState({
+                                        newUsername: username,
+                                        changed: true
+                                    })
+                                }} />
+                            </Item>
+                        </ListItem>
+                        <ListItem itemDivider>
+                            <Text>LANGUAGE</Text>
+                        </ListItem>
+                        <ListItem last>
+                            <Item>
+                                <Picker
+                                style={{ height: 45, width: "100%", textAlign: "center"}}
+                                mode="dropdown"
+                                selectedValue={this.state.newLanguage}
+                                onValueChange={(itemValue)=>{
+                                    this.setState({ 
+                                        newLanguage: itemValue,
+                                        changed: true })
+                                }}>
+                                    {this.state.languages.map((item, index) => {
+                                        return (<Picker.Item 
+                                            style= {{width: 267, fontSize: 22}} label={item.name} value={item.code} key={index}/>) 
+                                    })}
+                                </Picker>
+                            </Item>
+                        </ListItem>
+                        <ListItem itemDivider>
+                            <Text>OTHER</Text>
+                        </ListItem>
+                        <ListItem>
+                            <Text onPress={() => this.changePassword()}>CHANGE PASSWORD</Text>
+                        </ListItem>
+                        <ListItem last>
+                            <Text onPress={() => this.logout(navigate)}>LOGOUT</Text>
+                        </ListItem>
+                    </List>
+                    <DialogInput isDialogVisible={this.state.isEmailChanged}
+                        title={"Password"}
+                        message={"Enter your password"}
+                        submitInput={ (inputText) => {this.changeFirebaseEmail(inputText)} }
+                        closeDialog={ () =>this.setState({isEmailChanged:false})}>
+                    </DialogInput>
+
+                    {/* <Item style= {{flexDirection: "row"}} regular>
                         <Text style= {profileStyles.text}>USERNAME</Text>
                         <Input style={profileStyles.input} placeholder={this.state.prevUsername}
                         onChangeText={(username) => {
@@ -253,18 +338,6 @@ export default class ProfileScreen extends Component{
                             })}
                         </Picker>
                     </Item>
-                    {/* {this.state.changed?(
-                        <TouchableOpacity 
-                        style={commonStyles.button}
-                        onPress={() => {this.saveChanges()}} >
-                            <Text style= {commonStyles.buttonText}>SAVE</Text>
-                        </TouchableOpacity>
-                    ):(
-                        <TouchableHighlight 
-                        style={[commonStyles.button, { backgroundColor: disabledColor }]}>
-                            <Text style= {commonStyles.buttonText}>SAVE</Text>
-                        </TouchableHighlight>
-                    )} */}
                     <Item style={{height: 45, justifyContent: "center"}}>
                         <Text style= {profileStyles.text} onPress={() => this.changePassword()}>CHANGE PASSWORD</Text>
                     </Item>
@@ -283,33 +356,7 @@ export default class ProfileScreen extends Component{
                         style={[commonStyles.button, { backgroundColor: disabledColor }]}>
                             <Text style= {commonStyles.buttonText}>SAVE</Text>
                         </TouchableHighlight>
-                    )}
-
-                    {/* <TouchableOpacity 
-                        style={[commonStyles.button, {width:300}]}
-                        onPress={() => {this.changePassword()}} >
-                            <Text style= {commonStyles.buttonText}>CHANGE PASSWORD</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity 
-                        style={commonStyles.button}
-                        onPress={() => {this.logout(navigate)}} >
-                            <Text style= {commonStyles.buttonText}>LOGOUT</Text>
-                    </TouchableOpacity> */}
-
-
-                    {/* <List>
-                        <ListItem onPress={()=>this.changePassword()}>
-                            <Left>
-                                <Text style={profileStyles.listItemText}>Change Password</Text>
-                            </Left>
-                        </ListItem>
-                    </List>
-                        <ListItem onPress={()=>this.logout(navigate)}>
-                            <Left>
-                                <Text style={{fontSize: 22}}>Logout</Text>
-                            </Left>
-                        </ListItem>
-                    </List> */}
+                    )} */}
                     
                 </Content>
             </Container>
