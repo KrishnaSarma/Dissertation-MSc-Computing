@@ -41,9 +41,9 @@ export const getLanguages = async (req, response) => {
     
 }
 
-export const translateText = (message, finalLanguage) => {
+export const translateText = (message, sourceLanguage, finalLanguage) => {
     return new Promise( (resolve,reject) => {
-        const subscriptionKey = "3f9c828f2abc46359519882f4a0e96ad"
+        const subscriptionKey = "0dfd1f5047ef4aa580c01a1a8a231f82"
 
         let options = {
             method: 'POST',
@@ -51,6 +51,7 @@ export const translateText = (message, finalLanguage) => {
             url: 'translate',
             qs: {
             'api-version': '3.0',
+            'from': sourceLanguage,
             'to': [finalLanguage]
             },
             headers: {

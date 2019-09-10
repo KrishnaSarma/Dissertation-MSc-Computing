@@ -66,7 +66,7 @@ io.on("connection", socket => {
 
         if(recieverLanguage != senderLanguage){
 
-            msg.reciever_message = await translateText(msg.message, recieverLanguage)
+            msg.reciever_message = await translateText(msg.message, senderLanguage, recieverLanguage)
         }
 
         else{
