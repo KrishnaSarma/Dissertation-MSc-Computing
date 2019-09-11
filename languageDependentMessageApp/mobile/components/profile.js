@@ -237,7 +237,7 @@ export default class ProfileScreen extends Component{
                                 placeholder={this.state.prevEmail}
                                 onChangeText= { (email) => {
                                     this.setState({
-                                        newEmail: email,
+                                        newEmail: email.toLowerCase(),
                                         changed: true
                                     })
                                 }} />

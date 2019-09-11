@@ -148,12 +148,12 @@ export default class LoginScreen extends Component{
                         <Item>
                             <Input 
                             placeholder= "Email"
-                            onChangeText= {(email) => this.setState({email})}/>
+                            onChangeText= {(email) => this.setState({email: email.toLowerCase()})}/>
                         </Item>
                         <Item>
                             <Input
                             placeholder="Password"
-                            value={this.state.password} 
+                            value={this.state.password}
                             secureTextEntry={!this.state.showPassword}
                             onChangeText={(password) => this.setState({password})}/>                           
                             <Icon name={this.state.icon} onPress={() => this._changeIcon()} />

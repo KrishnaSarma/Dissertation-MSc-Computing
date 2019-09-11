@@ -134,7 +134,10 @@ export default class UsersScreen extends Component{
     }
 
     searchFilterFunction = (text) => {
-        const newData = this.userList.filter( (user) => user.username.includes(text) || user.email.includes(text));
+        var searchItem = text.toLowerCase();
+        const newData = this.userList.filter(
+            (user) => user.username.toLowerCase().includes(searchItem) || user.email.toLowerCase().includes(searchItem)
+        );
         this.setState({
             users: newData,
             search:text,
@@ -148,7 +151,11 @@ export default class UsersScreen extends Component{
         return( 
             <Container style={commonStyles.container}>
                 <Header style={commonStyles.header}>
-                    <Left />
+                    <Left>
+                        <Button transparent onPress={() => this.getUserList()}>
+                            <Icon name='refresh' />
+                        </Button>
+                    </Left>    
                     <Body>
                         <Title 
                         style={{alignSelf: "flex-end", color: secondaryColor, fontSize: 22}}>

@@ -211,7 +211,7 @@ export default class SignupScreen extends Component{
                         <Item>
                             <Input 
                             placeholder= "Email"
-                            onChangeText= {(email) => this.setState({email})}/>
+                            onChangeText= {(email) => this.setState({email: email.toLowerCase()})}/>
                         </Item>
                         <Item>
                             <Input 
