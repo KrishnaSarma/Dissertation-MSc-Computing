@@ -100,7 +100,7 @@ export default class SignupScreen extends Component{
             // this.setState(() => ({nameError: "Password don't match"}));
         }
 
-        else if (this.state.language == "") {
+        else if (this.state.language == "Placeholder") {
             this.showAlert("Select Language")
             // this.setState(() => ({nameError: "Select Language"}));
         }
@@ -174,7 +174,7 @@ export default class SignupScreen extends Component{
 
     _changeCPIcon = () =>{
         this.setState(prevState => ({
-            cPIcon: prevState.cPicon === 'eye' ? 'eye-off' : 'eye',
+            cPIcon: prevState.cPIcon === 'eye' ? 'eye-off' : 'eye',
             showConfirmPassword: !prevState.showConfirmPassword
         }));
     }
