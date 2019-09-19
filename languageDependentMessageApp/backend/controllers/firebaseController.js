@@ -1,19 +1,20 @@
 import FCM from "fcm-node";
-import serverKey from 'C:\\Users\\sarma\\Desktop\\mychatapp-df2b0-firebase-adminsdk-t0oco-fe71130fff.json'
+import serverKey from 'C:\\Users\\sarma\\Desktop\\mychatapp-df2b0-firebase-adminsdk-t0oco-fe71130fff.json';
 
 var fcm = new FCM(serverKey)
 
-export const sendNotification = (sender, recieverTopic, message) => {
+export const sendNotification = (sender, recieverTopic, message, receiverUsername) => {
     var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
         to: "/topics/"+recieverTopic,
         
         notification: {
-            title: sender, 
+            title: sender,
             body: message 
         },
         
         data: {  //you can send only notification or only data(or include both)
             title: sender,
+            uname: receiverUsername,
             body: message
         }
     }

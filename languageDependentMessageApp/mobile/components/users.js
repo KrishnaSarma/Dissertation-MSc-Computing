@@ -110,9 +110,11 @@ export default class UsersScreen extends Component{
             console.log("notification open", notificationOpen)
             const { data } = notificationOpen.notification;
             console.log("data", data)
-            console.log("on notification open if app closed listener", data.title, data.body);
+            console.log("username", data.uname)
+            console.log("on notification open if app closed listener", data.title, data.body, data.uname);
             this.props.navigation.navigate('Chat', {
-                reciever: data.title
+                reciever: data.title,
+                username: data.uname
             })
         }
     }

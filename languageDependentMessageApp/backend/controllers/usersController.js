@@ -58,6 +58,18 @@ export const getUserTopicName = async (userEmail) => {
     return topicName
 }
 
+export const getUsername = async (userEmail) => {
+    let username = "";
+    await users.findOne({email: userEmail})
+    .then((user) => {
+        username = user.username
+    })
+    .catch( (err) => {
+        console.log("Error finding user by email", err)
+    })    
+    return username
+}
+
 export const changePassword = (request, response) => {
         
         var email= request.body.email

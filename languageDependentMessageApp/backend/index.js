@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 
 import {saveMessage} from "./controllers/chatController";
 import {translateText} from "./controllers/translatorController";
-import {getUserLanguage, getUserTopicName} from "./controllers/usersController";
+import {getUserLanguage, getUserTopicName, getUsername} from "./controllers/usersController";
 
 import {sendNotification} from "./controllers/firebaseController";
 
@@ -76,7 +76,8 @@ io.on("connection", socket => {
         if(reciever_socket == ""){
             saveMessage(msg, 0);
             var topicName = await getUserTopicName(msg.reciever)
-            await sendNotification(msg.sender, topicName, msg.reciever_message)
+            var receiverUsername = await getUsername(msg.reciever)
+            await sendNotification(msg.sender, topicName, msg.reciever_message, receiverUsername)
         }
         else if (reciever_socket){
             saveMessage(msg, 1);

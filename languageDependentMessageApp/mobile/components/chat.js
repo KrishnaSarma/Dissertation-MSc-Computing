@@ -172,7 +172,7 @@ export default class ChatScreen extends Component{
                 }}
                 onShowUnderlay={separators.highlight}
                 onHideUnderlay={separators.unhighlight}
-                underlayColor="none"
+                underlayColor="transparent"
                 style={chatScreen.recieverMessage}>
                     <View style={{margin: 10}}>
                         <Text >{item.message}</Text>
