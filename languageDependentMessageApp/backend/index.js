@@ -76,7 +76,7 @@ io.on("connection", socket => {
         if(reciever_socket == ""){
             saveMessage(msg, 0);
             var topicName = await getUserTopicName(msg.reciever)
-            var receiverUsername = await getUsername(msg.reciever)
+            var receiverUsername = await getUsername(msg.sender)
             await sendNotification(msg.sender, topicName, msg.reciever_message, receiverUsername)
         }
         else if (reciever_socket){
